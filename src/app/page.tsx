@@ -525,7 +525,7 @@ export default function Home() {
             <path d="M117.521 80.75H172.439" stroke="#434343" strokeWidth="3" strokeLinecap="round"/>
             <path d="M132.312 18.5H77.5625L59.3125 0.25H13.6875C6.12801 0.25 0 6.37801 0 13.9375V96.0625C0 103.622 6.12801 109.75 13.6875 109.75H132.312C139.872 109.75 146 103.622 146 96.0625V32.1875C146 24.628 139.872 18.5 132.312 18.5Z" fill="#BB254A"/>
           </svg>
-          <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Big data tarnsfer</h1>
+          <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Big data transfer</h1>
           <h5 className="text-white text-xs text-center lg:text-base lg:text-left">Transfer huge files and folders globally or over the VPN on same network</h5>
         </ul>
         <ul className="flex flex-col items-center lg:items-start">
@@ -670,7 +670,7 @@ export default function Home() {
         <div className="flex flex-row justify-between h-[200px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="">
             <h2 className="mb-4">CONTACT US</h2>
-            <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetaray.com</p>
+            <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
             <div>
