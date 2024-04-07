@@ -404,7 +404,7 @@ export default function Home() {
 
   return (
     <div className="bg-black flex justify-center align-center flex-col scroll-smooth">
-      <script defer data-domain="zetaray.com" src="https://plausible.io/js/script.js"></script>
+      <script defer data-domain="zetarya.com" src="https://plausible.io/js/script.js"></script>
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <div className="mx-auto z-10">
         <Navbar />
