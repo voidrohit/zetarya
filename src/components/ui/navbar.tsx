@@ -58,7 +58,7 @@ const Navbar = () => {
               key={id}
               className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-500 hover:scale-105 hover:text-white duration-200 link-underline"
             >
-              <Link href={link}>{link}</Link>
+              <Link href={link === "company" ? "https://www.zero2.in" : link}>{link}</Link>
             </li>
           ))}
         </ul>
