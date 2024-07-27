@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Urbanist} from "next/font/google"
+import { Analytics } from "@vercel/analytics/react"
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={urbanist.className}>
       <body className="">{children}</body>
+      <Analytics/>
     </html>
   );
 }
