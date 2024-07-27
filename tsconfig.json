@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "tailwind.config.js", "src/app/terms-and-privacy/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "tailwind.config.js", "src/app/terms-and-privacy/page.jsx", "src/components/ui/headboard.tsx", "src/components/ui/globe.jsx"],
   "exclude": ["node_modules"]
 }

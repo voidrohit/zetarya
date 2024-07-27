@@ -1,14 +1,18 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import "./globals.css"
 
 import { projects } from "./projects";
+import banner from "@/statics/representation-dark.svg"
 
 import Navbar from "@/components/ui/navbar"
 import { Bigtilt } from "@/components/ui/bigtilt";
 import { WavyBackground } from "@/components/ui/wavy-background";  
 
 import { HoverEffect } from "../components/ui/card-hover-effect";
+import { HeadBoard } from "@/components/ui/headboard";
 
 const World = dynamic(() => import("../components/ui/globe").then((m) => m.World), {
   ssr: false,
@@ -412,11 +416,12 @@ export default function Home() {
 
       <div className="landing flex w-[90vw] max-w-[1280px] mx-auto pt-[2rem] lg:pt-[6.5rem] justify-center align-center lg:flex-row flex-col">
         <div className="main">
-          <div className="moving lg:text-[4rem] text-[2rem] text-white lg:leading-[5rem] font-extrabold">
-            <h1>Moving world&apos;s data</h1>
-            <h1>with speed, security</h1>
-            <h1>and accuracy</h1>
-          </div>
+        <div className="moving-text-container lg:text-[4rem] text-[2rem] text-white lg:leading-[5rem] font-extrabold">
+          <h1 className="gradient-text">Moving world's data</h1>
+          <h1 className="gradient-text">with speed, security</h1>
+          <h1 className="gradient-text">and accuracy</h1>
+        </div>
+
 
           <h2 className="headingtwo text-[10px] lg:text-[16px] text-white pt-5">
             Peer to Peer high speed data transfer software designed for businesses
@@ -437,7 +442,7 @@ export default function Home() {
         </div>
       </div>
       <div className="mx-auto lg:pt-5">
-        <Bigtilt />
+        <HeadBoard />
       </div>
       
       <h1 className="text-white font-semibold size-10 w-[90vw] m-auto align-middle text-center text-[3rem] lg:text-[5rem] h-[20vh] mt-48 mb-10">Why Zetarya</h1>
@@ -451,6 +456,7 @@ export default function Home() {
           <h5 className="text-white text-xs text-center lg:text-base lg:text-left">Utilise full network speed of the available bandwidth and transfer data with high speed</h5>
         </ul>
         <ul className="flex flex-col items-center lg:items-start">
+          
          <svg className="h-[100px] lg:h-[150px]" width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M30.5961 18.3745L30.5957 18.3742L22.4677 10.2869L30.5961 18.3745ZM30.5961 18.3745C30.6536 18.4318 30.7032 18.4953 30.744 18.5634M30.5961 18.3745L30.744 18.5634M30.744 18.5634H26.2548C24.0457 18.5634 22.2548 16.7725 22.2548 14.5634V10.1267C22.3325 10.17 22.4041 10.2237 22.4674 10.2866L30.744 18.5634ZM17.598 11V20.2236C17.598 21.8709 18.9481 23.2042 20.5906 23.2042H30.8822V49.2729C30.8822 49.8125 30.4472 50.2535 29.8896 50.2535H1.99264C1.43496 50.2535 1 49.8125 1 49.2729V10.9806C1 10.441 1.43496 10 1.99264 10H16.598C17.1502 10 17.598 10.4477 17.598 11Z" stroke="#BB2649" strokeWidth="2"/>
             <path d="M5.19336 28.5527H26.2888" stroke="#BB2649" strokeWidth="2" strokeLinecap="round"/>

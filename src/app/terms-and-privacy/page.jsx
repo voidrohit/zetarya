@@ -1,7 +1,9 @@
 // pages/privacy-policy.js
 import Navbar from '@/components/ui/navbar-white';
 import React from 'react';
-import "../globals.css"
+// import "../globals.css"
+
+
 
 const PrivacyPolicy = () => {
   return (
