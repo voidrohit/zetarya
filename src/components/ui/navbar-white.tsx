@@ -9,16 +9,16 @@ const Navbar = () => {
   const links = [
     {
       id: 1,
-      link: "Docs",
+      link: "docs",
     },
     // {
     //   id: 2,
     //   link: "blogs",
     // },
-    {
-      id: 3,
-      link: "pricing",
-    },
+    // {
+    //   id: 3,
+    //   link: "pricing",
+    // },
     {
       id: 4,
       link: "company",
@@ -59,7 +59,7 @@ const Navbar = () => {
               key={id}
               className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-500 hover:scale-105 hover:text-gray-900 duration-200 link-underline"
             >
-              <Link href={link}>{link}</Link>
+              <Link href={link === "company" ? "https://www.zero2.in" : link === "docs" ? "https://docs.zetarya.com": link}>{link}</Link>
             </li>
           ))}
         </ul>
@@ -78,7 +78,7 @@ const Navbar = () => {
                 key={id}
                 className="px-4 cursor-pointer capitalize py-6 text-4xl"
               >
-                <Link onClick={() => setNav(!nav)} href={link}>
+                <Link onClick={() => setNav(!nav)} href={link === "company" ? "https://www.zero2.in" : link === "docs" ? "https://docs.zetarya.com": link}>
                   {link}
                 </Link>
               </li>

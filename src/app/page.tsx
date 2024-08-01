@@ -680,17 +680,17 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
             <div>
-              <a href="/docs" className="text-sm hover:underline">Docs</a>
+              <a href="https://docs.zetarya.com" className="text-sm hover:underline">Docs</a>
             </div>
             <div>
               <a href="/terms-and-privacy" className="text-sm hover:underline">Term & Privacy</a>
             </div>
             <div>
-              <a href="/blogs" className="text-sm hover:underline">Blogs</a>
+              <a href="/media-production-and-post-production" className="text-sm hover:underline">Blogs</a>
             </div>
-            <div>
-              <a href="/pricing" className="text-sm hover:underline">Pricing</a>
-            </div>
+            {/*<div>*/}
+            {/*  <a href="/pricing" className="text-sm hover:underline">Pricing</a>*/}
+            {/*</div>*/}
             <div>
               <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
             </div>
