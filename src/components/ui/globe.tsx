@@ -211,7 +211,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
       numbersOfRings = genRandomNumbers(
         0,
         data.length,
-          Math.floor((data.length * 4) / 5)
+          0
+          // Math.floor((data.length * 4) / 5)
       );
 
       globeRef.current.ringsData(
