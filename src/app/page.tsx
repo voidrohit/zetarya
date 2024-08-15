@@ -445,7 +445,7 @@ export default function Home() {
         </div>
         <div className="canvas max-w-7xl mx-auto w-full z-[0] lg:w-1/2 relative overflow-hidden h-full lg:h-[40rem] md:pl-48">
           <div className="lg:w-full lg:h-[85%] h-[30vh]">
-            <World data={sampleArcs} globeConfig={globeConfig}/>;
+            <World data={sampleArcs} globeConfig={globeConfig}/>
           </div>
         </div>
       </div>
