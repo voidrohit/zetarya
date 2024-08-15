@@ -464,7 +464,7 @@ export default function Home() {
             <path d="M139 103.5C142.59 103.5 145.5 106.41 145.5 110C145.5 113.59 142.59 116.5 139 116.5V103.5ZM53.1026 114.596C50.5642 112.058 50.5642 107.942 53.1026 105.404L94.4684 64.0381C97.0068 61.4997 101.122 61.4997 103.661 64.0381C106.199 66.5765 106.199 70.692 103.661 73.2304L66.8912 110L103.661 146.77C106.199 149.308 106.199 153.424 103.661 155.962C101.122 158.5 97.0068 158.5 94.4684 155.962L53.1026 114.596ZM139 116.5H57.6988V103.5H139V116.5Z" fill="#BB254A"/>
           </svg>
           <h1 className="text-white text-l lg:text-2xl font-semibold mt-5 mb-3">High Speed Data Transfer</h1>
-          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Utilise full network speed of the available bandwidth and transfer data with high speed</h5>
+          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Utilise full network speed of the available bandwidth and transfer data with high speed.</h5>
         </ul>
         <ul className="flex flex-col items-center lg:item-center">
           
@@ -519,7 +519,7 @@ export default function Home() {
             <path d="M123.312 130.287H144.407" stroke="#434343" strokeWidth="2" strokeLinecap="round"/>
           </svg>
           <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Agile</h1>
-          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Lots of small files doesn&apos;t affect the speed</h5>
+          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Lots of small files doesn&apos;t affect the speed.</h5>
         </ul>
         <ul className="flex flex-col items-center lg:item-center">
           <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -532,7 +532,7 @@ export default function Home() {
           </svg>
 
           <h1 className="text-white text-2xl font-semibold mt-5 mb-3">User Management</h1>
-          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Secure access control, role assignments, and permissions, queueing mechanism</h5>
+          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Secure access control, role assignments, permissions and queueing mechanism.</h5>
         </ul>
         <ul className="flex flex-col items-center lg:item-center">
           <svg className="h-[100px] lg:h-[150px]" width="225" height="150" viewBox="0 0 187 110" fill="none"
@@ -547,7 +547,7 @@ export default function Home() {
                 d="M132.312 18.5H77.5625L59.3125 0.25H13.6875C6.12801 0.25 0 6.37801 0 13.9375V96.0625C0 103.622 6.12801 109.75 13.6875 109.75H132.312C139.872 109.75 146 103.622 146 96.0625V32.1875C146 24.628 139.872 18.5 132.312 18.5Z" fill="#BB254A"/>
           </svg>
           <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Big data transfer</h1>
-          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Transfer huge files and folders globally or over the VPN on same network</h5>
+          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">Transfer huge files and folders globally over the VPN on same network.</h5>
         </ul>
         <ul className="flex flex-col items-center lg:item-center">
           <svg width="203" height="150" viewBox="0 0 203 150" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -678,7 +678,7 @@ export default function Home() {
 
           <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Secure by design</h1>
           <h5 className="text-white text-xs text-center lg:text-base lg:text-center">On-premises software runs behinds
-            your firewall</h5>
+            your firewall.</h5>
         </ul>
         <ul className="flex flex-col items-center lg:item-center">
           <svg className="h-[100px] lg:h-[150px]" width="150" height="150" viewBox="0 0 150 150" fill="none"
@@ -705,7 +705,7 @@ export default function Home() {
             </defs>
           </svg>
           <h1 className="text-white text-2xl font-semibold mt-5 mb-3">Easy Integration</h1>
-          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">REST API to directly integrate into your application</h5>
+          <h5 className="text-white text-xs text-center lg:text-base lg:text-center">REST API to directly integrate into your application.</h5>
         </ul>
       </div>
       <h1 className="text-white font-semibold size-5 w-[90vw] m-auto align-middle text-center text-[3rem] lg:text-[5rem] h-[20vh] mt-48 mb-2">Use Case</h1>
