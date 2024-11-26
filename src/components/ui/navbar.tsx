@@ -69,7 +69,7 @@ const Navbar = () => {
                         key={id}
                         className="px-4 cursor-pointer capitalize py-6 text-4xl"
                     >
-                      <Link onClick={() => setNav(!nav)} href={link === "docs" ? "https://docs.zetarya.com" : link}>
+                      <Link onClick={() => setNav(!nav)} href={link === "company" ? "https://www.zero2.in" : link === "docs" ? "https://docs.zetarya.com" : link}>
                         {link}
                       </Link>
                     </li>

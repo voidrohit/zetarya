@@ -1,6 +1,6 @@
 {
-  "name": "nextjszetarya",
-  "version": "0.1.0",
+  "name": "zetarya",
+  "version": "0.1.7",
   "private": true,
   "scripts": {
     "dev": "next dev",
