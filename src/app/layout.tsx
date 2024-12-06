@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://zetarya.com/'),
   title: "Zetarya - Bulk data transfer",
   description: "Moving world's data with speed, security and accuracy",
-  generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["high speed data transfer", "1Gbps", "1 Gbps", "1Gbps data transfer", "1 Gbps data transfer", "data transfer", "transfer", "aspera", "ibm aspera", "resilio"],
   themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fff" }],
