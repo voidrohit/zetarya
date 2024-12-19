@@ -1,7 +1,6 @@
 // pages/privacy-policy.js
 import Navbar from '@/components/ui/navbar-white';
 import React from 'react';
-// import "../globals.css"
 
 
 
@@ -61,16 +60,11 @@ const PrivacyPolicy = () => {
             <p className='text-gray-700 mb-4'>
             The information on this site and other information channels under control of zero2 can be updated, removed or changed without prior notice. zero2 does not guarantee that the information or this website is error-free.
             </p>
-            {/* <address className="text-gray-700 mb-4">
-            Zero2 (TM) Technova Private Ltd<br />
-            [Insert contact information - Address, Phone, Email]<br />
-            Attention: Data Protection Officer
-            </address> */}
         </section>
         <section className="mb-12">
             <h2 className="text-xl font-semibold mb-4">Pricing disclaimer</h2>
             <p className='text-gray-700 mb-4'>
-            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing.
+            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing. There will be no refund on after the purchase of the zetarya service.
             </p>
         </section>
         <section className="mb-12">
