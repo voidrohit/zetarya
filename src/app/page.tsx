@@ -411,7 +411,7 @@ export default function Home() {
 
   return (
     <div className="bg-black flex justify-center align-center flex-col scroll-smooth">
-      <script defer data-domain="zetarya.com" src="https://plausible.io/js/script.js"></script>
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="520e5182-eaf4-4ed3-9907-598c58f7ba2c"></script>
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <div className="mx-auto z-1">
         <Navbar />
