@@ -70,7 +70,7 @@ const PrivacyPolicy = () => {
         <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Trademark</h2>
             <p className="text-gray-700 mb-4">
-                Zetarya is prodct by zero2.
+                Zetarya is product by zero2.
             </p>
             <p className="text-gray-700 mb-4">
                 zero2 is registered trademark of Zeero Two Technova Pvt. Ltd.
