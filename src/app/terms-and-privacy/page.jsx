@@ -64,7 +64,7 @@ const PrivacyPolicy = () => {
         <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Pricing disclaimer</h2>
             <p className='text-gray-700 mb-4'>
-            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing. No refunds will be issued after the purchase of Zetarya services..
+            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing. A refund may be requested within 24 hours of the purchase of Zetarya services.
             </p>
         </section>
         <section className="mb-12">
