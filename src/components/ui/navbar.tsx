@@ -33,7 +33,7 @@ const Navbar = () => {
       <>
         <div className="flex justify-between items-center max-w-[1280px] w-[90vw] h-20 text-black bg-white nav overflow-hidden">
           <div>
-            <h1 className="text-5xl font-signature ml-2 w-[150px] md:w-[200px]">
+            <h1 className="text-5xl font-signature ml-2 w-[150px] md:w-[150px]">
               <a className="link-underline link-underline-black" href="/" rel="noreferrer">
                 <svg width="auto" height="auto" viewBox="0 0 185 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M33.435 12.935C33.8256 13.3256 33.8272 13.9608 33.4176 14.3313C29.7496 17.65 24.9702 19.5 20 19.5C15.0298 19.5 10.2504 17.65 6.58236 14.3313C6.17282 13.9608 6.17445 13.3256 6.56497 12.935L9.8648 9.6352C10.2553 9.24467 10.8862 9.24789 11.3049 9.60807C13.7154 11.6818 16.7983 12.8333 20 12.8333C23.2017 12.8333 26.2846 11.6818 28.6951 9.60808C29.1138 9.2479 29.7447 9.24467 30.1352 9.6352L33.435 12.935Z" fill="#BB254A" />
@@ -48,7 +48,7 @@ const Navbar = () => {
             {links.map(({ id, link }) => (
                 <li
                     key={id}
-                    className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-500 hover:scale-105 hover:text-white duration-200 link-underline"
+                    className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-500 hover:scale-105 hover:text-gray-400 duration-200 link-underline"
                 >
                   <Link href={link === "company" ? "https://www.zero2.in" : link === "docs" ? "https://docs.zetarya.com" : link}>{link}</Link>
                 </li>
