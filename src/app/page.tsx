@@ -22,9 +22,9 @@ export default function Home() {
         <div className="flex max-w-[1280px] w-[90vw] mx-auto pt-[2rem] lg:pt-[3rem] justify-center items-center flex-col relative z-10">
           <div className="main">
               <div className="text-center text-black font-semibold">
-                  <h1 className="text-4xl lg:text-[4rem] lg:leading-[5rem]">Transfer Files</h1>
+                  <h1 className="text-4xl lg:text-[4rem] lg:leading-[5rem]">Direct transfer files across</h1>
                   <h1 className="text-4xl lg:text-[4rem] lg:leading-[5rem]">
-                      upto <Cover >1 Gbps</Cover>
+                      globe upto <Cover >1 Gbps</Cover>
                   </h1>
               </div>
             <div className="flex mt-5 h-[100px] justify-center">
