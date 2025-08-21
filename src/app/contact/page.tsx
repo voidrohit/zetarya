@@ -7,24 +7,23 @@ import Navbar from "@/components/ui/navbar";
 
 const ContactInfo: React.FC = () => {
     return (
-        <div className="bg-black flex justify-center align-center flex-col scroll-smooth">
+        <div className="bg-white flex justify-center align-center flex-col scroll-smooth">
             <div className="mx-auto z-10">
                 <Navbar/>
             </div>
             <div
-                className="h-[80vh] w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center z-0 antialiased">
+                className="h-[80vh] w-full rounded-md bg-white relative flex flex-col items-center justify-center z-0 antialiased">
                 <div className="max-w-2xl mx-auto p-4">
-                    <h1 className="relative z-10 text-lg md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600  text-center font-sans font-bold">
-                        Send us an email
+                    <h1 className="relative z-10 text-xl md:text-5xl  bg-clip-text text-transparent bg-black text-center font-sans font-bold">
+                        Our teams are here to help
                     </h1>
                     <p></p>
                     <p className="text-neutral-500 max-w-l mx-auto my-2 text-lg text-center relative z-10">
-                        For more information on the services we provide, please contact us at
-                        <a href="mailto:info@zetarya.com" className="underline ml-1">info@zetarya.com</a>.
+                        Questions, bug reports, feedback — we’re here for it all.
+
                     </p>
                     <p className="text-neutral-500 max-w-l mx-auto my-2 text-lg text-center relative z-10">
-                        For sales inquiries, please contact us at <a href="mailto:sales@zetarya.com"
-                                                                    className="underline ml-1">sales@zetarya.com</a>.
+                        <a href="mailto:info@zetarya.com" className="underline ml-1">info@zetarya.com</a>.
                     </p>
                 </div>
                 <BackgroundBeams/>

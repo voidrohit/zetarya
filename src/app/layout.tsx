@@ -11,10 +11,21 @@ const urbanist = Urbanist({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zetarya.com/'),
-  title: "Zetarya - Bulk data transfer",
-  description: "Moving world's data with speed, security and accuracy",
+  title: "Zetarya - Transfer Files upto 1Gbps",
+  description: "Team collaboration made easy by fast data transfer.",
   manifest: "/manifest.json",
-  keywords: ["high speed data transfer", "1Gbps", "1 Gbps", "1Gbps data transfer", "1 Gbps data transfer", "data transfer", "transfer", "aspera", "ibm aspera", "resilio"],
+  keywords: [
+      "high speed data transfer", "1Gbps",
+      "1 Gbps",
+      "1Gbps data transfer",
+      "1 Gbps data transfer",
+      "data transfer",
+      "transfer",
+      "aspera",
+      "ibm aspera",
+      "resilio",
+      "zetarya"
+  ],
   themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fff" }],
   authors: [
     {
