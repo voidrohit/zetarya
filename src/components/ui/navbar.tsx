@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { signinWithGoogle } from "@/utils/actions";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -58,10 +59,14 @@ const Navbar = () => {
           </div>
 
             <div>
-                <h1 className="bg-[#BB254A] hover:bg-[#801336] border border-[#801336] hover:border-[#BB254A] text-white font-medium px-4 h-[30px] items-center justify-center cursor-pointer text-sm shadow-md rounded-md tracking-wide hidden lg:flex">
-                    Dashboard
-                </h1>
-
+                <form action={signinWithGoogle}>
+                    <button
+                        type="submit"
+                        className="bg-[#BB254A] hover:bg-[#801336] border border-[#801336] hover:border-[#BB254A] text-white font-medium px-4 h-[30px] items-center justify-center cursor-pointer text-sm shadow-md rounded-md tracking-wide hidden lg:flex"
+                    >
+                        Dashboard
+                    </button>
+                </form>
             </div>
 
           <div
