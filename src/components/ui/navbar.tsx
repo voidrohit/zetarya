@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { signinWithGoogle } from "@/utils/actions";
+import {redirect} from "next/navigation";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -12,12 +13,16 @@ const Navbar = () => {
       id: 1,
       link: "docs",
     },
+      {
+          id: 2,
+          link: "pricing",
+      },
     {
-      id: 4,
+      id: 3,
       link: "company",
     },
     {
-      id: 5,
+      id: 4,
       link: "contact",
     },
   ];
@@ -59,14 +64,12 @@ const Navbar = () => {
           </div>
 
             <div>
-                <form action={signinWithGoogle}>
-                    <button
-                        type="submit"
-                        className="bg-[#BB254A] hover:bg-[#801336] border border-[#801336] hover:border-[#BB254A] text-white font-medium px-4 h-[30px] items-center justify-center cursor-pointer text-sm shadow-md rounded-md tracking-wide hidden lg:flex"
-                    >
-                        Dashboard
-                    </button>
-                </form>
+                <Link
+                    href="/dashboard"
+                    className="hidden lg:inline-flex h-[30px] items-center justify-center rounded-md bg-[#BB254A] px-4 text-sm font-medium tracking-wide text-white shadow-md hover:bg-[#801336]"
+                >
+                    Dashboard
+                </Link>
             </div>
 
           <div

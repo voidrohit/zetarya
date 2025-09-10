@@ -121,9 +121,9 @@ export default function Home() {
               <div>
                 <a href="/media-production-and-post-production" className="text-sm hover:underline">Blogs</a>
               </div>
-              {/*<div>*/}
-              {/*  <a href="/pricing" className="text-sm hover:underline">Pricing</a>*/}
-              {/*</div>*/}
+              <div>
+                <a href="/pricing" className="text-sm hover:underline">Pricing</a>
+              </div>
               <div>
                 <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
               </div>

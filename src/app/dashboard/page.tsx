@@ -1,53 +1,41 @@
-import { createClientForServer } from '@/utils/supabase'
-import Link from 'next/link'
-import Image from 'next/image'
-import { signOut } from '@/utils/actions'
-import {redirect} from "next/navigation";
-export default async function Home() {
-    const supabase = await createClientForServer()
+// app/dashboard/page.tsx
+import { createClientForServer } from "@/utils/supabase";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import DashboardClient from "./DashboardClient";
 
-    const session = await supabase.auth.getUser()
+function detectOsFromUA(ua: string | null): string {
+    if (!ua) return "web";
+    const s = ua.toLowerCase();
+    if (s.includes("windows")) return "windows";
+    if (s.includes("mac os") || s.includes("macintosh")) return "mac";
+    if (s.includes("linux")) return "linux";
+    if (s.includes("android")) return "android";
+    if (s.includes("iphone") || s.includes("ipad") || s.includes("ios")) return "ios";
+    return "web";
+}
 
-    if (!session.data.user) {
-        redirect('/')
-    }
+export default async function Page() {
+    const supabase = await createClientForServer();
+    const session = await supabase.auth.getUser();
+    if (!session.data.user) redirect("/signin");
 
     const {
         data: {
-            user: { user_metadata, app_metadata },
+            user: { user_metadata, app_metadata, id },
         },
-    } = session
+    } = session;
 
-    const { name, email, user_name, avatar_url } = user_metadata
+    const { name, email, user_name, avatar_url } = user_metadata ?? {};
+    if (!email) redirect("/signin");
 
-    const userName = user_name ? `@${user_name}` : 'User Name Not Set'
-
+    const userName = user_name ? `@${user_name}` : "User Name Not Set";
+    const provider = app_metadata?.provider ?? "—";
+    const osType = detectOsFromUA(headers().get("user-agent"));
 
     return (
-        <div className=''>
-            {/* continer at the center of the page  */}
-            <div className='flex flex-col items-center justify-center h-screen gap-4'>
-                {avatar_url && (
-                    <Image
-                        src={avatar_url}
-                        alt={name}
-                        width={200}
-                        height={200}
-                        className='rounded-full'
-                        quality={100}
-                    />
-                )}
-                <h1 className='text-4xl font-bold'>{name}</h1>
-                <p className='text-xl'>User Name: {userName}</p>
-                <p className='text-xl'>Email: {email}</p>
-                <p className='text-xl'>Created with: {app_metadata.provider}</p>
-
-                <form action={signOut}>
-                    <button className='btn' type='submit'>
-                        Sign Out
-                    </button>
-                </form>
-            </div>
-        </div>
-    )
+        <DashboardClient
+            initialUser={{ id, name, email, userName, provider, avatar_url }}
+        />
+    );
 }

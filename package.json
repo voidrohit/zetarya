@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.16.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.2",
     "@tsparticles/engine": "^3.5.0",
@@ -30,7 +31,8 @@
     "simplex-noise": "^4.0.1",
     "tailwind-merge": "^2.4.0",
     "three": "^0.162.0",
-    "three-globe": "^2.31.0"
+    "three-globe": "^2.31.0",
+    "undici": "^7.15.0"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -29,9 +29,47 @@ const signOut = async () => {
     redirect(`http://localhost:3000/`)
 }
 
+const signinWithOtp = async ( email: string) => {
+    const supabase = await createClientForServer()
+
+    const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+    })
+
+    if (error) {
+        console.log('error', error)
+
+        return {
+            success: null,
+            error: error.message,
+        }
+    }
+}
+
+const verifyOtp = async (email: string, token: string) => {
+    const supabase = await createClientForServer()
+
+    const { data, error } = await supabase.auth.verifyOtp({
+        token,
+        email,
+        type: 'email',
+    })
+
+    if (error) {
+        console.log('error', error)
+
+        return {
+            success: null,
+            error: error.message,
+        }
+    }
+}
+
 const signinWithGoogle = signInWith('google')
 
 export {
     signinWithGoogle,
     signOut,
+    signinWithOtp,
+    verifyOtp,
 }
