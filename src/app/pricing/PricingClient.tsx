@@ -33,7 +33,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
     const autoTriggeredRef = useRef(false);
 
     const handlePay = useCallback(async () => {
-        console.log(RAZORPAY_KEY_ID)
+        console.log(RAZORPAY_KEY_ID, process.env.RZP_KEY_ID!)
         if (!serverUser) {
             
             router.push(`/signin`);
