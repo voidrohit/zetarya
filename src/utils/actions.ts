@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 const signInWith = (provider: any) => async () => {
     const supabase = await createClientForServer()
 
-    const baseUrl = process.env.SITE_URL || "https://www.zetarya.com";
+    const baseUrl = process.env.SITE_URL! || "https://www.zetarya.com";
     const auth_callback_url = `${baseUrl}/auth/callback`;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -27,7 +27,7 @@ const signInWith = (provider: any) => async () => {
 const signOut = async () => {
     const supabase = await createClientForServer()
     await supabase.auth.signOut()
-    const baseUrl = process.env.SITE_URL || "https://www.zetarya.com";
+    const baseUrl = process.env.SITE_URL! || "https://www.zetarya.com";
     redirect(baseUrl)
 }
 
