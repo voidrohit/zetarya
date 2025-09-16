@@ -34,7 +34,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
 
     const handlePay = useCallback(async () => {
 
-        if (!serverUser && !serverUser.email) {
+        if (!serverUser) {
 
             router.push(`/signin`);
             return;
