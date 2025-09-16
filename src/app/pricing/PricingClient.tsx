@@ -6,7 +6,7 @@ import Navbar from "@/components/ui/navbar";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const RAZORPAY_KEY_ID = process.env.RZP_KEY_ID!;
+const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RZP_KEY_ID!;
 
 function loadRazorpay(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -33,7 +33,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
     const autoTriggeredRef = useRef(false);
 
     const handlePay = useCallback(async () => {
-        console.log(RAZORPAY_KEY_ID, process.env.RZP_KEY_ID!)
+        console.log(RAZORPAY_KEY_ID, process.env.NEXT_PUBLIC_RZP_KEY_ID!)
         if (!serverUser) {
             
             router.push(`/signin`);
