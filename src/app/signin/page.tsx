@@ -75,7 +75,7 @@ export default function AuthPage() {
             setMessage("OTP verified! Redirecting…");
             redirect("/dashboard")
         } catch (err: any) {
-            setMessage("Invalid code. Please try again.");
+            setMessage(`Invalid code. Please try again ${err}`);
         } finally {
             setLoading(false);
         }
