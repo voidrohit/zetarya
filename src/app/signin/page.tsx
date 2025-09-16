@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { signinWithOtp, signinWithGoogle, verifyOtp } from "@/utils/actions";
-import {redirect} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const BRAND = {
     primary: "#BB254A",
@@ -22,6 +22,8 @@ export default function AuthPage() {
     const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
     const [resendIn, setResendIn] = useState(0);
     const [resendLoading, setResendLoading] = useState(false);
+
+    const router = useRouter();
 
     function GoogleButton() {
         const { pending } = useFormStatus();
@@ -73,7 +75,7 @@ export default function AuthPage() {
             const code = otp.join("");
             await verifyOtp(email, code);
             setMessage("OTP verified! Redirecting…");
-            redirect("/dashboard")
+            router.push("/dashboard");
         } catch (err: any) {
             setMessage(`Invalid code. Please try again ${err}`);
         } finally {
