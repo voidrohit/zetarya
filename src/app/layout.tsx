@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     { rel: "icon", url: "icons/icon-48x48.png" },
   ],
   openGraph: {
-    images: '/opengraph-image.jpg',
+    images: '/opengraph-image.png',
   },
 };
 
