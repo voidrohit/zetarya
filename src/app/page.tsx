@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import Image from "next/image";
 import "./globals.css"
 
@@ -11,6 +11,16 @@ import Navbar from "@/components/ui/navbar"
 import { Cover } from "@/components/ui/cover";
 
 export default function Home() {
+
+    const handleDownload = useCallback(() => {
+        setTimeout(() => {
+            const link = document.createElement("a");
+            link.href = "/download/zetarya_0.1.0_aarch64.pkg"; // path inside public/
+            link.download = "zetarya_0.1.0_aarch64.pkg";
+            link.click();
+        }, 1000); // 2 seconds delay
+    }, []);
+
   return (
     <div className="bg-white flex justify-center align-center flex-col scroll-smooth overflow-hidden">
       <script defer src="https://cloud.umami.is/script.js" data-website-id="520e5182-eaf4-4ed3-9907-598c58f7ba2c"></script>
@@ -22,13 +32,14 @@ export default function Home() {
         <div className="flex max-w-[1280px] w-[90vw] mx-auto pt-[2rem] lg:pt-[3rem] justify-center items-center flex-col relative z-10">
           <div className="main">
               <div className="text-center text-black font-semibold">
-                  <h1 className="text-4xl lg:text-[4rem] lg:leading-[5rem]">Direct transfer files across</h1>
-                  <h1 className="text-4xl lg:text-[4rem] lg:leading-[5rem]">
+                  <h1 className="text-2xl lg:text-[4rem] lg:leading-[5rem]">Direct data transfer across</h1>
+                  <h1 className="text-2xl lg:text-[4rem] lg:leading-[5rem]">
                       globe upto <Cover >1 Gbps</Cover>
                   </h1>
               </div>
             <div className="flex mt-5 h-[100px] justify-center">
               <span
+                  onClick={handleDownload}
                   className="bg-black cursor-pointer w-[350px] h-[50px] rounded-[10px] text-[18px] text-white mt-[22px] font-semibold flex items-center justify-center gap-3
                   transition-all duration-300 ease-in-out
                hover:ring-2 hover:ring-black

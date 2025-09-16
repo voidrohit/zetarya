@@ -166,11 +166,10 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
               </span>
                             <ul className="space-y-3 text-sm">
                                 {[
-                                    "Up to 40 Mbps sustained transfer",
-                                    "5 GB/day fair usage",
-                                    "1 device / location",
-                                    "AES-256 encryption (in-flight)",
-                                    "Email support (48–72h)",
+                                    "Up to 40 Mbps transfer speed",
+                                    "30 GB/month data transfer",
+                                    "TLS encryption",
+                                    "Peer to Peer data transfer",
                                 ].map((f, i) => (
                                     <li key={i} className="flex items-start gap-2">
                                         <svg className="mt-0.5 h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -204,12 +203,11 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
 
                             <ul className="space-y-3 text-sm">
                                 {[
-                                    "Up to 100 Mbps sustained transfer",
-                                    "1 TB/month included",
-                                    "3 devices / locations",
-                                    "AES-256 + TLS, integrity checks",
+                                    "Up to 200 Mbps transfer speed",
+                                    "2 TB/month included",
+                                    "AES-256 + TLS encryption",
                                     "Priority email & chat support",
-                                    "API access & usage analytics",
+                                    "Peer to Peer data transfer"
                                 ].map((f, i) => (
                                     <li key={i} className="flex items-start gap-2">
                                         <svg className="mt-0.5 h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -237,12 +235,14 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
 
                             <ul className="space-y-3 text-sm">
                                 {[
-                                    "Up to 500 Mbps sustained transfer",
+                                    "Up to 1 Gbps transfer speed",
                                     "10 TB/month included",
-                                    "Unlimited devices / locations",
-                                    "End-to-end encryption options",
-                                    "SLA & priority support (4h)",
+                                    "AES-256 + TLS encryption",
+                                    "Priority support",
                                     "Advanced routing & P2P acceleration",
+                                    "On Prem Data transfer under the VPN",
+                                    "API access",
+                                    "Peer to Peer data transfer",
                                     "Dedicated onboarding",
                                 ].map((f, i) => (
                                     <li key={i} className="flex items-start gap-2">
@@ -256,7 +256,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                         </div>
                     </div>
 
-                    <div className="mt-8 text-center text-xs text-gray-500">Overages billed at competitive per-GB rates. Prices are in INR.</div>
+                    {/*<div className="mt-8 text-center text-xs text-gray-500">Overages billed at competitive per-GB rates. Prices are in INR.</div>*/}
                 </div>
             </div>
 
