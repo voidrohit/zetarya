@@ -33,9 +33,8 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
     const autoTriggeredRef = useRef(false);
 
     const handlePay = useCallback(async () => {
-
         if (!serverUser) {
-
+            
             router.push(`/signin`);
             return;
         }
