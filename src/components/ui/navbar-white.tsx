@@ -15,10 +15,10 @@ const Navbar = () => {
     //   id: 2,
     //   link: "blogs",
     // },
-    // {
-    //   id: 3,
-    //   link: "pricing",
-    // },
+    {
+      id: 3,
+      link: "pricing",
+    },
     {
       id: 4,
       link: "company",

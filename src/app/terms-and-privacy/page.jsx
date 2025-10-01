@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
         </div>
         <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mb-4">Terms and Privacy</h1>
-        <p className="text-lg text-gray-600 mb-8">Last update: July 30, 2025</p>
+        <p className="text-lg text-gray-600 mb-8">Last update: October 1, 2025</p>
 
         <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Terms of Use</h2>
@@ -64,7 +64,7 @@ const PrivacyPolicy = () => {
         <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Pricing disclaimer</h2>
             <p className='text-gray-700 mb-4'>
-            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing. A refund may be requested within 24 hours of the purchase of Zetarya services.
+            Prices indicated on this website are subject to change without prior notice from zero2. Request an official quote for the purpose of purchase processing. A refund may be requested within 24 hours of the purchase of Zetarya services. Once the refund request is approved, The Refunded Amount will be processed and credited within 10 days to the original mode of payment.
             </p>
         </section>
         <section className="mb-12">
@@ -110,20 +110,21 @@ const PrivacyPolicy = () => {
                 <div className="">
                     <h2 className="mb-4">CONTACT US</h2>
                     <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
+                    <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
                     <div>
-                        <a href="/docs" className="text-sm hover:underline">Docs</a>
+                        <a href="https://docs.zetarya.com/" className="text-sm hover:underline">Docs</a>
                     </div>
                     <div>
                         <a href="/terms-and-privacy" className="text-sm hover:underline">Term & Privacy</a>
                     </div>
-                    <div>
-                        <a href="/blogs" className="text-sm hover:underline">Blogs</a>
-                    </div>
                     {/*<div>*/}
-                    {/*    <a href="/pricing" className="text-sm hover:underline">Pricing</a>*/}
+                    {/*    <a href="/blogs" className="text-sm hover:underline">Blogs</a>*/}
                     {/*</div>*/}
+                    <div>
+                        <a href="/pricing" className="text-sm hover:underline">Pricing</a>
+                    </div>
                     <div>
                         <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
                     </div>

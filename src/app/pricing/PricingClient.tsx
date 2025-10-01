@@ -6,7 +6,7 @@ import Navbar from "@/components/ui/navbar";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const RAZORPAY_KEY_ID = process.env.RZP_KEY_ID!;
+const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RZP_KEY_ID!;
 
 function loadRazorpay(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -265,17 +265,18 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                     <div>
                         <h2 className="mb-4">CONTACT US</h2>
                         <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
+                        <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
                         <div>
-                            <a href="/docs" className="text-sm hover:underline">Docs</a>
+                            <a href="https://docs.zetarya.com" className="text-sm hover:underline">Docs</a>
                         </div>
                         <div>
                             <a href="/terms-and-privacy" className="text-sm hover:underline">Term & Privacy</a>
                         </div>
-                        <div>
-                            <a href="/blogs" className="text-sm hover:underline">Blogs</a>
-                        </div>
+                        {/*<div>*/}
+                        {/*    <a href="/blogs" className="text-sm hover:underline">Blogs</a>*/}
+                        {/*</div>*/}
                         <div>
                             <a href="/pricing" className="text-sm hover:underline">Pricing</a>
                         </div>

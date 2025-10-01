@@ -21,10 +21,10 @@ const Navbar = () => {
           id: 3,
           link: "docs",
       },
-    {
-      id: 4,
-      link: "company",
-    },
+    // {
+    //   id: 4,
+    //   link: "company",
+    // },
     {
       id: 5,
       link: "contact",
