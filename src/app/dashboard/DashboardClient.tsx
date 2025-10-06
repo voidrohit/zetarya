@@ -128,6 +128,8 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
                     body: JSON.stringify({ email, id, os_type: "web" }),
                 });
                 const payload = await res.json();
+
+                console.log(payload);
                 if (!payload.success) throw new Error(payload.message || "Failed to load user info");
                 if (mounted) {
                     setZeta(payload.data ?? null);

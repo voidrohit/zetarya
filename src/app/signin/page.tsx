@@ -54,11 +54,17 @@ export default function AuthPage() {
         try {
             // TODO: call your "send OTP" API here
             // await sendOtp(email);
-            await signinWithOtp(email)
-            setOtp(Array(OTP_LENGTH).fill(""));
-            setOtpSent(true);
-            setResendIn(45); // cooldown seconds
-            setMessage("We’ve sent a verification code to your email.");
+            const error = await signinWithOtp(email)
+
+            if(error) {
+                setMessage(error.error);
+            } else {
+
+                setOtp(Array(OTP_LENGTH).fill(""));
+                setOtpSent(true);
+                setResendIn(45); // cooldown seconds
+                setMessage("We’ve sent a verification code to your email.");
+            }
         } catch (err: any) {
             setMessage("Failed to send OTP. Please try again.");
         } finally {
@@ -91,9 +97,13 @@ export default function AuthPage() {
         try {
             // TODO: call your "resend OTP" API
             // await resendOtp(email);
-            await signinWithOtp(email);
-            setResendIn(45);
-            setMessage("Code resent.");
+            const error = await signinWithOtp(email);
+            if (error) {
+                setMessage(error.error);
+            } else {
+                setResendIn(45);
+                setMessage("Code resent.");
+            }
         } catch (err: any) {
             setMessage("Could not resend the code. Try again.");
         } finally {

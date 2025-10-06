@@ -42,7 +42,6 @@ const signinWithOtp = async ( email: string) => {
         console.log('error', error)
 
         return {
-            success: null,
             error: error.message,
         }
     }
