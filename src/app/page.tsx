@@ -15,8 +15,8 @@ export default function Home() {
     const handleDownload = useCallback(() => {
         setTimeout(() => {
             const link = document.createElement("a");
-            link.href = "/download/zetarya_0.1.0_aarch64.pkg"; // path inside public/
-            link.download = "zetarya_0.1.0_aarch64.pkg";
+            link.href = "/download/zetarya.pkg"; // path inside public/
+            link.download = "zetarya.pkg";
             link.click();
         }, 1000); // 2 seconds delay
     }, []);
