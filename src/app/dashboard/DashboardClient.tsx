@@ -331,7 +331,7 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
                                             <th className="pb-3 pr-4">Date</th>
                                             <th className="pb-3 pr-4">Plan</th>
                                             <th className="pb-3 pr-4">Amount</th>
-                                            {/*<th className="pb-3 pr-4">Status</th>*/}
+                                            <th className="pb-3 pr-4">Status</th>
                                             <th className="pb-3 pr-4">Payment ID</th>
                                             <th className="pb-3 pr-4">Order ID</th>
                                             <th className="pb-3 pr-4"> </th>
@@ -345,13 +345,13 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
                                                 <td className="py-3 pr-4">
                                                     ₹ {(p.price).toLocaleString(undefined, { maximumFractionDigits: 2 })}
                                                 </td>
-                            {/*                    <td className="py-3 pr-4">*/}
-                            {/*<span className={`inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs font-medium ${*/}
-                            {/*    p.status === "paid" ? "bg-emerald-100 text-emerald-800" : p.status === "failed" ? "bg-red-50 text-red-700" : "bg-neutral-100 text-neutral-700"*/}
-                            {/*}`}>*/}
-                            {/*  {p.status ?? "unknown"}*/}
-                            {/*</span>*/}
-                            {/*                    </td>*/}
+                                                <td className="py-3 pr-4">
+                                                    <span className={`inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs font-medium ${
+                                                        p.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : p.status === "FAILED" ? "bg-red-50 text-red-700" : "bg-neutral-100 text-neutral-700"
+                                                    }`}>
+                                                      {p.status ?? "unknown"}
+                                                    </span>
+                                                </td>
                                                 <td className="py-3 pr-4 break-all text-xs text-neutral-700">{p.payment_id}</td>
                                                 <td className="py-3 pr-4 break-all text-xs text-neutral-700">{p.order_id}</td>
                                                 {/*<td className="py-3 pr-4">*/}

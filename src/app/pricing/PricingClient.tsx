@@ -6,22 +6,6 @@ import Navbar from "@/components/ui/navbar";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RZP_KEY_ID!;
-
-function loadRazorpay(): Promise<boolean> {
-    return new Promise((resolve) => {
-        if (typeof window === "undefined") return resolve(false);
-        if ((window as any).Razorpay) return resolve(true);
-
-        const script = document.createElement("script");
-        script.src = "https://checkout.razorpay.com/v1/checkout.js";
-        script.async = true;
-        script.onload = () => resolve(true);
-        script.onerror = () => resolve(false);
-        document.body.appendChild(script);
-    });
-}
-
 export default function PricingClient({ serverUser }: { serverUser?: any | null }) {
     const [opening, setOpening] = useState(false);
     const session = useSession(); // Session | null
@@ -39,91 +23,36 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
             return;
         }
 
-        const res = await loadRazorpay();
-        if (!res) {
-            alert("Razorpay failed to load!!");
-            return;
-        }
-
         setOpening(true);
         try {
-
-            const orderRes = await fetch("https://login.zetarya.com/genorders", {
+            const orderRes = await fetch("/api/phonepe/payment", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    amount: 149900,
-                    currency: "INR",
+                    email: serverUser?.email,
                 }),
             });
 
             if (!orderRes.ok) {
-                throw new Error(`Order creation failed: ${orderRes.status}`);
+                const errorData = await orderRes.json();
+                throw new Error(errorData.error || `Order creation failed: ${orderRes.status}`);
             }
 
             const orderData = await orderRes.json();
+            console.log(orderData.body.data.fullResponse.redirectUrl);
+            const url = orderData.body.data.fullResponse.redirectUrl
 
-            if (!orderData?.body?.success) {
-                throw new Error(orderData?.body?.message || "Failed to create Razorpay order");
-            }
+            window.location.href = url;
 
-            const orderId = orderData.body.data.id;
-
-            const options: any = {
-                key: RAZORPAY_KEY_ID,
-                amount: orderData.body.data.amount,
-                currency: orderData.body.data.currency,
-                name: "ZERO TWO TECHNOVA PVT. LTD.",
-                description: "Zetarya License Upgrade",
-                image: "https://www.zetarya.com/favicon-32x32.png",
-                order_id: orderId,
-                handler: async function (response: any) {
-                    try {
-                        const res = await fetch("/api/verify-payment", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                payment_id: response.razorpay_payment_id,
-                                order_id: response.razorpay_order_id,
-                                signature: response.razorpay_signature,
-                                email: serverUser.email,
-                            }),
-                        });
-
-                        const json = await res.json();
-                        if (!res.ok || json?.error) {
-                            console.error("verification failed", json);
-                            alert("Payment succeeded but server verification failed.");
-                            return;
-                        }
-
-                        alert(`Payment Success!\nPayment ID: ${response.razorpay_payment_id}`);
-                        // optionally redirect user or update UI
-                    } catch (e) {
-                        console.error("verify call failed", e);
-                        alert("Verification request failed. Contact support.");
-                    }
-                },
-
-                notes: {
-                    address: "Zero Two Technova Pvt. Ltd.",
-                },
-                theme: {
-                    color: "#BB254A",
-                },
-            };
-
-            const rz = new (window as any).Razorpay(options);
-            rz.open();
         } catch (err) {
             console.error(err);
-            alert("Unable to start checkout. Please try again.");
+            alert(err instanceof Error ? err.message : "Unable to start checkout. Please try again.");
         } finally {
             setOpening(false);
         }
-    }, [session, router]);
+    }, [serverUser, router]);
 
     // Auto-trigger payment when user returns with ?pay=plus and session exists
     useEffect(() => {
