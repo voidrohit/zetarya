@@ -279,9 +279,9 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                         <div>
                             <a href="/pricing" className="text-sm hover:underline">Pricing</a>
                         </div>
-                        <div>
-                            <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
-                        </div>
+                        {/*<div>*/}
+                        {/*    <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>*/}
+                        {/*</div>*/}
                         <div>
                             <a href="/contact" className="text-sm hover:underline">Contact</a>
                         </div>
