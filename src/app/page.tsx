@@ -11,6 +11,7 @@ import Navbar from "@/components/ui/navbar"
 import { Cover } from "@/components/ui/cover";
 
 export default function Home() {
+    const [isMac, setIsMac] = useState<boolean | null>(null);
 
     const handleMacDownload = useCallback(() => {
         setTimeout(() => {
@@ -28,6 +29,14 @@ export default function Home() {
             link.download = "zetarya.exe";
             link.click();
         }, 500); // 2 seconds delay
+    }, []);
+
+    const download = isMac ? handleMacDownload : handleWindowsDownload;
+
+    useEffect(() => {
+        // Runs only on client
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        setIsMac(userAgent.includes("mac"));
     }, []);
 
   return (
@@ -48,11 +57,7 @@ export default function Home() {
               </div>
               <div className="flex mt-5 h-[100px] justify-center">
                   <span
-                      onClick={
-                          window.navigator.userAgent.toLowerCase().includes("mac")
-                              ? handleMacDownload
-                              : handleWindowsDownload
-                      }
+                      onClick={download}
                       className="bg-black cursor-pointer w-[350px] h-[50px] rounded-[10px] text-[18px] text-white mt-[22px] font-semibold flex items-center justify-center gap-3
                                transition-all duration-300 ease-in-out
                                hover:ring-2 hover:ring-black
