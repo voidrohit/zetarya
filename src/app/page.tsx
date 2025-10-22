@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import "./globals.css";
 
@@ -16,11 +16,24 @@ function detectIsMacFromUA(): boolean {
 
 export default function Home() {
     const [isMac, setIsMac] = useState<boolean | null>(null);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
         // Detect OS on client mount
         const mac = detectIsMacFromUA();
         setIsMac(mac);
+    }, []);
+
+    useEffect(() => {
+        const v = videoRef.current;
+        if (!v) return;
+        const p = v.play();
+        if (p && typeof p.catch === 'function') {
+            p.catch((err) => {
+                // usually autoplay blocked if not muted; we use muted so this rarely happens
+                console.warn('video play() rejected:', err);
+            });
+        }
     }, []);
 
     const handleMacDownload = useCallback(() => {
@@ -98,9 +111,21 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col justify-center align-center max-w-[1280px] w-[90vw] mx-auto pt-20 lg:pt-[3rem]">
-                <Image src={banner} alt="Banner Image" width={0} height={0} style={{width:'auto', height:'auto'}} className="hidden md:block" />
-                <Image src={bannerMobile} alt="Banner Mobile Image" width={0} height={0} style={{width:'auto', height:'auto'}} className="md:hidden" />
+            <div className="flex flex-col justify-center items-center max-w-[1280px] w-[90vw] mx-auto pt-20 lg:pt-[3rem]">
+                <video
+                    ref={videoRef}
+                    id="hero-video-light"
+                    className="w-full h-auto"
+                    playsInline
+                    autoPlay
+                    muted
+                    loop
+                    preload="auto"
+                >
+                    {/* Correct path: do NOT include /public in the src */}
+                    <source src="/videos/hero-light.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
             </div>
             <div className="flex max-w-[1280px] lg:w-[50vw] w-[90vw] mx-auto flex-col space-y-8 lg:pt-[10rem] pt-32">
                 <div className="space-y-1">
@@ -178,9 +203,9 @@ export default function Home() {
                             <div>
                                 <a href="/pricing" className="text-sm hover:underline">Pricing</a>
                             </div>
-                            {/*<div>*/}
-                            {/*  <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>*/}
-                            {/*</div>*/}
+                            <div>
+                              <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
+                            </div>
                             <div>
                                 <a href="/contact" className="text-sm hover:underline">Contact</a>
                             </div>

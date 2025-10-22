@@ -9,10 +9,10 @@ const Navbar = () => {
   const [nav, setNav] = useState(false);
 
   const links = [
-      // {
-      //   id: 1,
-      //   link: "dashboard",
-      // },
+      {
+        id: 1,
+        link: "dashboard",
+      },
       {
           id: 2,
           link: "pricing",
@@ -21,10 +21,10 @@ const Navbar = () => {
           id: 3,
           link: "docs",
       },
-    // {
-    //   id: 4,
-    //   link: "company",
-    // },
+    {
+      id: 4,
+      link: "company",
+    },
     {
       id: 5,
       link: "contact",
@@ -67,14 +67,14 @@ const Navbar = () => {
               </ul>
           </div>
 
-            {/*<div>*/}
-            {/*    <Link*/}
-            {/*        href="/dashboard"*/}
-            {/*        className="hidden lg:inline-flex h-[30px] items-center justify-center rounded-md bg-[#BB254A] px-4 text-sm font-medium tracking-wide text-white shadow-md hover:bg-[#801336]"*/}
-            {/*    >*/}
-            {/*        Dashboard*/}
-            {/*    </Link>*/}
-            {/*</div>*/}
+            <div>
+                <Link
+                    href="/dashboard"
+                    className="hidden lg:inline-flex h-[30px] items-center justify-center rounded-md bg-[#BB254A] px-4 text-sm font-medium tracking-wide text-white shadow-md hover:bg-[#801336]"
+                >
+                    Dashboard
+                </Link>
+            </div>
 
           <div
               onClick={() => setNav(!nav)}
