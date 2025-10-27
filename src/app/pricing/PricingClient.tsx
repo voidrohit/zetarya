@@ -17,11 +17,11 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
     const autoTriggeredRef = useRef(false);
 
     const handlePay = useCallback(async () => {
-        if (!serverUser) {
-            
-            router.push(`/signin`);
-            return;
-        }
+        // if (!serverUser) {
+        //
+        //     router.push(`/signin`);
+        //     return;
+        // }
 
         setOpening(true);
         try {
@@ -31,18 +31,21 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: serverUser?.email
+                    email: "nextgenrohit@gmail.com"
                 }),
             });
 
             if (!orderRes.ok) {
                 const errorData = await orderRes.json();
+                console.log(errorData);
                 throw new Error(errorData.error || `Order creation failed: ${orderRes.status}`);
             }
 
             const orderData = await orderRes.json();
-            console.log(orderData.body.data.fullResponse.redirectUrl);
-            const url = orderData.body.data.fullResponse.redirectUrl
+
+            console.log(orderData.fullResponse);
+            console.log(orderData.fullResponse.redirectUrl);
+            const url = orderData.fullResponse.redirectUrl
 
             window.location.href = url;
 
