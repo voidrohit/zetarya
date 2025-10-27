@@ -31,8 +31,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: serverUser?.email,
-                    amount: 149900,
+                    email: serverUser?.email
                 }),
             });
 

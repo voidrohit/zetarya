@@ -8,7 +8,7 @@ function generateOrderId() {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { email, amount } = body ?? {};
+        const { email } = body;
 
         if (!email) {
             return NextResponse.json({ success: false, message: "Email is required" }, { status: 400 });
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         const merchantOrderId = generateOrderId();
         const paymentPayload = {
             merchantOrderId,
-            amount: amount ?? 149900, // paise (₹1499.00)
+            amount: 149900, // paise (₹1499.00)
             expireAfter: 3600,
             metaInfo: { email },
             paymentFlow: {
