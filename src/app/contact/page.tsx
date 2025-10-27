@@ -34,7 +34,7 @@ const ContactInfo: React.FC = () => {
                         <h2 className="mb-4">CONTACT US</h2>
                         <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
                         <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
-                        <p className="text-base lg:text-xs mb-4 font-semibold">C-65 Sudarshanpura Industrial Area, Jaipur, Rajasthan, 302006</p>
+                        {/*<p className="text-base lg:text-xs mb-4 font-semibold">C-65 Sudarshanpura Industrial Area, Jaipur, Rajasthan, 302006</p>*/}
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
                         <div>
@@ -49,9 +49,9 @@ const ContactInfo: React.FC = () => {
                         <div>
                             <a href="/pricing" className="text-sm hover:underline">Pricing</a>
                         </div>
-                        {/*<div>*/}
-                        {/*    <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>*/}
-                        {/*</div>*/}
+                        <div>
+                            <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
+                        </div>
                         <div>
                             <a href="/contact" className="text-sm hover:underline">Contact</a>
                         </div>
