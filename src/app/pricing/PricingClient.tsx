@@ -17,11 +17,11 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
     const autoTriggeredRef = useRef(false);
 
     const handlePay = useCallback(async () => {
-        // if (!serverUser) {
-        //
-        //     router.push(`/signin`);
-        //     return;
-        // }
+        if (!serverUser) {
+
+            router.push(`/signin`);
+            return;
+        }
 
         setOpening(true);
         try {
@@ -31,7 +31,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: "nextgenrohit@gmail.com"
+                    email: serverUser?.email
                 }),
             });
 
