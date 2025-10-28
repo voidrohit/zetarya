@@ -44,7 +44,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
             const orderData = await orderRes.json();
 
             console.log(orderData.fullResponse);
-            console.log(orderData.fullResponse.redirectUrl);
+            console.log(serverUser);
             const url = orderData.fullResponse.redirectUrl
 
             window.location.href = url;
