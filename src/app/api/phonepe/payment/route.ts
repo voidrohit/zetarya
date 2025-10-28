@@ -63,9 +63,13 @@ export async function POST(request: NextRequest) {
         const merchantOrderId = generateOrderId();
         const paymentPayload = {
             merchantOrderId,
-            amount: 149900, // paise (₹1499.00)
-            expireAfter: 3600,
-            metaInfo: { email },
+            amount: 10000, // paise (₹1499.00)
+            expireAfter: 600,
+            metaInfo: {
+                email: email,
+                merchantOrderId: merchantOrderId,
+                testing: "testing",
+            },
             paymentFlow: {
                 type: "PG_CHECKOUT",
                 message: "Payment message used for collect requests",
