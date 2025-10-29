@@ -92,9 +92,10 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                                 <span className="text-4xl font-bold">₹0</span>
                                 <span className="text-gray-500">/mo</span>
                             </div>
-                            <span className="mb-8 inline-flex w-full items-center justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50">
-                Get free
-              </span>
+                            <span onClick={() => router.push("/")}
+                                  className="mb-8 cursor-pointer inline-flex w-full items-center justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50">
+                                Get free
+                            </span>
                             <ul className="space-y-3 text-sm">
                                 {[
                                     "Up to 40 Mbps transfer speed",
@@ -123,6 +124,7 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                                 <span className="text-4xl font-bold">₹1,499</span>
                                 <span className="text-gray-500">/mo</span>
                             </div>
+
 
                             <button
                                 onClick={() => handlePay()}
@@ -160,9 +162,10 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                                 <span className="text-4xl font-bold">Custom</span>
                             </div>
 
-                            <span className="mb-8 inline-flex w-full items-center justify-center rounded-xl border border-gray-900 px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white">
-                Talk to Sales
-              </span>
+                            <span onClick={() => router.push("/contact")}
+                                  className="mb-8 cursor-pointer inline-flex w-full items-center justify-center rounded-xl border border-gray-900 px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white">
+                                Talk to Sales
+                            </span>
 
                             <ul className="space-y-3 text-sm">
                                 {[

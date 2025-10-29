@@ -66,9 +66,7 @@ export async function POST(request: NextRequest) {
             amount: 10000, // paise (₹1499.00)
             expireAfter: 600,
             metaInfo: {
-                email: email,
-                merchantOrderId: merchantOrderId,
-                testing: "testing",
+                udf1: email,
             },
             paymentFlow: {
                 type: "PG_CHECKOUT",
