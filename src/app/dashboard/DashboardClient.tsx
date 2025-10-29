@@ -22,6 +22,7 @@ type ZetaUser = {
     license_type: string;
     license_expiry_date?: number | string;
     allowed_data_mb?: number | string;
+    current_month_send: number | string;
 };
 
 type PaymentRow = {
@@ -171,7 +172,7 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
     }, [email, id]);
 
     // Derived UI values
-    const data_send_mb = num(zeta?.data_send_mb);
+    const data_send_mb = num(zeta?.current_month_send);
     const allowed_data_mb = num(zeta?.allowed_data_mb);
     const total_used_mb = data_send_mb;
 

@@ -2,7 +2,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 function generateOrderId() {
-    return `ZT-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    const timestamp = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substring(2, 8);
+    return `order-${timestamp}-${randomPart}`;
 }
 
 export async function POST(request: NextRequest) {
@@ -63,7 +65,7 @@ export async function POST(request: NextRequest) {
         const merchantOrderId = generateOrderId();
         const paymentPayload = {
             merchantOrderId,
-            amount: 10000, // paise (₹1499.00)
+            amount: 149900, // paise (₹1499.00)
             expireAfter: 600,
             metaInfo: {
                 udf1: email,
