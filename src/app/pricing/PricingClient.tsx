@@ -120,21 +120,21 @@ export default function PricingClient({ serverUser }: { serverUser?: any | null 
                                 <h3 className="text-lg font-semibold">Plus</h3>
                                 <p className="mt-1 text-sm text-gray-500">Best for growing teams</p>
                             </div>
-                            {/*<div className="mb-6">*/}
-                            {/*    <span className="text-4xl font-bold">₹1,499</span>*/}
-                            {/*    <span className="text-gray-500">/mo</span>*/}
-                            {/*</div>*/}
-
-                            <div className="mb-6 flex items-baseline space-x-3">
-                                {/* Original price (struck through) */}
-                                <span className="text-3xl font-semibold text-gray-400 line-through">₹1,499</span>
-
-                                {/* Discounted price */}
-                                <div className="flex items-baseline space-x-1">
-                                    <span className="text-4xl font-bold text-black">₹999</span>
-                                    <span className="text-gray-500 text-lg">/mo</span>
-                                </div>
+                            <div className="mb-6">
+                                <span className="text-4xl font-bold">₹1,499</span>
+                                <span className="text-gray-500">/mo</span>
                             </div>
+
+                            {/*<div className="mb-6 flex items-baseline space-x-3">*/}
+                            {/*    /!* Original price (struck through) *!/*/}
+                            {/*    <span className="text-3xl font-semibold text-gray-400 line-through">₹1,499</span>*/}
+
+                            {/*    /!* Discounted price *!/*/}
+                            {/*    <div className="flex items-baseline space-x-1">*/}
+                            {/*        <span className="text-4xl font-bold text-black">₹999</span>*/}
+                            {/*        <span className="text-gray-500 text-lg">/mo</span>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
 
                             <button
                                 onClick={() => handlePay()}

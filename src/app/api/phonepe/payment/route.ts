@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
         const merchantOrderId = generateOrderId();
         const paymentPayload = {
             merchantOrderId,
-            // amount: 149900, // paise (₹1499.00)
-            amount: 99900,
+            amount: 149900, // paise (₹1499.00)
+            // amount: 99900,
             expireAfter: 600,
             metaInfo: {
                 udf1: email,
