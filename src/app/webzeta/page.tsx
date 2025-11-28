@@ -4,7 +4,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import Script from 'next/script';
 import SparkMD5 from 'spark-md5';
 
-const SIGNALING_SERVER = 'wss://52.66.111.222:8080/ws';
+const SIGNALING_SERVER = 'wss://signal.mineger.com/ws';
 const ICE_SERVERS      = [{ urls: 'stun:stun.l.google.com:19302' }];
 const CHUNK_SIZE       = 1024 * 64;       // 64 KiB
 const LIMIT_BPS        = 1024 * 1024 * 50;       // 1 Mbps throttle
