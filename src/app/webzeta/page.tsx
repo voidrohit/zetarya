@@ -2,12 +2,12 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
-import SparkMD5 from 'spark-md5';
 
 const SIGNALING_SERVER = 'wss://signal.mineger.com/ws';
 const ICE_SERVERS      = [{ urls: 'stun:stun.l.google.com:19302' }];
 const CHUNK_SIZE       = 1024 * 64; // 64 KiB
-const LIMIT_BPS        = 1024 * 1024 * 50; // 50 Mbps (throttle, if enabled)
+const LIMIT_BPS        = 1024 * 1024 * 50; // 50 Mbps (only if we throttle)
+const SECRET_KEY       = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
 
 declare global {
     interface Window {
@@ -16,12 +16,12 @@ declare global {
     }
 }
 
-const SECRET_KEY = 'abcdefghijklmnopqrstuwxyz'; // must match on both sides
+/* ---------- Helpers ---------- */
 
-const isIOS = () =>
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-
-/* ---------- Crypto helpers ---------- */
+const isIOS = () => {
+    if (typeof navigator === 'undefined') return false;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+};
 
 const generateIV = () => crypto.getRandomValues(new Uint8Array(12));
 
@@ -41,7 +41,6 @@ async function encryptChunk(
     const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, data);
     const encryptedBytes = new Uint8Array(encrypted);
 
-    // Prepend IV to encrypted data
     const out = new Uint8Array(12 + encryptedBytes.length);
     out.set(iv, 0);
     out.set(encryptedBytes, 12);
@@ -61,7 +60,6 @@ async function decryptChunk(
 /* ---------- Component ---------- */
 
 const HomePage: React.FC = () => {
-    // UI
     const [files, setFiles]                 = useState<FileList | null>(null);
     const [myId, setMyId]                   = useState('');
     const [remoteId, setRemoteId]           = useState('');
@@ -69,25 +67,24 @@ const HomePage: React.FC = () => {
     const [totalBytes, setTotalBytes]       = useState(0);
     const [receivedBytes, setReceivedBytes] = useState(0);
 
-    // Refs
-    const wsRef        = useRef<WebSocket | null>(null);
-    const pcRef        = useRef<RTCPeerConnection | null>(null);
-    const dcRef        = useRef<RTCDataChannel | null>(null);
-    const writerRef    = useRef<WritableStreamDefaultWriter<Uint8Array> | null>(null);
-    const recvHasher   = useRef<SparkMD5.ArrayBuffer | null>(null);
-    const recvStartRef = useRef(0);
-    const expectedName = useRef('');
-    const recvKeyRef   = useRef<CryptoKey | null>(null);
+    const wsRef      = useRef<WebSocket | null>(null);
+    const pcRef      = useRef<RTCPeerConnection | null>(null);
+    const dcRef      = useRef<RTCDataChannel | null>(null);
 
-    // Fallback for platforms with no WritableStream to disk (iOS)
-    const bufferedChunksRef = useRef<Uint8Array[] | null>(null);
+    // where we write on desktop (StreamSaver / FilePicker)
+    const writerRef  = useRef<WritableStreamDefaultWriter<Uint8Array> | null>(null);
+    // where we buffer on iOS / fallback
+    const bufferRef  = useRef<Uint8Array[] | null>(null);
 
-    // Sender-side key
-    const sendKeyRef = useRef<CryptoKey | null>(null);
+    const expectedNameRef = useRef<string>('');
+    const recvKeyRef      = useRef<CryptoKey | null>(null);
+    const sendKeyRef      = useRef<CryptoKey | null>(null);
 
-    // Throttle
+    const recvStartRef    = useRef<number>(0);
+
+    // throttle state (kept simple)
     let sendStart = 0;
-    let bitsSent = 0;
+    let bitsSent  = 0;
 
     const log = (m: string) => setLogs((l) => [...l, m]);
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -122,7 +119,7 @@ const HomePage: React.FC = () => {
             await waitForLowBuffer();
         }
 
-        // Optionally enable throttling:
+        // You can enable throttling if you see spikes:
         // await throttleIfNeeded(buffer.byteLength);
 
         try {
@@ -133,22 +130,18 @@ const HomePage: React.FC = () => {
         }
     }
 
-    /* ---------- Service worker for StreamSaver ---------- */
+    /* ---------- SW for StreamSaver (desktop) ---------- */
 
     useEffect(() => {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker
                 .register('/streamserver-sw.js')
-                .then((reg) => {
-                    log(`🥞 ServiceWorker registered`);
-                })
-                .catch((err) => {
-                    log(`⚠️ ServiceWorker registration failed: ${err}`);
-                });
+                .then(() => log('🥞 ServiceWorker registered'))
+                .catch((err) => log(`⚠️ ServiceWorker registration failed: ${err}`));
         }
     }, []);
 
-    /* ---------- WS signaling setup ---------- */
+    /* ---------- WS signaling ---------- */
 
     useEffect(() => {
         const id = Math.random().toString(36).slice(2, 8);
@@ -175,7 +168,7 @@ const HomePage: React.FC = () => {
         log(`📂 Selected ${selectedFiles.length} file(s)`);
     };
 
-    /* ---------- PeerConnection & DataChannel ---------- */
+    /* ---------- RTCPeerConnection & DataChannel ---------- */
 
     const initPC = (initiator: boolean) => {
         const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
@@ -203,8 +196,12 @@ const HomePage: React.FC = () => {
 
         dc.onopen = async () => {
             log('📡 DataChannel open');
-            // Prepare Crypto key for receiving
-            recvKeyRef.current = await importEncryptionKey(SECRET_KEY);
+            // Only import AES key on non-iOS (we'll skip encryption on iOS to match Toffeshare behavior)
+            if (!isIOS()) {
+                recvKeyRef.current = await importEncryptionKey(SECRET_KEY);
+            } else {
+                recvKeyRef.current = null;
+            }
         };
 
         dc.onmessage = async (ev) => {
@@ -213,43 +210,40 @@ const HomePage: React.FC = () => {
                 switch (msg.type) {
                     case 'file-meta': {
                         recvStartRef.current = performance.now();
-                        expectedName.current = msg.name;
+                        expectedNameRef.current = msg.name;
+
                         setTotalBytes(msg.size);
                         setReceivedBytes(0);
-                        recvHasher.current = new SparkMD5.ArrayBuffer();
 
-                        // Try streaming to disk where possible (desktop)
                         writerRef.current = null;
-                        bufferedChunksRef.current = null;
+                        bufferRef.current = null;
 
                         try {
-                            if (window.showSaveFilePicker && !isIOS()) {
-                                log('📝 Using showSaveFilePicker');
+                            if (!isIOS() && window.showSaveFilePicker) {
+                                log('📝 Using showSaveFilePicker (desktop)');
                                 const handle = await window.showSaveFilePicker({
                                     suggestedName: msg.name,
                                 });
                                 writerRef.current = await handle.createWritable();
-                            } else if (window.streamSaver && !isIOS()) {
-                                log('📝 Using StreamSaver');
+                            } else if (!isIOS() && window.streamSaver) {
+                                log('📝 Using StreamSaver (desktop)');
                                 const fileStream = window.streamSaver.createWriteStream(msg.name, {
                                     size: msg.size,
                                 });
                                 writerRef.current = fileStream.getWriter();
                             } else {
-                                // Fallback: buffer in memory; will turn into Blob at the end
-                                log('🧠 Fallback: buffering in memory (may be limited on mobile)');
-                                bufferedChunksRef.current = [];
+                                // iOS / fallback: buffer in memory, Blob at end (like Toffeshare)
+                                log('🧠 Fallback: buffering chunks in memory (iOS / unsupported browser)');
+                                bufferRef.current = [];
                             }
                         } catch (err: any) {
                             console.error(err);
                             log('❌ Failed to open file for saving: ' + (err?.message || err));
-                            bufferedChunksRef.current = [];
+                            bufferRef.current = [];
                         }
 
-                        if (!writerRef.current && !bufferedChunksRef.current) {
-                            log(
-                                '❌ No valid saving mechanism. Will receive data but cannot save file.'
-                            );
+                        if (!writerRef.current && !bufferRef.current) {
+                            log('❌ No valid saving mechanism; will receive but cannot save file.');
                         } else {
                             log(`📁 Receiving ${msg.name}`);
                         }
@@ -261,35 +255,30 @@ const HomePage: React.FC = () => {
 
                         if (writerRef.current) {
                             await writerRef.current.close();
-                            log(`💾 Saved ${expectedName.current} via stream`);
-                        } else if (bufferedChunksRef.current) {
+                            log(`💾 Saved ${expectedNameRef.current} via stream`);
+                        } else if (bufferRef.current) {
                             try {
-                                const blob = new Blob(bufferedChunksRef.current);
+                                const blob = new Blob(bufferRef.current);
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
                                 a.href = url;
-                                a.download = expectedName.current || 'download.bin';
+                                a.download = expectedNameRef.current || 'download.bin';
                                 document.body.appendChild(a);
                                 a.click();
                                 a.remove();
                                 URL.revokeObjectURL(url);
-                                log(`💾 Saved ${expectedName.current} via Blob download`);
-                            } catch (err) {
+                                log(`💾 Saved ${expectedNameRef.current} via Blob download`);
+                            } catch (err: any) {
                                 console.error(err);
-                                log('❌ Failed to create Blob/download: ' + (err as any)?.message);
+                                log('❌ Failed to create Blob/download: ' + (err?.message || err));
                             } finally {
-                                bufferedChunksRef.current = null;
+                                bufferRef.current = null;
                             }
                         }
 
-                        const finalHash = recvHasher.current?.end();
                         log(`⏱ Received in ${dur.toFixed(2)}s`);
-                        if (finalHash) {
-                            log(`🔑 Final MD5 (receiver): ${finalHash}`);
-                        }
 
-                        expectedName.current = '';
-                        recvHasher.current = null;
+                        expectedNameRef.current = '';
                         setTotalBytes(0);
                         setReceivedBytes(0);
                         break;
@@ -299,35 +288,29 @@ const HomePage: React.FC = () => {
                         break;
                 }
             } else {
-                // Binary data: an encrypted chunk
-                const key = recvKeyRef.current;
-                if (!key) {
-                    log('❌ No decryption key on receiver');
-                    return;
-                }
+                // Binary data (raw or encrypted chunk)
+                const encryptedOrPlain = new Uint8Array(ev.data as ArrayBuffer);
+                let plain: Uint8Array;
 
                 try {
-                    const encrypted = new Uint8Array(ev.data as ArrayBuffer);
-                    const decrypted = await decryptChunk(encrypted, key);
-
-                    // Stream to writer if available, else buffer
-                    if (writerRef.current) {
-                        await writerRef.current.write(decrypted);
-                    } else if (bufferedChunksRef.current) {
-                        bufferedChunksRef.current.push(decrypted);
+                    if (!isIOS() && recvKeyRef.current) {
+                        // desktop with encryption
+                        plain = await decryptChunk(encryptedOrPlain, recvKeyRef.current);
+                    } else {
+                        // iOS: no encryption, data is directly the original bytes
+                        plain = encryptedOrPlain;
                     }
 
-                    // Update MD5 & progress
-                    recvHasher.current?.append(
-                        decrypted.buffer.slice(
-                            decrypted.byteOffset,
-                            decrypted.byteOffset + decrypted.byteLength
-                        )
-                    );
-                    setReceivedBytes((r) => r + decrypted.byteLength);
-                } catch (err) {
+                    if (writerRef.current) {
+                        await writerRef.current.write(plain);
+                    } else if (bufferRef.current) {
+                        bufferRef.current.push(plain);
+                    }
+
+                    setReceivedBytes((r) => r + plain.byteLength);
+                } catch (err: any) {
                     console.error(err);
-                    log('❌ Failed to decrypt/write a chunk: ' + (err as any)?.message);
+                    log('❌ Failed to handle incoming chunk: ' + (err?.message || err));
                 }
             }
         };
@@ -335,7 +318,7 @@ const HomePage: React.FC = () => {
         dcRef.current = dc;
     };
 
-    /* ---------- Signaling handlers ---------- */
+    /* ---------- Signaling handling ---------- */
 
     const handleSignal = async (msg: any) => {
         if (msg.type === 'offer') {
@@ -344,7 +327,7 @@ const HomePage: React.FC = () => {
             await pcRef.current!.setRemoteDescription(msg.offer);
             const answer = await pcRef.current!.createAnswer();
             await pcRef.current!.setLocalDescription(answer);
-            wsRef.current!.send(
+            wsRef.current?.send(
                 JSON.stringify({
                     type: 'answer',
                     answer,
@@ -363,7 +346,7 @@ const HomePage: React.FC = () => {
         initPC(true);
         const offer = await pcRef.current!.createOffer();
         await pcRef.current!.setLocalDescription(offer);
-        wsRef.current!.send(
+        wsRef.current?.send(
             JSON.stringify({
                 type: 'offer',
                 offer,
@@ -372,7 +355,7 @@ const HomePage: React.FC = () => {
         );
     };
 
-    /* ---------- File sending logic (streaming, no pre-buffer) ---------- */
+    /* ---------- File sending (streaming, no full-buffer, no MD5) ---------- */
 
     const sendFiles = async () => {
         if (!files || files.length === 0) return;
@@ -383,26 +366,27 @@ const HomePage: React.FC = () => {
         }
 
         sendStart = performance.now();
-        bitsSent = 0;
-        sendKeyRef.current = await importEncryptionKey(SECRET_KEY);
+        bitsSent  = 0;
+
+        // Only import key for non-iOS; on iOS we send plain bytes (like Toffeshare)
+        if (!isIOS()) {
+            sendKeyRef.current = await importEncryptionKey(SECRET_KEY);
+        } else {
+            sendKeyRef.current = null;
+        }
 
         for (let i = 0; i < files.length; i++) {
             const f = files[i];
             const size = f.size;
             const chunks = Math.ceil(size / CHUNK_SIZE);
 
-            // Pre-calc MD5 of original file (optional, but streaming all at once is heavy).
-            // For large files you may want to skip this or compute on the fly.
-            const md5 = await new SparkMD5.ArrayBuffer().append(await f.arrayBuffer()).end();
-
-            // Send meta
+            // Send metadata
             dc.send(
                 JSON.stringify({
                     type: 'file-meta',
                     name: f.name,
                     size,
                     chunks,
-                    md5,
                 })
             );
 
@@ -412,27 +396,27 @@ const HomePage: React.FC = () => {
                     (1024 * 1024)
                 ).toFixed(2)} MB)`
             );
-            log(`🔑 MD5 (sender): ${md5}`);
 
-            const key = sendKeyRef.current!;
             const t0 = performance.now();
+            const key = sendKeyRef.current;
+            const useEncryption = !!key; // false on iOS
 
-            // Stream chunks sequentially (simpler & more stable for large files)
+            // Stream sequential chunks
             for (let idx = 0; idx < chunks; idx++) {
                 const offset = idx * CHUNK_SIZE;
                 const slice = new Uint8Array(
                     await f.slice(offset, offset + CHUNK_SIZE).arrayBuffer()
                 );
 
-                const encrypted = await encryptChunk(slice, key);
-                await safeSendWithThrottle(encrypted.buffer);
+                const payload = useEncryption ? await encryptChunk(slice, key!) : slice;
 
-                if (idx % 128 === 0 || idx === chunks - 1) {
+                await safeSendWithThrottle(payload.buffer);
+
+                if (idx % 256 === 0 || idx === chunks - 1) {
                     log(`⬆️ Sent chunk ${idx + 1}/${chunks}`);
                 }
             }
 
-            // Send end marker
             dc.send(
                 JSON.stringify({
                     type: 'file-end',
