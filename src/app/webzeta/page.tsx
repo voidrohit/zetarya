@@ -656,10 +656,10 @@ const HomePage: React.FC = () => {
                                 marginBottom: 4,
                             }}
                         >
-                            Zetarya P2P Share
+                            Zetarya - Browser to Browser Transfer
                         </h1>
                         <p style={{ color: '#6b7280', fontSize: 13 }}>
-                            Direct browser-to-browser file transfer.
+                            end-to-end encrypted data transfer
                         </p>
                         <div
                             style={{
