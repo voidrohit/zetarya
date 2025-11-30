@@ -7,7 +7,7 @@ const SIGNALING_SERVER = 'wss://signal.mineger.com/ws';
 const ICE_SERVERS      = [{ urls: 'stun:stun.l.google.com:19302' }];
 const CHUNK_SIZE       = 1024 * 64; // 64 KiB
 const LIMIT_BPS        = 1024 * 1024 * 50; // 50 Mbps (only if we throttle)
-const SECRET_KEY               = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
+const SECRET_KEY       = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
 
 declare global {
     interface Window {
@@ -51,7 +51,7 @@ async function decryptChunk(
     encryptedData: Uint8Array,
     key: CryptoKey
 ): Promise<Uint8Array> {
-    const iv   = encryptedData.slice(0, 12);
+    const iv = encryptedData.slice(0, 12);
     const data = encryptedData.slice(12);
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
     return new Uint8Array(decrypted);
@@ -324,12 +324,9 @@ const HomePage: React.FC = () => {
             setDataChannelOpen(true);
             dataChannelOpenRef.current = true;
             setConnectionStatus('connected');
-
-            // 🔐 Always import encryption key on ALL devices
-            try {
+            if (!isIOS()) {
                 recvKeyRef.current = await importEncryptionKey(SECRET_KEY);
-            } catch (e) {
-                console.error('Failed to import recv key', e);
+            } else {
                 recvKeyRef.current = null;
             }
 
@@ -430,14 +427,15 @@ const HomePage: React.FC = () => {
                         break;
                 }
             } else {
-                const encrypted = new Uint8Array(ev.data as ArrayBuffer);
+                const encryptedOrPlain = new Uint8Array(ev.data as ArrayBuffer);
+                let plain: Uint8Array;
 
                 try {
-                    if (!recvKeyRef.current) {
-                        throw new Error('recvKeyRef is null – cannot decrypt');
+                    if (!isIOS() && recvKeyRef.current) {
+                        plain = await decryptChunk(encryptedOrPlain, recvKeyRef.current);
+                    } else {
+                        plain = encryptedOrPlain;
                     }
-
-                    const plain = await decryptChunk(encrypted, recvKeyRef.current);
 
                     if (writerRef.current) {
                         try {
@@ -454,7 +452,7 @@ const HomePage: React.FC = () => {
 
                     setReceivedBytes((r) => r + plain.byteLength);
                 } catch (err: any) {
-                    console.error('❌ Failed to decrypt/handle incoming chunk:', err);
+                    console.error('❌ Failed to handle incoming chunk:', err);
                 }
             }
         };
@@ -534,11 +532,9 @@ const HomePage: React.FC = () => {
         setSentBytes(0);
         setSendTotalFiles(currentFiles.length);
 
-        // 🔐 Always import send key (no isIOS condition)
-        try {
+        if (!isIOS()) {
             sendKeyRef.current = await importEncryptionKey(SECRET_KEY);
-        } catch (e) {
-            console.error('Failed to import send key', e);
+        } else {
             sendKeyRef.current = null;
         }
 
@@ -563,9 +559,7 @@ const HomePage: React.FC = () => {
 
             const t0  = performance.now();
             const key = sendKeyRef.current;
-            if (!key) {
-                console.error('Send key is null – cannot encrypt, sending plaintext (NOT secure)');
-            }
+            const useEncryption = !!key; // false on iOS
 
             for (let idx = 0; idx < chunks; idx++) {
                 const offset = idx * CHUNK_SIZE;
@@ -573,13 +567,7 @@ const HomePage: React.FC = () => {
                     await f.slice(offset, offset + CHUNK_SIZE).arrayBuffer()
                 );
 
-                let payload: Uint8Array;
-                if (key) {
-                    payload = await encryptChunk(slice, key);
-                } else {
-                    // should not happen normally; fallback to plaintext
-                    payload = slice;
-                }
+                const payload = useEncryption ? await encryptChunk(slice, key!) : slice;
 
                 await safeSendWithThrottle(payload.buffer);
 
@@ -668,10 +656,10 @@ const HomePage: React.FC = () => {
                                 marginBottom: 4,
                             }}
                         >
-                            Zetarya - Browser to Browser Transfer
+                            Zetarya P2P Share
                         </h1>
                         <p style={{ color: '#6b7280', fontSize: 13 }}>
-                            end-to-end encrypted data transfer
+                            Direct browser-to-browser file transfer.
                         </p>
                         <div
                             style={{
@@ -892,7 +880,7 @@ const HomePage: React.FC = () => {
                                         >
                                             Receiver opens this link, waits for connection,
                                             then clicks “Start download”. All files will transfer
-                                            automatically with encryption.
+                                            automatically.
                                         </p>
                                     </div>
                                 )}
