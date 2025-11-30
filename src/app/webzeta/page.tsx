@@ -51,7 +51,7 @@ async function decryptChunk(
     encryptedData: Uint8Array,
     key: CryptoKey
 ): Promise<Uint8Array> {
-    const iv = encryptedData.slice(0, 12);
+    const iv   = encryptedData.slice(0, 12);
     const data = encryptedData.slice(12);
     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
     return new Uint8Array(decrypted);
@@ -324,9 +324,12 @@ const HomePage: React.FC = () => {
             setDataChannelOpen(true);
             dataChannelOpenRef.current = true;
             setConnectionStatus('connected');
-            if (!isIOS()) {
+
+            // 🔐 Always import encryption key on ALL devices
+            try {
                 recvKeyRef.current = await importEncryptionKey(SECRET_KEY);
-            } else {
+            } catch (e) {
+                console.error('Failed to import recv key', e);
                 recvKeyRef.current = null;
             }
 
@@ -427,15 +430,14 @@ const HomePage: React.FC = () => {
                         break;
                 }
             } else {
-                const encryptedOrPlain = new Uint8Array(ev.data as ArrayBuffer);
-                let plain: Uint8Array;
+                const encrypted = new Uint8Array(ev.data as ArrayBuffer);
 
                 try {
-                    if (!isIOS() && recvKeyRef.current) {
-                        plain = await decryptChunk(encryptedOrPlain, recvKeyRef.current);
-                    } else {
-                        plain = encryptedOrPlain;
+                    if (!recvKeyRef.current) {
+                        throw new Error('recvKeyRef is null – cannot decrypt');
                     }
+
+                    const plain = await decryptChunk(encrypted, recvKeyRef.current);
 
                     if (writerRef.current) {
                         try {
@@ -452,7 +454,7 @@ const HomePage: React.FC = () => {
 
                     setReceivedBytes((r) => r + plain.byteLength);
                 } catch (err: any) {
-                    console.error('❌ Failed to handle incoming chunk:', err);
+                    console.error('❌ Failed to decrypt/handle incoming chunk:', err);
                 }
             }
         };
@@ -532,9 +534,11 @@ const HomePage: React.FC = () => {
         setSentBytes(0);
         setSendTotalFiles(currentFiles.length);
 
-        if (!isIOS()) {
+        // 🔐 Always import send key (no isIOS condition)
+        try {
             sendKeyRef.current = await importEncryptionKey(SECRET_KEY);
-        } else {
+        } catch (e) {
+            console.error('Failed to import send key', e);
             sendKeyRef.current = null;
         }
 
@@ -559,7 +563,9 @@ const HomePage: React.FC = () => {
 
             const t0  = performance.now();
             const key = sendKeyRef.current;
-            const useEncryption = !!key; // false on iOS
+            if (!key) {
+                console.error('Send key is null – cannot encrypt, sending plaintext (NOT secure)');
+            }
 
             for (let idx = 0; idx < chunks; idx++) {
                 const offset = idx * CHUNK_SIZE;
@@ -567,7 +573,13 @@ const HomePage: React.FC = () => {
                     await f.slice(offset, offset + CHUNK_SIZE).arrayBuffer()
                 );
 
-                const payload = useEncryption ? await encryptChunk(slice, key!) : slice;
+                let payload: Uint8Array;
+                if (key) {
+                    payload = await encryptChunk(slice, key);
+                } else {
+                    // should not happen normally; fallback to plaintext
+                    payload = slice;
+                }
 
                 await safeSendWithThrottle(payload.buffer);
 
@@ -880,7 +892,7 @@ const HomePage: React.FC = () => {
                                         >
                                             Receiver opens this link, waits for connection,
                                             then clicks “Start download”. All files will transfer
-                                            automatically.
+                                            automatically with encryption.
                                         </p>
                                     </div>
                                 )}
