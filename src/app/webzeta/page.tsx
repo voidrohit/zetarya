@@ -4,7 +4,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 
 const SIGNALING_SERVER = 'wss://signal.mineger.com/ws';
-const ICE_SERVERS      = [{ urls: 'stun:stun.l.google.com:19302' }];
+const ICE_SERVERS = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    {
+        urls: [
+            'turn:turn.zetarya.com:3478?transport=udp',
+            'turn:turn.zetarya.com:3478?transport=tcp',
+        ],
+        username: 'zetarya',
+        credential: 'Qt96BPY%Ux1{',
+    },
+];
+;
 const CHUNK_SIZE       = 1024 * 64; // 64 KiB
 const LIMIT_BPS        = 1024 * 1024 * 50; // 50 Mbps (only if we throttle)
 const SECRET_KEY       = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
