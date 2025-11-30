@@ -7,7 +7,7 @@ const SIGNALING_SERVER = 'wss://signal.mineger.com/ws';
 const ICE_SERVERS      = [{ urls: 'stun:stun.l.google.com:19302' }];
 const CHUNK_SIZE       = 1024 * 64; // 64 KiB
 const LIMIT_BPS        = 1024 * 1024 * 50; // 50 Mbps (only if we throttle)
-const SECRET_KEY       = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
+const SECRET_KEY               = 'abcdefghijklmnopqrstuwxyz'; // same on both sides
 
 declare global {
     interface Window {
