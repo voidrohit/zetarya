@@ -184,6 +184,21 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
     const dleft = daysLeftFromEpoch(zeta?.license_expiry_date);
     const showWarn = usage_pct >= 90;
 
+    // --- NEW: full-page loader until API responses come ---
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div
+                        className="h-10 w-10 rounded-full border-2 border-neutral-200 border-t-[2px] animate-spin"
+                        style={{ borderTopColor: BRAND.primary }}
+                    />
+                    <p className="text-sm text-neutral-500">Loading your dashboard…</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-neutral-50 text-neutral-900">
             <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-8 md:py-10 lg:py-12">
@@ -248,7 +263,7 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
                     </div>
                 </div>
 
-                {/* Loading skeleton */}
+                {/* Loading skeleton (kept, but won't be used now since we early-return on loading) */}
                 {loading && (
                     <div className="mt-6 grid gap-6 sm:mt-8 md:grid-cols-2">
                         {[...Array(4)].map((_, i) => (
@@ -347,11 +362,11 @@ export default function DashboardClient({ initialUser }: { initialUser: InitialU
                                                     ₹ {(p.price).toLocaleString(undefined, { maximumFractionDigits: 2 })}
                                                 </td>
                                                 <td className="py-3 pr-4">
-                                                    <span className={`inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs font-medium ${
-                                                        p.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : p.status === "FAILED" ? "bg-red-50 text-red-700" : "bg-neutral-100 text-neutral-700"
-                                                    }`}>
-                                                      {p.status ?? "unknown"}
-                                                    </span>
+                                                        <span className={`inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs font-medium ${
+                                                            p.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : p.status === "FAILED" ? "bg-red-50 text-red-700" : "bg-neutral-100 text-neutral-700"
+                                                        }`}>
+                                                          {p.status ?? "unknown"}
+                                                        </span>
                                                 </td>
                                                 <td className="py-3 pr-4 break-all text-xs text-neutral-700">{p.payment_id}</td>
                                                 <td className="py-3 pr-4 break-all text-xs text-neutral-700">{p.order_id}</td>
