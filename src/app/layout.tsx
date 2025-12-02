@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Urbanist} from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
+import Script from "next/script";
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -51,8 +52,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={urbanist.className}>
-      <body className="">{children}</body>
+      <body className="">
+      {children}
+      <Script
+          defer
+          src='https://static.cloudflareinsights.com/beacon.min.js'
+          data-cf-beacon='{"token": "796a32ce7e8b4cdc97d74505ea4b4e50"}'
+      />
       <Analytics/>
+      </body>
     </html>
   );
 }
