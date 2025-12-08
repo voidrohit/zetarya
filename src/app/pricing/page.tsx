@@ -3,7 +3,11 @@ import React from "react";
 import PricingClient from "./PricingClient";
 import { createClientForServer } from "@/utils/supabase";
 
-export default async function Page({ searchParams }: { searchParams?: Record<string, string> }) {
+interface PricingPageProps {
+    searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default async function Page({ searchParams }: PricingPageProps) {
     let user = null;
     try {
         const supabase = await createClientForServer();
