@@ -3,12 +3,11 @@ import React from "react";
 import PricingClient from "./PricingClient";
 import { createClientForServer } from "@/utils/supabase";
 
-interface PricingPageProps {
-    searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default async function Page({ searchParams }: PricingPageProps) {
+export default async function Page({
+                                       searchParams,
+                                   }: { searchParams?: Promise<any> }) {
     let user = null;
+
     try {
         const supabase = await createClientForServer();
         const { data } = await supabase.auth.getUser();
@@ -18,6 +17,9 @@ export default async function Page({ searchParams }: PricingPageProps) {
     } catch (err) {
         console.error("server supabase.getUser error:", err);
     }
+
+    // If you ever need them:
+    // const qs = await searchParams; // works even if it's actually just an object
 
     return <PricingClient serverUser={user} />;
 }
