@@ -43,6 +43,13 @@ export const metadata: Metadata = {
   openGraph: {
     images: '/opengraph-image.png',
   },
+    twitter: {
+        card: "summary_large_image",
+        title: "Zetarya - Transfer Files upto 1Gbps",
+        description: "Team collaboration made easy by fast data transfer.",
+        images: ["/opengraph-image.png"],
+        creator: "@zetarya",   // Optional: your Twitter handle
+    },
 };
 
 export default function RootLayout({

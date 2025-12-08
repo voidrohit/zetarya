@@ -1,5 +1,6 @@
 // app/dashboard/page.tsx
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
 import { createClientForServer } from "@/utils/supabase";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
@@ -32,7 +33,10 @@ export default async function Page() {
 
     const userName = user_name ? `@${user_name}` : "User Name Not Set";
     const provider = app_metadata?.provider ?? "—";
-    const osType = detectOsFromUA(headers().get("user-agent"));
+
+    // ✅ Await headers() here
+    const headersList = await headers();
+    const osType = detectOsFromUA(headersList.get("user-agent"));
 
     return (
         <DashboardClient
