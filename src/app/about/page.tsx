@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const STORY = [
-  "In 2023 we were shipping colour-graded footage between two studios eleven kilometres apart. The fastest reliable method was a motorcycle. Everything else meant uploading a terabyte to a data centre in another country so that someone across town could download it back again.",
+  "In 2022 our friend shipping colour-graded footage between two studios eleven kilometres apart. The fastest reliable method was a motorcycle. Everything else meant uploading a terabyte to a data centre in another country so that someone across town could download it back again.",
   "That detour is the default because storing your file is how most products make money. We wanted the other shape: a direct encrypted link between two machines, no copy anywhere else, and every bit of the line you are already paying for.",
   "Zetarya is that link. It runs on desktop and mobile, on our own protocol over UDP, and it keeps nothing. Fifteen of us work on it now, across four time zones, and we still measure every release against a motorcycle.",
 ];
