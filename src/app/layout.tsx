@@ -85,36 +85,6 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://zetarya.com/#organization",
-      name: "Zetarya",
-      url: "https://zetarya.com",
-      logo: "https://zetarya.com/icons/icon-512x512.png",
-      sameAs: ["https://www.zero2.in/"],
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://zetarya.com/#website",
-      name: "Zetarya",
-      url: "https://zetarya.com",
-      publisher: { "@id": "https://zetarya.com/#organization" },
-    },
-    {
-      "@type": "SoftwareApplication",
-      name: "Zetarya",
-      applicationCategory: "UtilitiesApplication",
-      operatingSystem: "macOS, Windows, Linux, iOS, Android",
-      url: "https://zetarya.com",
-      publisher: { "@id": "https://zetarya.com/#organization" },
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    },
-  ],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -123,10 +93,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
       <body className="font-sans antialiased">
-      <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-      />
       {children}
       <Script
           defer

@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 import SiteShell from "@/components/site/site-shell";
 import { Icon } from "@/components/site/icons";
+
+export const metadata: Metadata = {
+  title: "Page not found - Zetarya",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

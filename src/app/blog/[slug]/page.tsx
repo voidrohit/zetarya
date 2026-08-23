@@ -6,6 +6,8 @@ import SiteShell from "@/components/site/site-shell";
 import { Icon } from "@/components/site/icons";
 import { CtaBanner } from "@/components/site/primitives";
 import { POSTS } from "@/lib/site-content";
+import JsonLd from "@/components/site/json-ld";
+import { blogPosting, breadcrumbs, graph, isoDate, webPage } from "@/lib/schema";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -28,26 +30,11 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt,
       url: `/blog/${post.slug}`,
-      publishedTime: new Date(post.date).toISOString(),
+      publishedTime: isoDate(post.date),
       authors: [post.author],
       section: post.category,
     },
     twitter: { card: "summary_large_image", title: post.title, description: post.excerpt },
-  };
-}
-
-function articleJsonLd(post: (typeof POSTS)[number]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
-    datePublished: new Date(post.date).toISOString(),
-    author: { "@type": "Person", name: post.author },
-    publisher: { "@id": "https://zetarya.com/#organization" },
-    mainEntityOfPage: `https://zetarya.com/blog/${post.slug}`,
-    articleSection: post.category,
-    image: "https://zetarya.com/opengraph-image.png",
   };
 }
 
@@ -58,9 +45,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <SiteShell>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post)) }}
+      <JsonLd
+        data={graph(
+          breadcrumbs(`https://zetarya.com/blog/${post.slug}`, [
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]),
+          webPage({
+            path: `/blog/${post.slug}`,
+            name: post.title,
+            description: post.excerpt,
+            trail: [],
+            datePublished: isoDate(post.date),
+            dateModified: isoDate(post.date),
+          }),
+          blogPosting(post),
+        )}
       />
       <article className="measure py-14 sm:py-16">
         <div className="mx-auto max-w-prose">

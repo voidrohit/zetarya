@@ -10,6 +10,8 @@ import {
   SectionHeading,
 } from "@/components/site/primitives";
 import { VALUES } from "@/lib/site-content";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbs, graph, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "About - Zetarya",
@@ -25,6 +27,16 @@ const STORY = [
 export default function AboutPage() {
   return (
     <SiteShell>
+      <JsonLd data={graph(
+        breadcrumbs("https://zetarya.com/about", [{ name: "About", path: "/about" }]),
+        webPage({
+          path: "/about",
+          name: "About - Zetarya",
+          description: "We're building the transfer tool we wished we had.",
+          type: "AboutPage",
+          trail: [],
+        }),
+      )} />
       <PageHero
         eyebrow="ABOUT"
         title="We’re building the transfer tool we wished we had."

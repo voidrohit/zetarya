@@ -6,6 +6,8 @@ import { Reveal } from "@/components/site/reveal";
 import { LogoMark } from "@/components/site/logo";
 import { PageHero, Section } from "@/components/site/primitives";
 import { POSTS } from "@/lib/site-content";
+import JsonLd from "@/components/site/json-ld";
+import { blogIndex, breadcrumbs, graph, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Blog - Zetarya",
@@ -26,6 +28,19 @@ export default function BlogPage() {
 
   return (
     <SiteShell>
+      <JsonLd data={graph(
+        breadcrumbs("https://zetarya.com/blog", [{ name: "Blog", path: "/blog" }]),
+        webPage({
+          path: "/blog",
+          name: "Blog - Zetarya",
+          description:
+            "Throughput experiments, protocol write-ups, and notes from moving very large files.",
+          type: "CollectionPage",
+          trail: [],
+          extra: { mainEntity: { "@id": "https://zetarya.com/blog/#blog" } },
+        }),
+        blogIndex(),
+      )} />
       <PageHero
         eyebrow="BLOG"
         title="Notes from the wire"

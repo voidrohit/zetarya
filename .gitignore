@@ -19,3 +19,7 @@ public/workbox-*.js.map
 
 # opennext build output
 .open-next
+
+# wrangler local state
+.wrangler/
+.open-next/

@@ -11,6 +11,8 @@ import {
   SectionHeading,
 } from "@/components/site/primitives";
 import { COMPARISON, FEATURE_GROUPS } from "@/lib/site-content";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbs, graph, softwareApplication, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Features - Zetarya",
@@ -21,6 +23,18 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <SiteShell>
+      <JsonLd data={graph(
+        breadcrumbs("https://zetarya.com/features", [{ name: "Features", path: "/features" }]),
+        webPage({
+          path: "/features",
+          name: "Features - Zetarya",
+          description:
+            "One encrypted link between two devices, on our own protocol over UDP. Up to 1 Gbps, AES-256 inside TLS 1.3, nothing stored.",
+          trail: [],
+          extra: { mainEntity: { "@id": "https://zetarya.com/#software" } },
+        }),
+        softwareApplication(),
+      )} />
       <PageHero
         eyebrow="FEATURES"
         title={

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
 import LegalPage, { LegalSection } from "@/components/site/legal-page";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbs, graph, isoDate, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Terms of Service - Zetarya",
@@ -108,5 +110,21 @@ const SECTIONS: LegalSection[] = [
 ];
 
 export default function TermsPage() {
-  return <LegalPage title="Terms of Service" updated="12 August 2026" sections={SECTIONS} />;
+  return (
+    <>
+      <JsonLd
+        data={graph(
+          breadcrumbs("https://zetarya.com/terms", [{ name: "Terms of Service", path: "/terms" }]),
+          webPage({
+            path: "/terms",
+            name: "Terms of Service - Zetarya",
+            description: "The terms that govern your use of Zetarya.",
+            trail: [],
+            dateModified: isoDate("12 August 2026"),
+          }),
+        )}
+      />
+      <LegalPage title="Terms of Service" updated="12 August 2026" sections={SECTIONS} />
+    </>
+  );
 }

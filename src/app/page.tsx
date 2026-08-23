@@ -19,6 +19,8 @@ import {
 } from "@/components/site/primitives";
 import { HOME_FEATURES, METRICS, TIERS } from "@/lib/site-content";
 import { DownloadButton, OtherPlatforms } from "@/components/site/platform";
+import JsonLd from "@/components/site/json-ld";
+import { graph, softwareApplication, webPage } from "@/lib/schema";
 
 const TICKER = [
   "2 TB MUMBAI → USA",
@@ -33,6 +35,16 @@ const TICKER = [
 export default function Home() {
   return (
     <SiteShell>
+      <JsonLd data={graph(
+        webPage({
+          path: "/",
+          name: "Zetarya — Transfer files at up to 1 Gbps",
+          description:
+            "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
+          extra: { mainEntity: { "@id": "https://zetarya.com/#software" } },
+        }),
+        softwareApplication(),
+      )} />
       {/* ---------------- hero ---------------- */}
       <section className="measure pb-12 pt-14 text-center sm:pt-20">
         <Reveal>

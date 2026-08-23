@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
 import LegalPage, { LegalSection } from "@/components/site/legal-page";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbs, graph, isoDate, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - Zetarya",
@@ -99,5 +101,21 @@ const SECTIONS: LegalSection[] = [
 ];
 
 export default function PrivacyPage() {
-  return <LegalPage title="Privacy Policy" updated="12 August 2026" sections={SECTIONS} />;
+  return (
+    <>
+      <JsonLd
+        data={graph(
+          breadcrumbs("https://zetarya.com/privacy", [{ name: "Privacy Policy", path: "/privacy" }]),
+          webPage({
+            path: "/privacy",
+            name: "Privacy Policy - Zetarya",
+            description: "What Zetarya collects, why, and what you can do about it.",
+            trail: [],
+            dateModified: isoDate("12 August 2026"),
+          }),
+        )}
+      />
+      <LegalPage title="Privacy Policy" updated="12 August 2026" sections={SECTIONS} />
+    </>
+  );
 }

@@ -4,6 +4,8 @@ import SiteShell from "@/components/site/site-shell";
 import { Reveal } from "@/components/site/reveal";
 import { PageHero } from "@/components/site/primitives";
 import { CHANGELOG } from "@/lib/site-content";
+import JsonLd from "@/components/site/json-ld";
+import { breadcrumbs, graph, webPage } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Changelog - Zetarya",
@@ -13,6 +15,15 @@ export const metadata: Metadata = {
 export default function ChangelogPage() {
   return (
     <SiteShell>
+      <JsonLd data={graph(
+        breadcrumbs("https://zetarya.com/changelog", [{ name: "Changelog", path: "/changelog" }]),
+        webPage({
+          path: "/changelog",
+          name: "Changelog - Zetarya",
+          description: "Every Zetarya release, in reverse order.",
+          trail: [],
+        }),
+      )} />
       <PageHero
         eyebrow="CHANGELOG"
         title="What shipped"
