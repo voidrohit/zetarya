@@ -1,10 +1,10 @@
 export const SPECS = {
-  freeVolume: "30 GB",
-  freeSpeed: "40 Mbps",
+  freeVolume: "25 GB",
+  freeSpeed: "100 Mbps",
   plusVolume: "2 TB",
   plusSpeed: "200 Mbps",
-  proVolume: "10 TB",
-  proSpeed: "1 Gbps",
+  proVolume: "Unlimited",
+  proSpeed: "Unlimited",
   recordVolume: "2 TB",
   recordRoute: "Mumbai → N. Virginia",
   recordTime: "4 h 27 m",
@@ -102,7 +102,7 @@ export const FEATURE_GROUPS = [
       {
         icon: "gauge" as const,
         title: "Up to 1 Gbps",
-        body: "Pro saturates a full gigabit. Our record run held 1 Gbps from Mumbai to N. Virginia.",
+        body: "Pro is uncapped — it takes whatever the link gives it. Our record run held 1 Gbps from Mumbai to N. Virginia.",
       },
       {
         icon: "resume" as const,
@@ -172,8 +172,8 @@ export const TIERS: Tier[] = [
     cta: "Get free",
     highlight: false,
     features: [
-      "Up to 40 Mbps transfer speed",
-      "30 GB/month data transfer",
+      "Up to 100 Mbps transfer speed",
+      "25 GB/month data transfer",
       "TLS encryption",
       "Peer to Peer data transfer",
     ],
@@ -201,8 +201,8 @@ export const TIERS: Tier[] = [
     cta: "Talk to Sales",
     highlight: false,
     features: [
-      "Up to 1 Gbps transfer speed",
-      "10 TB/month included",
+      "Unlimited transfer speed",
+      "Unlimited data transfer",
       "AES-256 + TLS encryption",
       "Advanced routing & P2P acceleration",
       "On-prem data transfer under the VPN",
@@ -215,8 +215,8 @@ export const TIERS: Tier[] = [
 export const PLAN_MATRIX = {
   columns: ["Free", "Plus", "Pro"],
   rows: [
-    ["Monthly data transfer", "30 GB", "2 TB", "10 TB"],
-    ["Transfer speed", "Up to 40 Mbps", "Up to 200 Mbps", "Up to 1 Gbps"],
+    ["Monthly data transfer", "25 GB", "2 TB", "Unlimited"],
+    ["Transfer speed", "Up to 100 Mbps", "Up to 200 Mbps", "Unlimited"],
     ["Peer to peer data transfer", "yes", "yes", "yes"],
     ["TLS encryption", "yes", "yes", "yes"],
     ["AES-256 encryption", "no", "yes", "yes"],
@@ -244,11 +244,11 @@ export const FAQS = [
   },
   {
     q: "What happens when my trial ends?",
-    a: "Your account moves to the Free plan. Nothing is deleted, because nothing was ever stored on our side - your paired devices simply return to 30 GB a month at up to 40 Mbps.",
+    a: "Your account moves to the Free plan. Nothing is deleted, because nothing was ever stored on our side - your paired devices simply return to 25 GB a month at up to 100 Mbps.",
   },
   {
     q: "Is it really peer to peer?",
-    a: "Yes. Devices talk directly over UDP using our own protocol. When a firewall refuses a direct path we fall back to an encrypted AWS relay that carries ciphertext it cannot read.",
+    a: "Yes. Devices talk directly over UDP using our own protocol. When a firewall refuses a direct path we fall back to an encrypted relay that carries ciphertext it cannot read.",
   },
 ];
 
@@ -310,7 +310,7 @@ export const CHANGELOG = [
     tags: [{ kind: "New", label: "Public beta" }],
     title: "Zetarya is open to everyone",
     bullets: [
-      "Desktop, mobile and CLI clients are out of the waitlist. Free stays free: 30 GB a month at up to 40 Mbps.",
+      "Desktop, mobile and CLI clients are out of the waitlist. Free stays free: 25 GB a month at up to 100 Mbps.",
     ],
   },
 ];
@@ -466,7 +466,7 @@ export const POSTS: Post[] = [
       "## What is open today",
       "Desktop apps for macOS, Windows and Linux, clients for iOS and Android, and a CLI for the people who would rather script it. Pairing is six digits typed at both ends. There is no upload queue, because there is no upload.",
       "## The free tier is staying free",
-      "30 GB a month at up to 40 Mbps. No expiry on transfers, no ads, no inviting three friends to unlock anything. We have all watched enough products use a free tier as a countdown timer, and we would rather not run that play. If we ever have to change it, we will say so in advance and in plain language, not in a changelog line.",
+      "25 GB a month at up to 100 Mbps. No expiry on transfers, no ads, no inviting three friends to unlock anything. We have all watched enough products use a free tier as a countdown timer, and we would rather not run that play. If we ever have to change it, we will say so in advance and in plain language, not in a changelog line.",
       "Paid plans exist for people who need real volume and real speed, and they are what funds the relays and the people who maintain them.",
       "## What is not finished",
       "A beta label should mean something, so: Windows has more rough edges than macOS. Very large folder trees take longer to enumerate than they should. Team features are early and will change. Backgrounding is handled well on Android and merely acceptably on iOS.",

@@ -22,7 +22,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://zetarya.com/'),
   title: {
-    default: "Zetarya - Transfer files at up to 1 Gbps",
+    default: "Zetarya — Transfer files at up to 1 Gbps",
     template: "%s",
   },
   description:
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     siteName: "Zetarya",
     locale: "en_US",
     url: "/",
-    title: "Zetarya - Transfer files at up to 1 Gbps",
+    title: "Zetarya — Transfer files at up to 1 Gbps",
     description:
       "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
     images: '/opengraph-image.png',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
     twitter: {
         card: "summary_large_image",
-        title: "Zetarya - Transfer files at up to 1 Gbps",
+        title: "Zetarya — Transfer files at up to 1 Gbps",
         description:
             "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
         images: ["/opengraph-image.png"],

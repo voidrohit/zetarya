@@ -3,7 +3,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import SiteShell from "@/components/site/site-shell";
 import { PricingCard } from "@/components/site/pricing-card";
 import { Reveal } from "@/components/site/reveal";
@@ -18,7 +17,6 @@ export default function PricingClient() {
     const [openFaq, setOpenFaq] = useState<number | null>(0);
     const [email, setEmail] = useState("");
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const searchParams = useSearchParams();
 
     // avoid double auto-trigger
     const autoTriggeredRef = useRef(false);
@@ -50,13 +48,16 @@ export default function PricingClient() {
     // Checkout needs an email to attach the order to. Ask for it, nothing more.
     const handlePay = useCallback(() => dialogRef.current?.showModal(), []);
 
-    // Auto-open checkout when someone lands on ?pay=plus
+    // Auto-open checkout when someone lands on ?pay=plus.
+    // Read from window rather than useSearchParams: the hook opts the whole
+    // page out of prerendering, which would ship /pricing with no crawlable HTML.
     useEffect(() => {
-        if (searchParams?.get("pay") === "plus" && !autoTriggeredRef.current && !opening) {
+        if (autoTriggeredRef.current) return;
+        if (new URLSearchParams(window.location.search).get("pay") === "plus") {
             autoTriggeredRef.current = true;
             handlePay();
         }
-    }, [searchParams, handlePay, opening]);
+    }, [handlePay]);
 
     return (
         <SiteShell>

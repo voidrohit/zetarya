@@ -117,7 +117,7 @@ export function PageHero({
 
 export function CtaBanner({
   title = "Start moving files the direct way.",
-  sub = "Free forever for personal transfers. 30 GB a month, no card, no account to create.",
+  sub = "Free forever for personal transfers. 25 GB a month, no card, no account to create.",
 }: {
   title?: string;
   sub?: string;

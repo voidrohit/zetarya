@@ -7,6 +7,9 @@ const nextConfig = {
         // Strip console.* from production bundles, keeping error/warn.
         removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
     },
+    // Lets a verification build run without clobbering a live `next dev` .next dir:
+    //   BUILD_DIR=.next-verify yarn build
+    distDir: process.env.BUILD_DIR ?? '.next',
     poweredByHeader: false,
     async redirects() {
         return [

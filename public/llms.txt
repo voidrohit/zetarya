@@ -7,7 +7,7 @@ Zetarya runs on its own protocol over UDP rather than on TCP, which is what lets
 ## Product
 
 - [Features](https://zetarya.com/features): pairing, transfer and control capabilities in full
-- [Pricing](https://zetarya.com/pricing): free tier at 30 GB/month up to 40 Mbps; paid tiers up to 10 TB at 1 Gbps
+- [Pricing](https://zetarya.com/pricing): free tier at 25 GB/month up to 100 Mbps; Plus at 2 TB/month up to 200 Mbps; Pro uncapped on volume and speed
 - [Changelog](https://zetarya.com/changelog): release notes by version
 
 ## Writing

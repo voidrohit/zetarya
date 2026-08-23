@@ -185,7 +185,7 @@ export default function TransferPanel() {
                 </span>
               </div>
               <span className="hidden shrink-0 font-mono text-[11px] text-muted sm:inline">
-                plan limit 1 Gbps · 1 recipient
+                record run · 1 Gbps · 1 recipient
               </span>
             </div>
 
