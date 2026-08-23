@@ -8,7 +8,7 @@ import { PageHero, Section } from "@/components/site/primitives";
 import { POSTS } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Blog — Zetarya",
+  title: "Blog - Zetarya",
   description: "Throughput experiments, protocol write-ups, and notes from moving very large files.",
 };
 

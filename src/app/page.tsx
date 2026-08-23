@@ -126,7 +126,7 @@ export default function Home() {
               Every byte, on a timeline
             </h2>
             <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              A year of transfers at a glance — volume per day, throughput per run, and the exact AWS
+              A year of transfers at a glance - volume per day, throughput per run, and the exact AWS
               route each one took.
             </p>
             <Link href="/features" className="link-accent mt-6">
@@ -146,8 +146,8 @@ export default function Home() {
               We use the whole pipe
             </h2>
             <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              We pushed 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes — a sustained 1 Gbps end to
-              end on AWS. Pro runs at that ceiling, and a dropped link resumes at the exact byte.
+              We pushed 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes - a sustained 1 Gbps end to
+              end on AWS EC2 machines. Pro runs at that ceiling, and a dropped link resumes at the exact byte.
             </p>
             <Link href="/features" className="link-accent mt-6">
               See the benchmarks
@@ -162,9 +162,9 @@ export default function Home() {
 
       {/* ---------------- metrics ---------------- */}
       <div className="rule border-b bg-surface">
-        <div className="measure grid grid-cols-2 gap-8 py-14 lg:grid-cols-4">
+        <div className="measure flex flex-wrap justify-center gap-x-16 gap-y-10 py-14">
           {METRICS.map((m, i) => (
-            <Reveal key={m.label} delay={i * 80}>
+            <Reveal key={m.label} delay={i * 80} className="w-[240px]">
               <p className="text-[32px] font-semibold leading-none tracking-[-0.035em] tabular-nums sm:text-[40px]">
                 <CountUp
                   value={m.value}
@@ -184,22 +184,9 @@ export default function Home() {
         <Reveal>
           <blockquote className="mx-auto max-w-[900px] text-center text-[22px] font-semibold leading-[1.35] tracking-[-0.02em] sm:text-[27px] lg:text-[30px]">
             “We were mailing hard drives to the colour grade suite. Now a 400 GB dailies bundle is on
-            their machine before the coffee is poured — and legal stopped asking where the copy lives,
+            their machine before the coffee is poured - and legal stopped asking where the copy lives,
             because there isn’t one.”
           </blockquote>
-        </Reveal>
-        <Reveal delay={100}>
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent">
-              RM
-            </span>
-            <span className="text-left">
-              <span className="block text-sm font-semibold">Rina Mehta</span>
-              <span className="block text-[13px] text-muted">
-                Head of Post Production, Northwind Studios
-              </span>
-            </span>
-          </div>
         </Reveal>
       </Section>
 

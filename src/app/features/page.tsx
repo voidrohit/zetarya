@@ -13,7 +13,7 @@ import {
 import { COMPARISON, FEATURE_GROUPS } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Features — Zetarya",
+  title: "Features - Zetarya",
   description:
     "One encrypted link between two devices, on our own protocol over UDP. Up to 1 Gbps, AES-256 inside TLS 1.3, nothing stored.",
 };

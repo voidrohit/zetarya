@@ -288,7 +288,7 @@ export default function PricingClient() {
 
             <CtaBanner
                 title="Start on Free. Move up when you need to."
-                sub="No account and no card to start — download, pair two devices, and send."
+                sub="No account and no card to start - download, pair two devices, and send."
             />
         </SiteShell>
     );

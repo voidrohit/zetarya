@@ -52,7 +52,7 @@ function fmtClock(sec: number) {
 }
 
 function fmtEta(sec: number) {
-  if (!isFinite(sec) || sec <= 0) return "—";
+  if (!isFinite(sec) || sec <= 0) return "-";
   const s = Math.round(sec);
   const h = Math.floor(s / 3600);
   const m = Math.round((s % 3600) / 60);
@@ -206,7 +206,9 @@ export default function TransferPanel() {
                       className="flex-1 rounded-t-[2px] transition-[height] duration-200 ease-linear"
                       style={{
                         height: `${Math.max(1.5, (v / TARGET_MBPS) * 100)}%`,
-                        background: `rgba(190,42,80,${0.22 + 0.78 * Math.pow(i / (BARS - 1), 1.7)})`,
+                        // backgroundColor, not the `background` shorthand: the browser expands
+                        // the shorthand into longhands and React flags it as a hydration mismatch.
+                        backgroundColor: `rgba(190,42,80,${(0.22 + 0.78 * Math.pow(i / (BARS - 1), 1.7)).toFixed(3)})`,
                       }}
                     />
                   ))}

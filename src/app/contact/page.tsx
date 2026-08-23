@@ -41,7 +41,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="CONTACT"
         title="Let’s talk."
-        sub="Sales, support, security disclosures or press — pick the right door and you’ll hear back within a working day."
+        sub="Sales, support, security disclosures or press - pick the right door and you’ll hear back within a working day."
       />
 
       <div className="measure grid gap-12 pb-20 lg:grid-cols-[1fr_380px] lg:gap-20">
@@ -85,7 +85,7 @@ export default function ContactPage() {
             </Field>
 
             <button type="submit" className="btn-primary btn-lg group">
-              {sent ? "Thanks — we’ll be in touch" : "Send message"}
+              {sent ? "Thanks - we’ll be in touch" : "Send message"}
               {!sent && (
                 <Icon
                   name="arrow-right"
@@ -96,7 +96,7 @@ export default function ContactPage() {
 
             {sent && (
               <p className="animate-fade-in text-[13.5px] text-muted">
-                This form is a demo — for anything urgent, email{" "}
+                This form is a demo - for anything urgent, email{" "}
                 <a href="mailto:admin@zetarya.com" className="font-medium text-accent hover:underline">
                   admin@zetarya.com
                 </a>

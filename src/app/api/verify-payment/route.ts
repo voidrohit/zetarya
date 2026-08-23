@@ -1,4 +1,4 @@
-// minimal forwarder — no verification logic, just forwards body to external API
+// minimal forwarder - no verification logic, just forwards body to external API
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {

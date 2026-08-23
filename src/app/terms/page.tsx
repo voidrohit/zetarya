@@ -3,7 +3,7 @@ import React from "react";
 import LegalPage, { LegalSection } from "@/components/site/legal-page";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Zetarya",
+  title: "Terms of Service - Zetarya",
   description: "The terms that govern your use of Zetarya.",
 };
 
@@ -56,7 +56,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Your content and licence",
     paragraphs: [
-      "Your files remain entirely yours. Because they are transferred directly between endpoints and are never stored by us, we take no licence over them of any kind. Any content you publish in shared account metadata — device names, roster labels — you licence to us only to display it back to your team.",
+      "Your files remain entirely yours. Because they are transferred directly between endpoints and are never stored by us, we take no licence over them of any kind. Any content you publish in shared account metadata - device names, roster labels - you licence to us only to display it back to your team.",
     ],
   },
   {
@@ -92,7 +92,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Governing law and disputes",
     paragraphs: [
-      "These terms are governed by the laws of India. The courts of Jaipur have exclusive jurisdiction, save that either party may seek injunctive relief in any competent court. We will always try to resolve a dispute informally first — write to admin@zetarya.com.",
+      "These terms are governed by the laws of India. The courts of Jaipur have exclusive jurisdiction, save that either party may seek injunctive relief in any competent court. We will always try to resolve a dispute informally first - write to admin@zetarya.com.",
     ],
   },
   {

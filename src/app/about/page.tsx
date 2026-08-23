@@ -12,7 +12,7 @@ import {
 import { VALUES } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "About — Zetarya",
+  title: "About - Zetarya",
   description: "We're building the transfer tool we wished we had.",
 };
 

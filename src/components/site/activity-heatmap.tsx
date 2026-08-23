@@ -38,7 +38,7 @@ export default function ActivityHeatmap({ weeks = 38 }: { weeks?: number }) {
                 key={r}
                 className="aspect-square w-full rounded-[2px] transition-all duration-500"
                 style={{
-                  background: LEVELS[lvl],
+                  backgroundColor: LEVELS[lvl],
                   opacity: inView ? 1 : 0,
                   transform: inView ? "scale(1)" : "scale(.4)",
                   transitionDelay: `${c * 12 + r * 6}ms`,
@@ -54,7 +54,7 @@ export default function ActivityHeatmap({ weeks = 38 }: { weeks?: number }) {
         <span className="flex items-center gap-1.5">
           less
           {LEVELS.map((c, i) => (
-            <span key={i} className="h-2.5 w-2.5 rounded-[2px]" style={{ background: c }} />
+            <span key={i} className="h-2.5 w-2.5 rounded-[2px]" style={{ backgroundColor: c }} />
           ))}
           more
         </span>

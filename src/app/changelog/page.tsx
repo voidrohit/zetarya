@@ -6,7 +6,7 @@ import { PageHero } from "@/components/site/primitives";
 import { CHANGELOG } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Changelog — Zetarya",
+  title: "Changelog - Zetarya",
   description: "Every Zetarya release, in reverse order.",
 };
 

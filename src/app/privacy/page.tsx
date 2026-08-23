@@ -3,7 +3,7 @@ import React from "react";
 import LegalPage, { LegalSection } from "@/components/site/legal-page";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Zetarya",
+  title: "Privacy Policy - Zetarya",
   description: "What Zetarya collects, why, and what you can do about it.",
 };
 
@@ -18,7 +18,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Information you provide",
     paragraphs: [
-      "Account details: your name, email address, and — for paid accounts — billing contact and company name. Payment card data is handled by our payment processor and never touches our servers.",
+      "Account details: your name, email address, and - for paid accounts - billing contact and company name. Payment card data is handled by our payment processor and never touches our servers.",
       "Support correspondence: anything you send us in a ticket, including logs you choose to attach.",
     ],
   },
@@ -32,13 +32,13 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "What we never collect",
     paragraphs: [
-      "File contents, file names, folder structures, and encryption keys. These are generated and held on your devices. We are not technically able to read them, including when compelled by a lawful request.",
+      "File contents, folder structures, and encryption keys. These are generated and held on your devices. We are not technically able to read them, including when compelled by a lawful request.",
     ],
   },
   {
     heading: "How we use your information",
     paragraphs: [
-      "To operate and secure the service, run the AWS fast path, bill paid accounts, respond to support requests, and diagnose faults.",
+      "To operate and secure the service, bill paid accounts, respond to support requests, and diagnose faults.",
       "We do not sell personal data, and we do not use your data to train machine learning models.",
     ],
   },
@@ -58,13 +58,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "How we share information",
     paragraphs: [
-      "With subprocessors listed below, under written data-processing terms. With authorities where legally required — noting that we cannot produce file contents we do not hold. With an acquirer, in the event of a merger, subject to this policy.",
-    ],
-  },
-  {
-    heading: "Third-party subprocessors",
-    paragraphs: [
-      "Amazon Web Services (all transfer infrastructure — Mumbai, Frankfurt and N. Virginia), PhonePe (payments, India) and Vercel (site hosting and analytics).",
+      "With subprocessors listed below, under written data-processing terms. With authorities where legally required - noting that we cannot produce file contents we do not hold. With an acquirer, in the event of a merger, subject to this policy.",
     ],
   },
   {
@@ -84,12 +78,6 @@ const SECTIONS: LegalSection[] = [
     paragraphs: [
       "Depending on where you live, you may request access, correction, deletion, portability, restriction, or object to processing. Write to admin@zetarya.com and we will respond within 30 days.",
       "You also have the right to complain to your local supervisory authority.",
-    ],
-  },
-  {
-    heading: "International transfers",
-    paragraphs: [
-      "Our AWS infrastructure runs in Mumbai, Frankfurt and N. Virginia. Where data moves outside your region we rely on Standard Contractual Clauses and, for India, the transfer provisions of the DPDP Act.",
     ],
   },
   {

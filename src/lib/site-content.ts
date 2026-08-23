@@ -137,8 +137,7 @@ export const FEATURE_GROUPS = [
 export const METRICS = [
   { value: 1, suffix: " Gbps", label: "peak on our Mumbai → US run", decimals: 0 },
   { value: 0, suffix: " bytes", label: "of your data stored by us", decimals: 0 },
-  { value: 4.45, prefix: "", suffix: " hrs", label: "to move 2 TB, Mumbai → N. Virginia", decimals: 2 },
-  { value: 3, suffix: "", label: "AWS regions on the fast path", decimals: 0 },
+  { value: 4.45, prefix: "", suffix: " hrs", label: "to move 2 TB, Mumbai → USA", decimals: 2 },
 ];
 
 export const COMPARISON = {
@@ -150,7 +149,7 @@ export const COMPARISON = {
     ["Encryption", "AES-256 inside TLS 1.3", "At rest, provider holds keys", "In transit only"],
     ["Resume after a dropped link", "Byte-exact", "Restarts the chunk", "Restarts the upload"],
     ["Recipient needs an account", "No", "Usually", "No"],
-    ["Retention you have to manage", "None — nothing is stored", "Quotas and lifecycle rules", "Link expiry dates"],
+    ["Retention you have to manage", "None - nothing is stored", "Quotas and lifecycle rules", "Link expiry dates"],
   ],
 };
 
@@ -237,7 +236,7 @@ export const FAQS = [
   },
   {
     q: "Does the receiver need a plan?",
-    a: "Your plan covers the devices signed in to your account. The person you send to is a guest — guests are free, and there is no limit on them.",
+    a: "Your plan covers the devices signed in to your account. The person you send to is a guest - guests are free, and there is no limit on them.",
   },
   {
     q: "Do you offer student or open-source discounts?",
@@ -245,7 +244,7 @@ export const FAQS = [
   },
   {
     q: "What happens when my trial ends?",
-    a: "Your account moves to the Free plan. Nothing is deleted, because nothing was ever stored on our side — your paired devices simply return to 30 GB a month at up to 40 Mbps.",
+    a: "Your account moves to the Free plan. Nothing is deleted, because nothing was ever stored on our side - your paired devices simply return to 30 GB a month at up to 40 Mbps.",
   },
   {
     q: "Is it really peer to peer?",
@@ -357,7 +356,7 @@ export const POSTS: Post[] = [
       "The second change was to stop treating a transfer as one long stream. Files go out as fixed-size chunks, each carrying its own hash. The receiver commits them as they land, in whatever order they land, and can verify the finished file without reading the whole thing back off the disk a second time.",
       "This bought us more than throughput. Resume came almost free, and an entire family of “we were at 94% and then something moved” failures stopped existing.",
       "## Three things we threw away",
-      "Compression on the wire. Most of what people send us is already compressed — camera footage, disk images, archives. On the small fraction that isn’t, the CPU cost showed up as a throughput dip on thin laptops and lost more than it ever returned.",
+      "Compression on the wire. Most of what people send us is already compressed - camera footage, disk images, archives. On the small fraction that isn’t, the CPU cost showed up as a throughput dip on thin laptops and lost more than it ever returned.",
       "An adaptive chunk size. On a whiteboard this is obviously correct. Two weeks of measurement put the gain inside the noise, and it made every bug report harder to reproduce, because no two runs were shaped the same.",
       "A third loss-recovery mode, for the awkward case in the middle. We could never write down the situation it was for without hand-waving. If you cannot describe when a heuristic fires, it will fire when you least want it to.",
       "## Where it actually sits",
@@ -378,10 +377,10 @@ export const POSTS: Post[] = [
     date: "2 August 2026",
     read: "6 min",
     body: [
-      "“We never hold your keys” is the sort of sentence every product says, so it is worth spelling out what it means here — and, more usefully, what it does not mean.",
+      "“We never hold your keys” is the sort of sentence every product says, so it is worth spelling out what it means here - and, more usefully, what it does not mean.",
       "## What happens when you read out six digits",
       "The six digits are not a password, and they are not the encryption key. The keys for a transfer are generated fresh on your two devices, used for that session, and thrown away. Neither of them is ever sent anywhere, to us or to anyone else. The content itself is encrypted with AES-256 inside TLS 1.3, which is deliberately the least surprising choice available.",
-      "The code is doing one specific job. Two machines can agree on a shared secret across an open network without an eavesdropper learning it — that part is old, settled mathematics. What that alone cannot tell you is whether you agreed with the right machine. The digits close that gap, because they are derived from the exchange the two devices just performed. If somebody sat in the middle and ran their own exchange with each side, the digits on the two screens would not match. That is the whole reason we ask you to compare them out loud rather than just tapping Accept.",
+      "The code is doing one specific job. Two machines can agree on a shared secret across an open network without an eavesdropper learning it - that part is old, settled mathematics. What that alone cannot tell you is whether you agreed with the right machine. The digits close that gap, because they are derived from the exchange the two devices just performed. If somebody sat in the middle and ran their own exchange with each side, the digits on the two screens would not match. That is the whole reason we ask you to compare them out loud rather than just tapping Accept.",
       "## What we can see",
       "Our servers help two devices find each other, and when a network refuses to allow a direct path, traffic can be relayed through us. Relayed or not, what passes through is ciphertext we hold no key for.",
       "We can see that a device with a short-lived identifier is sending to another one, roughly how much, and for how long. We cannot see file names, file contents, or folder structure. Those never leave your device in a readable form.",
@@ -412,7 +411,7 @@ export const POSTS: Post[] = [
       "When the two devices reconnect, they compare maps before a single byte of content moves. Whatever the receiver already holds is skipped; whatever it is missing gets queued. On a 2 TB transfer that conversation takes a couple of seconds.",
       "## The part that was actually hard",
       "Deciding what “committed” means. A chunk sitting in the operating system’s write cache is not the same thing as a chunk on the disk, and being wrong in the optimistic direction is the worst possible failure here: you resume into a file that is quietly corrupt and verifies as fine.",
-      "So the receiver only records a chunk in the map once it is genuinely durable. That costs a little throughput and buys the guarantee that the map never lies. At the end, hashes are checked against the file that exists on the disk — not against the version we hoped we had written.",
+      "So the receiver only records a chunk in the map once it is genuinely durable. That costs a little throughput and buys the guarantee that the map never lies. At the end, hashes are checked against the file that exists on the disk - not against the version we hoped we had written.",
       "The other hard part was networks that change identity underneath you. Moving from Wi-Fi to mobile mid-transfer should not be a reconnection at all; the session simply carries on over a new path. Getting that to be true rather than nearly true took two rewrites.",
       "## What it feels like now",
       "Close the lid at 94%, open it in the morning, and the bar picks up roughly where it was after a short pause while both ends agree on the map. A transfer cancelled and resumed a week later behaves the same way, as long as neither the source file nor the partial file has been touched since.",
@@ -434,7 +433,7 @@ export const POSTS: Post[] = [
     body: [
       "Getting two ordinary consumer machines to talk directly to each other is the least glamorous problem at this company and the one that generates the most support tickets. So we instrumented it properly: 1.4 million connection attempts across home broadband, office networks, campus Wi-Fi and mobile, each tagged with what it tried, what worked, and how long it took to work.",
       "## Why this is hard at all",
-      "Almost nothing on the internet has an address another device can simply dial. Your laptop sits behind a router doing network address translation — a private address indoors, a shared public one outdoors. NAT was designed so that many devices could reach out to servers. It was never designed so that two of them could find each other.",
+      "Almost nothing on the internet has an address another device can simply dial. Your laptop sits behind a router doing network address translation - a private address indoors, a shared public one outdoors. NAT was designed so that many devices could reach out to servers. It was never designed so that two of them could find each other.",
       "The standard way through is hole punching. Both devices ask a server we run how they appear from the outside, then start sending to each other at the same moment. Each side’s outgoing packet opens a temporary path through its own router, and the other side’s packet arrives just in time to look like the reply that path was expecting. It works far more often than it sounds like it should.",
       "## What the numbers said",
       "97% of attempts get a direct path, most on the first try, most in well under a second. The interesting part was the shape of the remaining 3%.",
@@ -443,7 +442,7 @@ export const POSTS: Post[] = [
       "Corporate networks that block outbound UDP wholesale. There is no clever trick for this one. It is a policy decision made by somebody who is not in the room.",
       "Mobile networks that move you between towers mid-transfer. The path you established is simply no longer the path, and the whole introduction has to happen again while a transfer is already running.",
       "## The relay you hope not to need",
-      "When no direct path can be built, the transfer falls back to a relay and our servers pass the encrypted bytes through. We run them in three regions so the detour is usually short. It is slower than direct, sometimes considerably, and we label it in the client rather than hiding it — a user who can see the word “relayed” has a chance of moving to a different network.",
+      "When no direct path can be built, the transfer falls back to a relay and our servers pass the encrypted bytes through. We run them in three regions so the detour is usually short. It is slower than direct, sometimes considerably, and we label it in the client rather than hiding it - a user who can see the word “relayed” has a chance of moving to a different network.",
       "The relays cannot read anything they carry; keys never reach them. But a relayed transfer costs us money and costs you speed, so nearly all the effort here went into shrinking the 3% rather than making the fallback more comfortable.",
       "## The thing we got wrong for a year",
       "For a long time we tried the direct path, waited for it to fail, and then fell back. The waiting was the whole problem: a network that will never work takes exactly as long to time out as one that is merely being slow, so the worst experience was reserved for the users with the worst networks.",
@@ -463,7 +462,7 @@ export const POSTS: Post[] = [
     read: "3 min",
     body: [
       "Zetarya is out of the waitlist. Desktop, mobile and the CLI are open to everyone from today, and you do not need an invite from anybody.",
-      "We built this because the honest way to move a terabyte in 2026 was still to put it on a disk and hand the disk to a human being. Everything else asked you to upload the file into somebody’s cloud, wait, and then ask the other person to download it back out — two copies, two waits, and a stranger holding your footage in the middle.",
+      "We built this because the honest way to move a terabyte in 2026 was still to put it on a disk and hand the disk to a human being. Everything else asked you to upload the file into somebody’s cloud, wait, and then ask the other person to download it back out - two copies, two waits, and a stranger holding your footage in the middle.",
       "## What is open today",
       "Desktop apps for macOS, Windows and Linux, clients for iOS and Android, and a CLI for the people who would rather script it. Pairing is six digits typed at both ends. There is no upload queue, because there is no upload.",
       "## The free tier is staying free",
@@ -489,7 +488,7 @@ export const POSTS: Post[] = [
       "Northwind Studios finishes around forty commercial spots a year. Their colourist works in Lisbon, their edit suite is in London, and until last year the reliable way to get a day’s rushes between the two was a courier with a hard drive on an evening flight.",
       "This is not really a story about a feature. It is a story about what a working day looks like once a nine-hour dependency is removed from the middle of it.",
       "## What the old day looked like",
-      "The shoot wraps around 7pm. An assistant copies the day’s cards to two drives — one for the shelf, one for the courier. The courier collects at 9pm, the drive flies overnight, and Lisbon has the material by about 10am. Which means notes come back the following afternoon: two days of latency wrapped around a creative decision that takes twenty minutes to make.",
+      "The shoot wraps around 7pm. An assistant copies the day’s cards to two drives - one for the shelf, one for the courier. The courier collects at 9pm, the drive flies overnight, and Lisbon has the material by about 10am. Which means notes come back the following afternoon: two days of latency wrapped around a creative decision that takes twenty minutes to make.",
       "The cloud version they had tried before was worse in an interesting way. The upload out of London ran overnight anyway, and then Lisbon still had to pull it all down before anyone could look at anything. They had turned one nine-hour wait into two five-hour ones, and paid for storage in between.",
       "## What they do now",
       "The assistant starts the transfer from the machine that already holds the rushes, reads six digits down the phone to Lisbon, and goes home. The bytes travel from the London box to the Lisbon box. Nothing is uploaded anywhere first, which is why the wait is about the size of the file and the link, rather than the size of the file twice over.",
@@ -516,7 +515,7 @@ export const POSTS: Post[] = [
       "Every organisation that buys software for a team eventually asks for an audit log, and they are right to. Somebody has to be able to answer “who moved what, and when” after an incident. We spent an uncomfortable number of meetings on what the second word in that sentence is allowed to mean.",
       "## The easy version, and why we did not ship it",
       "The obvious audit log records file names. It is trivial to build, since the client already knows the name, and it is what every admin is picturing when they ask.",
-      "But the file name is frequently the most sensitive part of the entire transfer. Redundancies_Final_March.xlsx. patient_1993_scan.dcm. AcquisitionTarget_DD.zip. A log full of names is a searchable index of everything an organisation is currently thinking about — and it would live on our servers, which is precisely where the file contents deliberately never go. We would have built the exact thing our architecture exists to avoid, and then parked it somewhere easier to reach than any of the files it describes.",
+      "But the file name is frequently the most sensitive part of the entire transfer. Redundancies_Final_March.xlsx. patient_1993_scan.dcm. AcquisitionTarget_DD.zip. A log full of names is a searchable index of everything an organisation is currently thinking about - and it would live on our servers, which is precisely where the file contents deliberately never go. We would have built the exact thing our architecture exists to avoid, and then parked it somewhere easier to reach than any of the files it describes.",
       "## What the log actually holds",
       "Who sent, who received, when, how much, from which device, over what kind of path, and whether it completed. That answers the questions that genuinely get asked during an incident: did data leave, to whom, how much of it, and when. It answers them without our servers ever learning the name of anything.",
       "## Where names do live",
