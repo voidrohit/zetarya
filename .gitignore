@@ -16,3 +16,6 @@ public/sw.js.map
 public/workbox-*.js
 public/workbox-*.js.map
 .next-verify
+
+# opennext build output
+.open-next
