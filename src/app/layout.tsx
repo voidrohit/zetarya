@@ -1,19 +1,34 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-import { Urbanist} from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import Script from "next/script";
 
-const urbanist = Urbanist({
-  subsets: ['latin'],
-  weight: ['200', '400', '500', '600', '800'],
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zetarya.com/'),
-  title: "Zetarya - Transfer Files upto 1Gbps",
-  description: "Team collaboration made easy by fast data transfer.",
+  title: {
+    default: "Zetarya — Transfer files at up to 1 Gbps",
+    template: "%s",
+  },
+  description:
+    "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
+  // Resolves relative to the current route, so every page gets its own canonical.
+  alternates: { canonical: "./" },
   manifest: "/manifest.json",
   keywords: [
       "high speed data transfer", "1Gbps",
@@ -27,29 +42,77 @@ export const metadata: Metadata = {
       "resilio",
       "zetarya"
   ],
-  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fff" }],
   authors: [
     {
       name: "zero2",
       url: "https://www.zero2.in/",
     },
   ],
-  viewport:
-      "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
     { rel: "apple-touch-icon", url: "icons/icon-72x72.png" },
     { rel: "icon", url: "icons/icon-48x48.png" },
   ],
   openGraph: {
+    type: "website",
+    siteName: "Zetarya",
+    locale: "en_US",
+    url: "/",
+    title: "Zetarya — Transfer files at up to 1 Gbps",
+    description:
+      "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
     images: '/opengraph-image.png',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
     twitter: {
         card: "summary_large_image",
-        title: "Zetarya - Transfer Files upto 1Gbps",
-        description: "Team collaboration made easy by fast data transfer.",
+        title: "Zetarya — Transfer files at up to 1 Gbps",
+        description:
+            "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
         images: ["/opengraph-image.png"],
         creator: "@zetarya",   // Optional: your Twitter handle
     },
+};
+
+export const viewport: Viewport = {
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fff" }],
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: "cover",
+};
+
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://zetarya.com/#organization",
+      name: "Zetarya",
+      url: "https://zetarya.com",
+      logo: "https://zetarya.com/icons/icon-512x512.png",
+      sameAs: ["https://www.zero2.in/"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://zetarya.com/#website",
+      name: "Zetarya",
+      url: "https://zetarya.com",
+      publisher: { "@id": "https://zetarya.com/#organization" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Zetarya",
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "macOS, Windows, Linux, iOS, Android",
+      url: "https://zetarya.com",
+      publisher: { "@id": "https://zetarya.com/#organization" },
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -58,8 +121,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={urbanist.className}>
-      <body className="">
+    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
+      <body className="font-sans antialiased">
+      <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       {children}
       <Script
           defer

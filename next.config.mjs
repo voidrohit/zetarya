@@ -3,10 +3,12 @@ import withPWA from 'next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,      // Enable React strict mode for improved error handling
-    swcMinify: true,            // Enable SWC minification for improved performance
     compiler: {
-        // removeConsole: process.env.NODE_ENV !== "development"     // Remove console.log in production
+        // Strip console.* from production bundles, keeping error/warn.
+        removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
     },
+    poweredByHeader: false,
+    compress: true,
     images: {
         remotePatterns: [
             {

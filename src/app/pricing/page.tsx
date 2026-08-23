@@ -1,25 +1,17 @@
-export const dynamic = 'force-dynamic';
-import React from "react";
+import React, { Suspense } from "react";
+import type { Metadata } from "next";
 import PricingClient from "./PricingClient";
-import { createClientForServer } from "@/utils/supabase";
 
-export default async function Page({
-                                       searchParams,
-                                   }: { searchParams?: Promise<any> }) {
-    let user = null;
+export const metadata: Metadata = {
+  title: "Pricing — Zetarya",
+  description:
+    "Free at 30 GB a month. Plus and Pro scale to 10 TB at up to 1 Gbps. No egress fees and nothing expires.",
+};
 
-    try {
-        const supabase = await createClientForServer();
-        const { data } = await supabase.auth.getUser();
-        user = data?.user ?? null;
-
-        console.log(user);
-    } catch (err) {
-        console.error("server supabase.getUser error:", err);
-    }
-
-    // If you ever need them:
-    // const qs = await searchParams; // works even if it's actually just an object
-
-    return <PricingClient serverUser={user} />;
+export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <PricingClient />
+    </Suspense>
+  );
 }

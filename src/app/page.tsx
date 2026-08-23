@@ -1,219 +1,233 @@
 "use client";
-import React, { useCallback, useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import "./globals.css";
 
-import banner from "@/statics/img.png";
-import bannerMobile from "@/statics/img.png";
+import Link from "next/link";
+import React from "react";
+import SiteShell from "@/components/site/site-shell";
+import TransferPanel from "@/components/site/transfer-panel";
+import ActivityHeatmap from "@/components/site/activity-heatmap";
+import ThroughputChart from "@/components/site/throughput-chart";
+import { CountUp } from "@/components/site/count-up";
+import { Reveal } from "@/components/site/reveal";
+import { Icon } from "@/components/site/icons";
+import { PricingCard } from "@/components/site/pricing-card";
+import {
+  CtaBanner,
+  Eyebrow,
+  FeatureBlock,
+  Section,
+  SectionHeading,
+} from "@/components/site/primitives";
+import { HOME_FEATURES, METRICS, TIERS } from "@/lib/site-content";
+import { DownloadButton, OtherPlatforms } from "@/components/site/platform";
 
-import Navbar from "@/components/ui/navbar";
-import { Cover } from "@/components/ui/cover";
-
-function detectIsMacFromUA(): boolean {
-    if (typeof navigator === "undefined") return false;
-    return navigator.userAgent.toLowerCase().includes("mac");
-}
+const TICKER = [
+  "2 TB MUMBAI → USA",
+  "4 H 27 M",
+  "1 GBPS SUSTAINED",
+  "AES-256 + TLS 1.3 INSIDE",
+  "OUR OWN PROTOCOL · UDP",
+  "0 BYTES STORED",
+  "BYTE-EXACT RESUME",
+];
 
 export default function Home() {
-    const [isMac, setIsMac] = useState<boolean | null>(null);
-    const videoRef = useRef<HTMLVideoElement | null>(null);
+  return (
+    <SiteShell>
+      {/* ---------------- hero ---------------- */}
+      <section className="measure pb-12 pt-14 text-center sm:pt-20">
+        <Reveal>
+          <span className="chip">
+            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+            NOW IN BETA
+          </span>
+        </Reveal>
 
-    useEffect(() => {
-        // Detect OS on client mount
-        const mac = detectIsMacFromUA();
-        setIsMac(mac);
-    }, []);
+        <Reveal delay={70}>
+          <h1 className="h-display mx-auto mt-6 max-w-[900px] text-[40px] sm:text-[56px] lg:text-[68px]">
+            Transfer at full speed.
+            <br className="hidden sm:block" /> Nothing in between.
+          </h1>
+        </Reveal>
 
-    useEffect(() => {
-        const v = videoRef.current;
-        if (!v) return;
-        const p = v.play();
-        if (p && typeof p.catch === 'function') {
-            p.catch((err) => {
-                // usually autoplay blocked if not muted; we use muted so this rarely happens
-                console.warn('video play() rejected:', err);
-            });
-        }
-    }, []);
+        <Reveal delay={140}>
+          <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-relaxed text-muted sm:text-[18px]">
+            Our own protocol over UDP. AES-256 inside TLS 1.3. Utilize full available bandwidth up to 1 Gbps between two devices, and
+            not one byte parked on a server.
+          </p>
+        </Reveal>
 
-    const handleMacDownload = useCallback(() => {
-        setTimeout(() => {
-            const link = document.createElement("a");
-            link.href = "/download/zetarya.pkg";
-            link.download = "zetarya.pkg";
-            link.click();
-        }, 500);
-    }, []);
+        <Reveal delay={210}>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <DownloadButton className="btn-primary btn-lg w-full sm:w-auto" />
+            <Link href="/blog/one-gbps-long-haul" className="btn-ghost btn-lg group w-full sm:w-auto">
+              Read the 1 Gbps run
+              <Icon
+                name="arrow-right"
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+        </Reveal>
 
-    const handleWindowsDownload = useCallback(() => {
-        setTimeout(() => {
-            const link = document.createElement("a");
-            link.href = "/download/zetarya.exe";
-            link.download = "zetarya.exe";
-            link.click();
-        }, 500);
-    }, []);
+        <Reveal delay={280}>
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <p className="text-[13px] text-faint">
+              Free forever for personal transfers. No account, no card.
+            </p>
+            <OtherPlatforms />
+          </div>
+        </Reveal>
+      </section>
 
-    const download = isMac ? handleMacDownload : handleWindowsDownload;
+      {/* ---------------- product ---------------- */}
+      <div className="measure pb-16 sm:pb-20">
+        <Reveal delay={120}>
+          <TransferPanel />
+        </Reveal>
+      </div>
 
-    return (
-        <div className="bg-white flex justify-center align-center flex-col scroll-smooth overflow-hidden">
-            <script defer src="https://cloud.umami.is/script.js" data-website-id="520e5182-eaf4-4ed3-9907-598c58f7ba2c"></script>
-            <link rel="icon" href="/favicon.ico" sizes="any" />
-            <div className="mx-auto z-1">
-                <Navbar />
-            </div>
-            <div className="relative overflow-hidden">
-                <div className="flex max-w-[1280px] w-[90vw] mx-auto pt-[2rem] lg:pt-[3rem] justify-center items-center flex-col relative z-10">
-                    <div className="main">
-                        <div className="text-center text-black font-semibold">
-                            <h1 className="text-2xl lg:text-[4rem] lg:leading-[5rem]">Direct data transfer across</h1>
-                            <h1 className="text-2xl lg:text-[4rem] lg:leading-[5rem]">
-                                globe upto <Cover >1 Gbps</Cover>
-                            </h1>
-                        </div>
-                        <div className="flex mt-5 h-[100px] justify-center">
-                            {isMac !== null && (
-                                <span
-                                    onClick={download}
-                                    className="bg-black cursor-pointer w-[350px] h-[50px] rounded-[10px] text-[18px] text-white mt-[22px] font-semibold flex items-center justify-center gap-3
-                                   transition-all duration-300 ease-in-out
-                                   hover:ring-2 hover:ring-black
-                                   hover:ring-offset-4"
-                                >
-                        {isMac ? (
-                            <>
-                                {/* macOS icon */}
-                                <svg className="w-6 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 814 1000">
-                                    <path
-                                        d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"
-                                        fill="currentColor"
-                                    ></path>
-                                </svg>
-                                <h1>Download for macOS</h1>
-                            </>
-                        ) : (
-                            <>
-                                {/* Windows icon */}
-                                <svg className="w-6 h-5" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="m0 12.402 35.687-4.86.016 34.423-35.67.203zm35.67 33.529.028 34.453L.028 75.48.026 45.7zm4.326-39.025L87.314 0v41.527l-47.318.376zm47.329 39.349-.011 41.34-47.318-6.678-.066-34.739z"
-                                        fill="currentColor"
-                                    ></path>
-                                </svg>
-                                <h1>Download for Windows</h1>
-                            </>
-                        )}
-                      </span>
-                            )}
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col justify-center items-center max-w-[1280px] w-[90vw] mx-auto pt-20 lg:pt-[3rem]">
-                <video
-                    ref={videoRef}
-                    id="hero-video-light"
-                    className="w-full h-auto"
-                    playsInline
-                    autoPlay
-                    muted
-                    loop
-                    preload="auto"
-                >
-                    {/* Correct path: do NOT include /public in the src */}
-                    <source src="/videos/hero-light.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div className="flex max-w-[1280px] lg:w-[50vw] w-[90vw] mx-auto flex-col space-y-8 lg:pt-[10rem] pt-32">
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">Files are shared straight from your device</h1>
-                    <p>
-                        The traditional cloud sharing process is inefficient by design — you're forced to upload
-                        everything to servers first, then wait through another full download. This redundant approach
-                        doubles your transfer time unnecessarily.
-                    </p>
-                    <p>
-                        Zetarya offers direct peer-to-peer file sharing, eliminating the tedious process of uploading
-                        to servers and then downloading again. By connecting devices directly, your transfers are
-                        faster and more secure.
-                    </p>
-                </div>
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">Military Grade Security</h1>
-                    <p>
-                        Your data is encrypted end-to-end using AES-256 encryption and can only be read by your
-                        receiver (and you). Zetarya also uses TLS 1.3 encryption while your data is in transit.
-                    </p>
-                </div>
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">Utilize full bandwidth</h1>
-                    <p>
-                        Zetarya uses TCP/IP under the hood for reliable data transfer and maximizes the use of the
-                        available bandwidth provided by your ISP. Say goodbye to slow transfers and move data in less
-                        time.
-                    </p>
-                </div>
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">No more file size limits</h1>
-                    <p>
-                        Because we don't store the data, there's no need for file size limits. Just share files of any size or
-                        whatever amount. As long as you keep an eye on your own data usage.
-                    </p>
-                </div>
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">Simple transfers at a glance</h1>
-                    <p>
-                        Zetarya makes transferring simple. After connecting with your peer, just select a file or
-                        folder and transfer with one click. No endless menus or confusing UI — just straightforward
-                        sharing.
-                    </p>
-                </div>
-                <div className="space-y-1">
-                    <h1 className="font-medium text-[1.5rem]">Low environmental impact</h1>
-                    <p>
-                        Because we don't store your data, we avoid the need for energy-hungry servers. By using
-                        Zetarya, you'll have a much smaller carbon footprint than with traditional cloud storage
-                        providers.
-                    </p>
-                </div>
-            </div>
-
-
-            <div className="space-y-1 pt-[10rem] ">
-                <footer className="bg-[#171515] text-[#F5F5F7] py-8">
-                    <div className="flex flex-row justify-between h-[200px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="">
-                            <h2 className="mb-4">CONTACT US</h2>
-                            <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
-                            <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
-                            <div>
-                                <a href="https://docs.zetarya.com" className="text-sm hover:underline">Docs</a>
-                            </div>
-                            <div>
-                                <a href="/terms-and-privacy" className="text-sm hover:underline">Term & Privacy</a>
-                            </div>
-                            {/*<div>*/}
-                            {/*  <a href="/blogs" className="text-sm hover:underline">Blogs</a>*/}
-                            {/*</div>*/}
-                            <div>
-                                <a href="/pricing" className="text-sm hover:underline">Pricing</a>
-                            </div>
-                            <div>
-                              <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
-                            </div>
-                            <div>
-                                <a href="/contact" className="text-sm hover:underline">Contact</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-            <p className="text-gray-700 bg-[#171515] w-full text-center pb-2">© zero2 All rights reserved</p>
+      {/* ---------------- ticker ---------------- */}
+      <div className="rule border-b bg-surface py-4">
+        <div className="mask-fade-x flex overflow-hidden pause-hover">
+          <div className="flex shrink-0 animate-marquee items-center gap-10 pr-10">
+            {[...TICKER, ...TICKER].map((t, i) => (
+              <span key={i} className="flex shrink-0 items-center gap-10">
+                <span className="font-mono text-[11px] tracking-[0.12em] text-muted">{t}</span>
+                <span className="h-1 w-1 rounded-full bg-accent/50" />
+              </span>
+            ))}
+          </div>
+          <div aria-hidden className="flex shrink-0 animate-marquee items-center gap-10 pr-10">
+            {[...TICKER, ...TICKER].map((t, i) => (
+              <span key={i} className="flex shrink-0 items-center gap-10">
+                <span className="font-mono text-[11px] tracking-[0.12em] text-muted">{t}</span>
+                <span className="h-1 w-1 rounded-full bg-accent/50" />
+              </span>
+            ))}
+          </div>
         </div>
-    );
+      </div>
+
+      {/* ---------------- features ---------------- */}
+      <Section>
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          {HOME_FEATURES.map((f, i) => (
+            <FeatureBlock key={f.title} {...f} delay={i * 90} />
+          ))}
+        </div>
+      </Section>
+
+      {/* ---------------- deep dive ---------------- */}
+      <Section rule>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <Reveal>
+            <Eyebrow>TRACK</Eyebrow>
+            <h2 className="h-section mt-4 text-[28px] sm:text-[34px] lg:text-[38px]">
+              Every byte, on a timeline
+            </h2>
+            <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
+              A year of transfers at a glance — volume per day, throughput per run, and the exact AWS
+              route each one took.
+            </p>
+            <Link href="/features" className="link-accent mt-6">
+              See what it tracks
+              <Icon name="arrow-right" className="h-4 w-4" />
+            </Link>
+          </Reveal>
+          <Reveal delay={120}>
+            <ActivityHeatmap />
+          </Reveal>
+        </div>
+
+        <div className="mt-20 grid items-center gap-12 lg:mt-28 lg:grid-cols-2 lg:gap-20">
+          <Reveal className="lg:order-2">
+            <Eyebrow>SPEED</Eyebrow>
+            <h2 className="h-section mt-4 text-[28px] sm:text-[34px] lg:text-[38px]">
+              We use the whole pipe
+            </h2>
+            <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
+              We pushed 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes — a sustained 1 Gbps end to
+              end on AWS. Pro runs at that ceiling, and a dropped link resumes at the exact byte.
+            </p>
+            <Link href="/features" className="link-accent mt-6">
+              See the benchmarks
+              <Icon name="arrow-right" className="h-4 w-4" />
+            </Link>
+          </Reveal>
+          <Reveal delay={120} className="lg:order-1">
+            <ThroughputChart />
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* ---------------- metrics ---------------- */}
+      <div className="rule border-b bg-surface">
+        <div className="measure grid grid-cols-2 gap-8 py-14 lg:grid-cols-4">
+          {METRICS.map((m, i) => (
+            <Reveal key={m.label} delay={i * 80}>
+              <p className="text-[32px] font-semibold leading-none tracking-[-0.035em] tabular-nums sm:text-[40px]">
+                <CountUp
+                  value={m.value}
+                  decimals={m.decimals}
+                  suffix={m.suffix}
+                  prefix={(m as any).prefix ?? ""}
+                />
+              </p>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-muted sm:text-sm">{m.label}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      {/* ---------------- testimonial ---------------- */}
+      <Section>
+        <Reveal>
+          <blockquote className="mx-auto max-w-[900px] text-center text-[22px] font-semibold leading-[1.35] tracking-[-0.02em] sm:text-[27px] lg:text-[30px]">
+            “We were mailing hard drives to the colour grade suite. Now a 400 GB dailies bundle is on
+            their machine before the coffee is poured — and legal stopped asking where the copy lives,
+            because there isn’t one.”
+          </blockquote>
+        </Reveal>
+        <Reveal delay={100}>
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent">
+              RM
+            </span>
+            <span className="text-left">
+              <span className="block text-sm font-semibold">Rina Mehta</span>
+              <span className="block text-[13px] text-muted">
+                Head of Post Production, Northwind Studios
+              </span>
+            </span>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/* ---------------- pricing preview ---------------- */}
+      <Section rule>
+        <SectionHeading
+          center
+          title="Pricing that stays out of the way"
+          sub="Free to start, flat monthly after that. No egress fees, no per-gigabyte metering."
+        />
+        <div className="mt-12 grid items-start gap-6 md:grid-cols-3">
+          {TIERS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 90}>
+              <PricingCard tier={t} maxFeatures={3} href="/pricing" />
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={260}>
+          <div className="mt-10 text-center">
+            <Link href="/pricing" className="link-accent">
+              Compare all plans
+              <Icon name="arrow-right" className="h-4 w-4" />
+            </Link>
+          </div>
+        </Reveal>
+      </Section>
+
+      <CtaBanner />
+    </SiteShell>
+  );
 }

@@ -2,239 +2,294 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Navbar from "@/components/ui/navbar";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import SiteShell from "@/components/site/site-shell";
+import { PricingCard } from "@/components/site/pricing-card";
+import { Reveal } from "@/components/site/reveal";
+import { Icon } from "@/components/site/icons";
+import { CtaBanner, PageHero, Section, SectionHeading } from "@/components/site/primitives";
+import { FAQS, PLAN_MATRIX, TIERS } from "@/lib/site-content";
+import { DOWNLOADS, DOWNLOADS_LIVE, detectPlatform } from "@/components/site/platform";
 
-export default function PricingClient({ serverUser }: { serverUser?: any | null }) {
+export default function PricingClient() {
     const [opening, setOpening] = useState(false);
-    const session = useSession(); // Session | null
-    const supabase = useSupabaseClient();
-    const router = useRouter();
+    const [annual, setAnnual] = useState(true);
+    const [openFaq, setOpenFaq] = useState<number | null>(0);
+    const [email, setEmail] = useState("");
+    const dialogRef = useRef<HTMLDialogElement>(null);
     const searchParams = useSearchParams();
 
     // avoid double auto-trigger
     const autoTriggeredRef = useRef(false);
 
-    const handlePay = useCallback(async () => {
-        if (!serverUser) {
-
-            router.push(`/signin`);
-            return;
-        }
-
+    const startCheckout = useCallback(async (buyerEmail: string) => {
         setOpening(true);
         try {
             const orderRes = await fetch("/api/phonepe/payment", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: serverUser?.email
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: buyerEmail }),
             });
 
             if (!orderRes.ok) {
                 const errorData = await orderRes.json();
-                console.log(errorData);
                 throw new Error(errorData.error || `Order creation failed: ${orderRes.status}`);
             }
 
             const orderData = await orderRes.json();
-
-            console.log(orderData.fullResponse);
-            console.log(serverUser);
-            const url = orderData.fullResponse.redirectUrl
-
-            window.location.href = url;
-
+            window.location.href = orderData.fullResponse.redirectUrl;
         } catch (err) {
             console.error(err);
             alert(err instanceof Error ? err.message : "Unable to start checkout. Please try again.");
         } finally {
             setOpening(false);
         }
-    }, [serverUser, router]);
+    }, []);
 
-    // Auto-trigger payment when user returns with ?pay=plus and session exists
+    // Checkout needs an email to attach the order to. Ask for it, nothing more.
+    const handlePay = useCallback(() => dialogRef.current?.showModal(), []);
+
+    // Auto-open checkout when someone lands on ?pay=plus
     useEffect(() => {
-        const payParam = searchParams?.get("pay");
-        if (payParam === "plus" && session && !autoTriggeredRef.current && !opening) {
+        if (searchParams?.get("pay") === "plus" && !autoTriggeredRef.current && !opening) {
             autoTriggeredRef.current = true;
-            handlePay().catch((e) => console.error("auto-pay failed", e));
+            handlePay();
         }
-    }, [searchParams, session, handlePay, opening]);
+    }, [searchParams, handlePay, opening]);
 
     return (
-        <div className="bg-white flex justify-center align-center flex-col scroll-smooth">
-            <div className="mx-auto z-10">
-                <Navbar />
-            </div>
-
-            <div className="relative w-full py-16 lg:py-20">
-                <div className="mx-auto max-w-6xl px-4">
-                    <div className="text-center mb-12">
-                        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900">
-                            Simple, transparent pricing
-                        </h1>
-                        <p className="mt-3 text-gray-600 md:text-lg">Scale your data transfer with secure, high-throughput plans.</p>
+        <SiteShell>
+            <dialog
+                ref={dialogRef}
+                className="rounded border border-line bg-card p-0 text-ink backdrop:bg-black/40"
+            >
+                <form
+                    method="dialog"
+                    className="w-[min(92vw,380px)] p-6"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        dialogRef.current?.close();
+                        startCheckout(email);
+                    }}
+                >
+                    <h2 className="text-[17px] font-semibold">Where should the receipt go?</h2>
+                    <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">
+                        We use this to attach the order to your plan. No account needed.
+                    </p>
+                    <input
+                        type="email"
+                        required
+                        autoFocus
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@company.com"
+                        className="mt-4 w-full rounded border border-line bg-surface px-3 py-2.5 text-[14px] outline-none focus:border-accent"
+                    />
+                    <div className="mt-4 flex gap-2">
+                        <button
+                            type="button"
+                            onClick={() => dialogRef.current?.close()}
+                            className="btn-ghost btn-md flex-1"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={opening} className="btn-primary btn-md flex-1 disabled:opacity-60">
+                            Continue
+                        </button>
                     </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {/* Free */}
-                        <div className="relative rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold">Free</h3>
-                                <p className="mt-1 text-sm text-gray-500">For testing & personal use</p>
-                            </div>
-                            <div className="mb-6">
-                                <span className="text-4xl font-bold">₹0</span>
-                                <span className="text-gray-500">/mo</span>
-                            </div>
-                            <span onClick={() => router.push("/")}
-                                  className="mb-8 cursor-pointer inline-flex w-full items-center justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50">
-                                Get free
-                            </span>
-                            <ul className="space-y-3 text-sm">
-                                {[
-                                    "Up to 40 Mbps transfer speed",
-                                    "30 GB/month data transfer",
-                                    "TLS encryption",
-                                    "Peer to Peer data transfer",
-                                ].map((f, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                        <svg className="mt-0.5 h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <path d="M20 6L9 17l-5-5" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        <span className="text-gray-700">{f}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Plus */}
-                        <div className="relative rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-                            <div className="absolute right-4 -top-3"></div>
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold">Plus</h3>
-                                <p className="mt-1 text-sm text-gray-500">Best for growing teams</p>
-                            </div>
-                            <div className="mb-6">
-                                <span className="text-4xl font-bold">₹1,499</span>
-                                <span className="text-gray-500">/mo</span>
-                            </div>
-
-                            {/*<div className="mb-6 flex items-baseline space-x-3">*/}
-                            {/*    /!* Original price (struck through) *!/*/}
-                            {/*    <span className="text-3xl font-semibold text-gray-400 line-through">₹1,499</span>*/}
-
-                            {/*    /!* Discounted price *!/*/}
-                            {/*    <div className="flex items-baseline space-x-1">*/}
-                            {/*        <span className="text-4xl font-bold text-black">₹999</span>*/}
-                            {/*        <span className="text-gray-500 text-lg">/mo</span>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-
+                </form>
+            </dialog>
+            <PageHero
+                eyebrow="PRICING"
+                title="Simple, honest pricing."
+                sub="Scale your data transfer with secure, high-throughput plans. No egress fees, nothing expires."
+            >
+                <div className="mt-8 flex justify-center">
+                    <div className="inline-flex items-center gap-1 rounded border border-line bg-surface p-1">
+                        {[
+                            { label: "Monthly", value: false },
+                            { label: "Annual", value: true },
+                        ].map((o) => (
                             <button
-                                onClick={() => handlePay()}
-                                disabled={opening}
-                                className="mb-8 inline-flex w-full items-center justify-center rounded-xl bg-[#BB254A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#801336] disabled:opacity-60 disabled:cursor-not-allowed"
+                                key={o.label}
+                                onClick={() => setAnnual(o.value)}
+                                className={`flex items-center gap-2 rounded-md px-4 py-2 text-[13.5px] transition-all duration-200 ${
+                                    annual === o.value
+                                        ? "border border-line bg-card font-semibold text-ink shadow-sm"
+                                        : "border border-transparent font-medium text-muted hover:text-ink"
+                                }`}
                             >
-                                {opening ? "Opening..." : serverUser ? "Get Plus" : "Sign in to purchase"}
+                                {o.label}
+                                {o.value && (
+                                    <span className="text-[12px] font-semibold text-accent">Save 20%</span>
+                                )}
                             </button>
-
-                            <ul className="space-y-3 text-sm">
-                                {[
-                                    "Up to 200 Mbps transfer speed",
-                                    "2 TB/month included",
-                                    "AES-256 + TLS encryption",
-                                    "Priority email & chat support",
-                                    "Peer to Peer data transfer"
-                                ].map((f, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                        <svg className="mt-0.5 h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <path d="M20 6L9 17l-5-5" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        <span className="text-gray-700">{f}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Pro */}
-                        <div className="relative rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold">Pro</h3>
-                                <p className="mt-1 text-sm text-gray-500">For high-volume transfer</p>
-                            </div>
-                            <div className="mb-6">
-                                <span className="text-4xl font-bold">Custom</span>
-                            </div>
-
-                            <span onClick={() => router.push("/contact")}
-                                  className="mb-8 cursor-pointer inline-flex w-full items-center justify-center rounded-xl border border-gray-900 px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white">
-                                Talk to Sales
-                            </span>
-
-                            <ul className="space-y-3 text-sm">
-                                {[
-                                    "Up to 1 Gbps transfer speed",
-                                    "10 TB/month included",
-                                    "AES-256 + TLS encryption",
-                                    "Priority support",
-                                    "Advanced routing & P2P acceleration",
-                                    "On Prem Data transfer under the VPN",
-                                    "API access",
-                                    "Peer to Peer data transfer",
-                                    "Dedicated onboarding",
-                                ].map((f, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                        <svg className="mt-0.5 h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <path d="M20 6L9 17l-5-5" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        <span className="text-gray-700">{f}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        ))}
                     </div>
-
-                    {/*<div className="mt-8 text-center text-xs text-gray-500">Overages billed at competitive per-GB rates. Prices are in INR.</div>*/}
                 </div>
+            </PageHero>
+
+            <div className="measure grid items-start gap-6 pb-16 md:grid-cols-3 sm:pb-20">
+                {TIERS.map((t, i) => {
+                    const isPlus = t.name === "Plus";
+                    const isFree = t.name === "Free";
+                    const isPro = t.name === "Pro";
+                    const priced =
+                        isPlus && annual
+                            ? { ...t, price: "₹1,199", unit: "/mo, billed yearly" }
+                            : t;
+                    return (
+                        <Reveal key={t.name} delay={i * 90}>
+                            <PricingCard
+                                tier={priced}
+                                busy={isPlus && opening}
+                                soon={isFree && !DOWNLOADS_LIVE}
+                                onCta={
+                                    isPlus
+                                        ? handlePay
+                                        : isFree && DOWNLOADS_LIVE
+                                          ? () => {
+                                                window.location.href = DOWNLOADS[detectPlatform()].href;
+                                            }
+                                          : undefined
+                                }
+                                href={isPro ? "/contact" : undefined}
+                            />
+                        </Reveal>
+                    );
+                })}
             </div>
 
-            <footer className="bg-[#171515] text-[#F5F5F7] py-8">
-                <div className="flex flex-row justify-between h-[200px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div>
-                        <h2 className="mb-4">CONTACT US</h2>
-                        <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
-                        <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
-                        <div>
-                            <a href="https://docs.zetarya.com" className="text-sm hover:underline">Docs</a>
-                        </div>
-                        <div>
-                            <a href="/terms-and-privacy" className="text-sm hover:underline">Term & Privacy</a>
-                        </div>
-                        {/*<div>*/}
-                        {/*    <a href="/blogs" className="text-sm hover:underline">Blogs</a>*/}
-                        {/*</div>*/}
-                        <div>
-                            <a href="/pricing" className="text-sm hover:underline">Pricing</a>
-                        </div>
-                        <div>
-                            <a href="https://www.zero2.in" className="text-sm hover:underline">Company</a>
-                        </div>
-                        <div>
-                            <a href="/contact" className="text-sm hover:underline">Contact</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            {/* plan matrix */}
+            <Section rule>
+                <SectionHeading center title="Compare every plan" />
 
-            <p className="text-gray-700 bg-[#171515] w-full text-center pb-2">© zero2 All rights reserved</p>
-        </div>
+                <Reveal delay={100}>
+                    <div className="mt-12 hidden overflow-hidden rounded border border-line lg:block">
+                        <div className="grid grid-cols-[1.6fr_1fr_1fr_1fr] bg-surface">
+                            <div className="px-5 py-4 text-[13px] font-semibold text-muted">Capability</div>
+                            {PLAN_MATRIX.columns.map((c, i) => (
+                                <div
+                                    key={c}
+                                    className={`px-5 py-4 text-[13px] font-semibold ${
+                                        i === 1 ? "text-accent" : "text-muted"
+                                    }`}
+                                >
+                                    {c}
+                                </div>
+                            ))}
+                        </div>
+                        {PLAN_MATRIX.rows.map((row) => (
+                            <div
+                                key={row[0]}
+                                className="grid grid-cols-[1.6fr_1fr_1fr_1fr] border-t border-line transition-colors hover:bg-surface/60"
+                            >
+                                <div className="px-5 py-3.5 text-[13.5px] font-medium">{row[0]}</div>
+                                {row.slice(1).map((v, i) => (
+                                    <div key={i} className="px-5 py-3.5 text-[13.5px] text-muted">
+                                        {v === "yes" ? (
+                                            <Icon
+                                                name="check"
+                                                className={`h-4 w-4 ${i === 1 ? "text-accent" : "text-ok"}`}
+                                            />
+                                        ) : v === "no" ? (
+                                            <Icon name="minus" className="h-4 w-4 text-faint" />
+                                        ) : (
+                                            v
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </Reveal>
+
+                <div className="mt-10 grid gap-4 lg:hidden">
+                    {PLAN_MATRIX.rows.map((row, i) => (
+                        <Reveal key={row[0]} delay={i * 30}>
+                            <div className="rounded border border-line bg-card p-4">
+                                <p className="text-[13.5px] font-semibold">{row[0]}</p>
+                                <div className="mt-3 space-y-2">
+                                    {PLAN_MATRIX.columns.map((c, ci) => {
+                                        const v = row[ci + 1];
+                                        return (
+                                            <div key={c} className="flex items-center justify-between gap-3">
+                                                <span className="text-[12.5px] text-muted">{c}</span>
+                                                <span className="text-[12.5px] font-medium">
+                                                    {v === "yes" ? (
+                                                        <Icon name="check" className="h-4 w-4 text-accent" />
+                                                    ) : v === "no" ? (
+                                                        <Icon name="minus" className="h-4 w-4 text-faint" />
+                                                    ) : (
+                                                        v
+                                                    )}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </Reveal>
+                    ))}
+                </div>
+            </Section>
+
+            {/* faq */}
+            <Section rule>
+                <SectionHeading center title="Questions people actually ask" />
+                <div className="mx-auto mt-12 max-w-[800px]">
+                    {FAQS.map((f, i) => {
+                        const open = openFaq === i;
+                        return (
+                            <Reveal key={f.q} delay={i * 60}>
+                                <div className="border-t border-line">
+                                    <button
+                                        onClick={() => setOpenFaq(open ? null : i)}
+                                        aria-expanded={open}
+                                        className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                                    >
+                                        <span className="text-[16px] font-semibold tracking-[-0.01em] sm:text-[16.5px]">
+                                            {f.q}
+                                        </span>
+                                        <Icon
+                                            name="chevron-down"
+                                            className={`h-4 w-4 shrink-0 text-muted transition-transform duration-300 ${
+                                                open ? "rotate-180" : ""
+                                            }`}
+                                        />
+                                    </button>
+                                    <div
+                                        className={`grid transition-all duration-400 ease-[cubic-bezier(.16,1,.3,1)] ${
+                                            open ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"
+                                        }`}
+                                    >
+                                        <div className="overflow-hidden">
+                                            <p className="max-w-[680px] text-[15.5px] leading-relaxed text-muted">
+                                                {f.a}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Reveal>
+                        );
+                    })}
+                </div>
+                <Reveal delay={200}>
+                    <p className="mt-10 text-center text-sm text-muted">
+                        Still deciding?{" "}
+                        <Link href="/contact" className="font-semibold text-accent hover:underline">
+                            Talk to us
+                        </Link>
+                        .
+                    </p>
+                </Reveal>
+            </Section>
+
+            <CtaBanner
+                title="Start on Free. Move up when you need to."
+                sub="No account and no card to start — download, pair two devices, and send."
+            />
+        </SiteShell>
     );
 }

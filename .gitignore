@@ -1,0 +1,17 @@
+.next
+.idea
+node_modules
+tsconfig.tsbuildinfo
+
+# env
+.env*.local
+
+# os
+.DS_Store
+**/.DS_Store
+
+# next-pwa generated
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map

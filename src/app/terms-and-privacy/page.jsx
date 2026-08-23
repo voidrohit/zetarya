@@ -109,7 +109,7 @@ const PrivacyPolicy = () => {
             <div className="flex flex-row justify-between h-[200px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="">
                     <h2 className="mb-4">CONTACT US</h2>
-                    <p className="text-base lg:text-5xl mb-4 font-semibold">info@zetarya.com</p>
+                    <p className="text-base lg:text-5xl mb-4 font-semibold">admin@zetarya.com</p>
                     <p className="text-base lg:text-xl mb-4 font-semibold">+91 9119334720</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">

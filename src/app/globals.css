@@ -2,6 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg text-ink font-sans;
+  }
+  ::selection {
+    background: #f9ebef;
+    color: #8f1f3c;
+  }
+}
+
+@layer components {
+  .measure {
+    @apply mx-auto w-full max-w-measure px-5 sm:px-8 lg:px-10;
+  }
+  .h-display {
+    @apply font-semibold tracking-[-0.03em] leading-[1.05];
+  }
+  .h-section {
+    @apply font-semibold tracking-[-0.025em] leading-[1.12];
+  }
+  .rule {
+    @apply border-t border-line;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded font-semibold transition-all duration-200 active:scale-[.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-deep hover:shadow-lift;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-transparent text-ink hover:border-ink/25 hover:bg-surface;
+  }
+  .btn-lg {
+    @apply px-6 py-[14px] text-[15px];
+  }
+  .btn-md {
+    @apply px-[18px] py-[10px] text-sm;
+  }
+  .chip {
+    @apply inline-flex items-center gap-2 rounded bg-accent-soft px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.08em] text-accent;
+  }
+  .card-surface {
+    @apply rounded border border-line bg-card;
+  }
+  .link-accent {
+    @apply inline-flex items-center gap-2 text-[15px] font-semibold text-accent transition-transform duration-200 hover:gap-3;
+  }
+}
+
+@layer utilities {
+  .grid-backdrop {
+    background-image: linear-gradient(to right, #eae9e5 1px, transparent 1px),
+      linear-gradient(to bottom, #eae9e5 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 35%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 35%, transparent 100%);
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+  .pause-hover:hover * {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
 
 .custom-list {
   list-style: none;
@@ -21,5 +102,5 @@
   left: 0;
   width: 8px;
   height: 8px;
-  background-color: #BA8288;
+  background-color: #ba8288;
 }
