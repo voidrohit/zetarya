@@ -8,6 +8,12 @@ const nextConfig = {
         removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
     },
     poweredByHeader: false,
+    async redirects() {
+        return [
+            // Superseded by the separate /terms and /privacy pages.
+            { source: '/terms-and-privacy', destination: '/terms', permanent: true },
+        ];
+    },
     compress: true,
     images: {
         remotePatterns: [

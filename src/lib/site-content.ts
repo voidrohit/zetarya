@@ -35,7 +35,6 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "Blog", href: "/blog" },
       { label: "Protocol paper", href: "/blog/one-gbps-long-haul" },
-      { label: "Status", href: "https://status.zetarya.com" },
       { label: "Contact", href: "/contact" },
     ],
   },
@@ -44,7 +43,6 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "About", href: "/about" },
       { label: "zero2", href: "https://www.zero2.in" },
-      { label: "Careers", href: "/about#hiring" },
     ],
   },
   {
@@ -529,17 +527,6 @@ export const POSTS: Post[] = [
       "The rule we apply now: if a piece of data would be valuable to an attacker and merely convenient for you, it does not go in the log. Convenience loses that argument every time, and it should.",
     ],
   },
-];
-
-export const TEAM = [
-  { initials: "MO", name: "Maya Osei", role: "Co-founder, CEO" },
-  { initials: "DK", name: "Devi Krishnan", role: "Co-founder, Protocol" },
-  { initials: "TS", name: "Tom Serrano", role: "Co-founder, Clients" },
-  { initials: "AR", name: "Ana Ruiz", role: "Security" },
-  { initials: "JL", name: "Jonas Lind", role: "Infrastructure" },
-  { initials: "PN", name: "Priya Nair", role: "Design" },
-  { initials: "EC", name: "Elena Costa", role: "Mobile" },
-  { initials: "KB", name: "Kwame Boateng", role: "Support" },
 ];
 
 export const VALUES = [

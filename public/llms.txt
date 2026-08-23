@@ -25,7 +25,3 @@ Zetarya runs on its own protocol over UDP rather than on TCP, which is what lets
 - [Contact](https://zetarya.com/contact)
 - [Privacy Policy](https://zetarya.com/privacy)
 - [Terms of Service](https://zetarya.com/terms)
-
-## Optional
-
-- [Status](https://status.zetarya.com)
