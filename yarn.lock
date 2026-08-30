@@ -2305,6 +2305,21 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@modelcontextprotocol/core@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/core/-/core-2.0.0.tgz#c918a4c6aef22a7c59dfb0aabc2a82c187cce157"
+  integrity sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==
+  dependencies:
+    zod "^4.2.0"
+
+"@modelcontextprotocol/server@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/server/-/server-2.0.0.tgz#4fae5ccb8f7925ed9a6bf6595bb3b58617063ffd"
+  integrity sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==
+  dependencies:
+    "@modelcontextprotocol/core" "2.0.0"
+    zod "^4.2.0"
+
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.12.tgz#3e78a8b96e6c33a6c517e1894efbd5385a7cb6f2"
@@ -3132,6 +3147,45 @@
   version "1.6.1"
   resolved "https://registry.npmjs.org/@vercel/analytics/-/analytics-1.6.1.tgz"
   integrity sha512-oH9He/bEM+6oKlv3chWuOOcp8Y6fo6/PSro8hEkgCW3pu9/OiCXiUpRUogDh3Fs3LH2sosDrx8CxeOLBEE+afg==
+
+"@vgpu/adapter-mock@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@vgpu/adapter-mock/-/adapter-mock-0.3.1.tgz#11a863c5a08170fff24541a8cecebb087cc1522f"
+  integrity sha512-uZxTFPHLYd1nOxGxluvni50tsjnUTQ2eOhjJ/YwWynO7k906AD0byJxN0V6BbYb1MK/xM/EF+/cA8tKCrvY0yA==
+  dependencies:
+    "@vgpu/core" "0.3.1"
+
+"@vgpu/adapter-node@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@vgpu/adapter-node/-/adapter-node-0.3.1.tgz#63a34a03d6749f53a7b46d5998d34a205c22234b"
+  integrity sha512-DtGxI8q3bAh3aN1JdT2EJhUEEbiuVC3U5nd3JLCbn+8zQlxmzs/+lsLo3TzD0gXr7fWHHdOiYYv0xIvAC/1UnQ==
+  dependencies:
+    "@vgpu/core" "0.3.1"
+    webgpu "0.4.0"
+
+"@vgpu/core@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@vgpu/core/-/core-0.3.1.tgz#a6ca1a040ac7ed1a78ef5e2a0e65c41d5ab667b1"
+  integrity sha512-HO0J2LplV+UiJNv1gp8k3Vog6hD/E84HEi5xHj0GxxJ8ZQT7a3kGlyMxGTrNuALXKNPziZzzZl8XHdiX1YNp8w==
+  dependencies:
+    "@vgpu/wgsl" "0.3.1"
+
+"@vgpu/wgsl-std@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@vgpu/wgsl-std/-/wgsl-std-0.3.1.tgz#20a51723773390944145c57d8454f644b390738a"
+  integrity sha512-9MuJ9/YfJLkCjusjPU81sHfnHZs2k4Yv66TKJEqYNXma5Z+GDPEq8GNksMeKxb9WiXfTjp1TjOR/8GhyEOeuFA==
+
+"@vgpu/wgsl@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@vgpu/wgsl/-/wgsl-0.3.1.tgz#850be2b6e45014fe9e251493c900174f257c904e"
+  integrity sha512-/D3l/+0Kw/Hnr79AvxsLUjp21/ZeTcbBmvltXkftyHBXqs0YZf+0AVOeMpMyWjV24lGPrPgIqDsGpmKS38y7Ow==
+  dependencies:
+    "@vgpu/wgsl-std" "0.3.1"
+
+"@webgpu/types@^0.1.69":
+  version "0.1.72"
+  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.72.tgz#d182969c26197e0072e9a887991faeb75cc7d9fb"
+  integrity sha512-0cF7RFM2edNoiIS1ODJp0/Gzv4/xSXhwoR0YCza+OWpJWtn4wmo9DvK91aLlH9+uUnwIriP7ZiC3WitmyhuzBw==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -6115,12 +6169,24 @@ pirates@^4.0.1:
   resolved "https://registry.npmjs.org/pirates/-/pirates-4.0.7.tgz"
   integrity sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==
 
+pixelmatch@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/pixelmatch/-/pixelmatch-7.2.0.tgz#59f4e6faca733f763756d175e2579ed71369fd72"
+  integrity sha512-xhcb4yHu9sM/G7foGzoLtXYcC0zHEaOXXjRKhGup0fw78Nf2Tkiapv4EQyMzrbcmQPsllAI7DbFY2UT7PlI9Pg==
+  dependencies:
+    pngjs "^7.0.0"
+
 pkg-dir@^4.1.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/pkg-dir/-/pkg-dir-4.2.0.tgz"
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
+
+pngjs@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-7.0.0.tgz#a8b7446020ebbc6ac739db6c5415a65d17090e26"
+  integrity sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==
 
 possible-typed-array-names@^1.0.0:
   version "1.1.0"
@@ -7390,10 +7456,35 @@ vary@^1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
+vgpu@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/vgpu/-/vgpu-0.3.1.tgz#af84544f510e2a82056b3b7278f65683e1705a1f"
+  integrity sha512-NeEETis2aCr0I9/8dy42lueNGNs3GZxL+0OmjLI82wlgPD/4WpW/XNX4xduc+ChxFqOJtjEYsz297VS9GmIuyA==
+  dependencies:
+    "@modelcontextprotocol/server" "2.0.0"
+    "@vgpu/adapter-mock" "0.3.1"
+    "@vgpu/adapter-node" "0.3.1"
+    "@vgpu/core" "0.3.1"
+    "@vgpu/wgsl" "0.3.1"
+    "@vgpu/wgsl-std" "0.3.1"
+    "@webgpu/types" "^0.1.69"
+    pixelmatch "^7.2.0"
+    pngjs "^7.0.0"
+    wgpu-matrix "^3.4.2"
+    zod "^4.4.3"
+
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.3.tgz#2898486b74f5156095e473efe989dcf185047a38"
   integrity sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==
+
+webgpu@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/webgpu/-/webgpu-0.4.0.tgz#4bdbb9b38f898e468c9bb5b744b03b2f5b0b654f"
+  integrity sha512-F5pimn3Aoi0zWjuRdiVs5TnrUwSzD2lESBohsIUsqyitWkGRQlXU2fhV6ycXlQTa1bvAf3sjqiUpBEpmSQ5ptA==
+  dependencies:
+    "@webgpu/types" "^0.1.69"
+    debug "^4.4.0"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
@@ -7412,6 +7503,11 @@ webpack-sources@^1.4.3:
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
+
+wgpu-matrix@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/wgpu-matrix/-/wgpu-matrix-3.4.2.tgz#15fda104735ec8e8ec670db8d86b82ab310a9517"
+  integrity sha512-IfZFbG7olEYBD76VCZy2TzqM57GKy3LT++AZh37tMHPPByO6R2h61zXGBZFNPi2IzxNivNi8y5dvze5PjaczjA==
 
 whatwg-url@^5.0.0:
   version "5.0.0"
@@ -7790,3 +7886,8 @@ youch@4.1.0-beta.10:
     "@speed-highlight/core" "^1.2.7"
     cookie "^1.0.2"
     youch-core "^0.3.3"
+
+zod@^4.2.0, zod@^4.4.3:
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.5.4.tgz#e215c62420c528dd7951e31fb52c5438f1fd184a"
+  integrity sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==

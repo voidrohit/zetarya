@@ -65,6 +65,10 @@
     -webkit-mask-image: linear-gradient(to bottom, black 35%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 35%, transparent 100%);
   }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 72%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 18%, black 72%, transparent);
+  }
   .mask-fade-x {
     -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
     mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);

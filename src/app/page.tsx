@@ -17,6 +17,7 @@ import {
   Section,
   SectionHeading,
 } from "@/components/site/primitives";
+import Field from "@/components/site/field";
 import { HOME_FEATURES, METRICS, TIERS } from "@/lib/site-content";
 import { DownloadButton, OtherPlatforms } from "@/components/site/platform";
 import JsonLd from "@/components/site/json-ld";
@@ -46,49 +47,56 @@ export default function Home() {
         softwareApplication(),
       )} />
       {/* ---------------- hero ---------------- */}
-      <section className="measure pb-12 pt-14 text-center sm:pt-20">
-        <Reveal>
-          <span className="chip">
-            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
-            NOW IN BETA
-          </span>
-        </Reveal>
+      <section className="relative isolate overflow-hidden">
+        <Field className="mask-fade-y pointer-events-none absolute inset-0 -z-10" />
 
-        <Reveal delay={70}>
-          <h1 className="h-display mx-auto mt-6 max-w-[900px] text-[40px] sm:text-[56px] lg:text-[68px]">
-            Transfer at full speed.
-            <br className="hidden sm:block" /> Nothing in between.
-          </h1>
-        </Reveal>
+        <div className="measure pb-14 pt-14 text-center sm:pt-24 lg:pb-20">
+          <Reveal>
+            <span className="chip">
+              <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+              NOW IN BETA
+            </span>
+          </Reveal>
 
-        <Reveal delay={140}>
-          <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-relaxed text-muted sm:text-[18px]">
-            Our own protocol over UDP. AES-256 inside TLS 1.3. Utilize full available bandwidth up to 1 Gbps between two devices, and
-            not one byte parked on a server.
-          </p>
-        </Reveal>
+          <Reveal delay={70}>
+            <h1 className="h-display mx-auto mt-6 max-w-[900px] text-[40px] sm:text-[56px] lg:text-[68px]">
+              Transfer at full speed.
+              <br className="hidden sm:block" /> Nothing in between.
+            </h1>
+          </Reveal>
 
-        <Reveal delay={210}>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <DownloadButton className="btn-primary btn-lg w-full sm:w-auto" />
-            <Link href="/blog/one-gbps-long-haul" className="btn-ghost btn-lg group w-full sm:w-auto">
-              Read the 1 Gbps run
-              <Icon
-                name="arrow-right"
-                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-          </div>
-        </Reveal>
-
-        <Reveal delay={280}>
-          <div className="mt-6 flex flex-col items-center gap-2">
-            <p className="text-[13px] text-faint">
-              Free forever for personal transfers. No account, no card.
+          <Reveal delay={140}>
+            <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-relaxed text-muted sm:text-[18px]">
+              Our own protocol over UDP. AES-256 inside TLS 1.3. Utilize full available bandwidth up
+              to 1 Gbps between two devices, and not one byte parked on our server.
             </p>
-            <OtherPlatforms />
-          </div>
-        </Reveal>
+          </Reveal>
+
+          <Reveal delay={210}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <DownloadButton className="btn-primary btn-lg w-full sm:w-auto" />
+              <Link
+                href="/blog/one-gbps-long-haul"
+                className="btn-ghost btn-lg group w-full sm:w-auto"
+              >
+                Read the 1 Gbps run
+                <Icon
+                  name="arrow-right"
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={280}>
+            <div className="mt-6 flex flex-col items-center gap-2">
+              <p className="text-[13px] text-faint">
+                Free forever for personal transfers. No account, no card.
+              </p>
+              <OtherPlatforms />
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* ---------------- product ---------------- */}

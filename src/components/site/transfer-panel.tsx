@@ -15,6 +15,40 @@ import { useInView } from "./reveal";
 --------------------------------------------------------------------------- */
 
 const TOTAL_MB = 2_000_000; // 2 TB
+
+/* ---------------------------------------------------------------------------
+   What the transfer costs the machine.
+
+   Every figure here is read off the transfer engine, not invented:
+
+   STREAMS / CHUNK_MIB     CLI defaults        src/main.rs
+   BUFFER_MIB              streams x chunk — one 4 MiB frame in flight per
+                           worker on each side (sender build_frame, receiver
+                           `vec![0u8; payload_len]`). This is the whole payload
+                           working set, and it does not grow with the file.
+   IN_FLIGHT_MB            QUIC connection receive window, which the engine
+                           calls "a RAM budget, not just a tuning knob"
+                                               src/transfer/endpoint.rs
+   RESUME_*                resume state file layout: 56 B header + 16 B per
+                           completed chunk (id + xxh3), deleted on success
+                                               src/transfer/resume.rs
+   staged bytes            none. The receiver pre-allocates each file to its
+                           final length and writes every chunk straight to its
+                           offset with write_at — there is no scratch copy
+                                               src/transfer/receiver.rs
+   GPU                     none. There is no GPU, SIMD-offload or compute path
+                           anywhere in the crate.
+   no compression          zstd is a dependency but only ever compresses the
+                           manifest (the file list). Payload bytes are never
+                           re-encoded — only xxh3-checked and, with a password,
+                           AES-256-CTR encrypted
+                                               src/transfer/manifest.rs
+--------------------------------------------------------------------------- */
+const STREAMS = 4;
+const CHUNK_BYTES = 4 * 1024 * 1024;
+const BUFFER_MIB = (STREAMS * CHUNK_BYTES) / (1024 * 1024);
+const RESUME_HEADER = 56;
+const RESUME_PER_CHUNK = 16;
 const TARGET_MBPS = 1000; // 1 Gbps
 const SIM_DT = 60; // simulated seconds per tick
 const TICK_MS = 250;
@@ -40,6 +74,15 @@ function fmtSize(mb: number) {
 
 function fmtSpeed(mbps: number) {
   return mbps >= 1000 ? `${(mbps / 1000).toFixed(2)} Gbps` : `${Math.round(mbps)} Mbps`;
+}
+
+// Small at the start of a run (56 B of header), so step the unit up rather
+// than showing "0.00 MB", which reads as a broken value.
+function fmtOverhead(bytes: number) {
+  if (bytes < 1024) return `${Math.round(bytes)} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  const mb = bytes / (1024 * 1024);
+  return mb >= 10 ? `${mb.toFixed(1)} MB` : `${mb.toFixed(2)} MB`;
 }
 
 function fmtClock(sec: number) {
@@ -134,6 +177,29 @@ export default function TransferPanel() {
   const remainingMb = TOTAL_MB - s.sent;
   const etaSec = s.speed > 0 ? remainingMb / (s.speed / 8) : Infinity;
   const avg = s.elapsed > 0 ? (s.sent * 8) / s.elapsed : 0;
+
+  // Resume state is the only thing Zetarya writes beyond the file itself.
+  const chunksDone = Math.floor((s.sent * 1e6) / CHUNK_BYTES);
+  const stateBytes = RESUME_HEADER + chunksDone * RESUME_PER_CHUNK;
+
+  const cost = [
+    {
+      k: "PROCESSOR",
+      v: "Nothing heavy",
+      sub: "no compressing or re-encoding your files",
+    },
+    { k: "GRAPHICS CARD", v: "Not used", sub: "Zetarya never touches your GPU" },
+    {
+      k: "MEMORY",
+      v: `${BUFFER_MIB} MB`,
+      sub: "the same for a 2 GB file or a 2 TB one",
+    },
+    {
+      k: "EXTRA DISK SPACE",
+      v: fmtOverhead(stateBytes),
+      sub: "a bookmark, so it can resume. No second copy",
+    },
+  ];
 
   const ringLen = 2 * Math.PI * 54;
   const ringOffset = ringLen * (1 - pct / 100);
@@ -276,6 +342,22 @@ export default function TransferPanel() {
                   {s.done ? "complete" : `${fmtSpeed(s.speed)} · ${fmtEta(etaSec)} left`}
                 </span>
               </div>
+            </div>
+
+            {/* what the run costs this machine */}
+            <p className="mt-6 font-mono text-[10px] tracking-[0.12em] text-faint">
+              WHAT THIS COSTS YOUR COMPUTER
+            </p>
+            <div className="mt-2 grid grid-cols-2 gap-px overflow-hidden rounded border border-line bg-line sm:grid-cols-4">
+              {cost.map((c) => (
+                <div key={c.k} className="bg-card p-3">
+                  <p className="font-mono text-[9px] tracking-[0.1em] text-faint">{c.k}</p>
+                  <p className="mt-1.5 text-[15px] font-semibold leading-tight tracking-[-0.02em] tabular-nums">
+                    {c.v}
+                  </p>
+                  <p className="mt-1.5 font-mono text-[9px] leading-snug text-faint">{c.sub}</p>
+                </div>
+              ))}
             </div>
           </div>
 
