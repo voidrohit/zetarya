@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Inter, JetBrains_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/react"
-import Script from "next/script";
+import AnalyticsGate from "@/components/site/analytics-gate";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -94,12 +93,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
       <body className="font-sans antialiased">
       {children}
-      <Script
-          defer
-          src='https://static.cloudflareinsights.com/beacon.min.js'
-          data-cf-beacon='{"token": "796a32ce7e8b4cdc97d74505ea4b4e50"}'
-      />
-      <Analytics/>
+      {/* Mounts only once the visitor has allowed analytics — see lib/consent. */}
+      <AnalyticsGate />
       </body>
     </html>
   );

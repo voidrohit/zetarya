@@ -19,6 +19,8 @@ export const NAV_LINKS = [
   { label: "Pricing", href: "/pricing" },
   { label: "Changelog", href: "/changelog" },
   { label: "Blog", href: "/blog" },
+  // Hash link into the homepage FAQ, not a page of its own.
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export const FOOTER_COLUMNS = [
@@ -157,6 +159,10 @@ export type Tier = {
   name: string;
   price: string;
   unit: string;
+  /** Optional line under the price — e.g. what the yearly charge actually is. */
+  note?: string;
+  /** Paid tiers only: the fields that swap in when the yearly toggle is on. */
+  annual?: { price: string; unit: string; note: string };
   desc: string;
   cta: string;
   highlight: boolean;
@@ -166,7 +172,7 @@ export type Tier = {
 export const TIERS: Tier[] = [
   {
     name: "Free",
-    price: "₹0",
+    price: "$0",
     unit: "/mo",
     desc: "For testing & personal use.",
     cta: "Get free",
@@ -179,78 +185,216 @@ export const TIERS: Tier[] = [
     ],
   },
   {
-    name: "Plus",
-    price: "₹1,499",
+    name: "Business",
+    price: "$30",
     unit: "/mo",
-    desc: "Best for growing workloads.",
-    cta: "Get Plus",
+    annual: {
+      price: "$25",
+      unit: "/mo, billed yearly",
+      note: "$300 billed once a year",
+    },
+    desc: "Unlimited speed and volume, for teams moving real data.",
+    cta: "Get Business",
     highlight: true,
-    features: [
-      "Up to 200 Mbps transfer speed",
-      "2 TB/month included",
-      "AES-256 + TLS encryption",
-      "Priority email & chat support",
-      "Peer to Peer data transfer",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "Custom",
-    unit: "",
-    desc: "For high-volume transfer.",
-    cta: "Talk to Sales",
-    highlight: false,
     features: [
       "Unlimited transfer speed",
       "Unlimited data transfer",
       "AES-256 + TLS encryption",
-      "Advanced routing & P2P acceleration",
-      "On-prem data transfer under the VPN",
-      "API access",
-      "Dedicated onboarding",
+      "Peer to Peer data transfer",
     ],
   },
 ];
 
+/* The capabilities every transfer gets, whichever plan you are on. Each one is
+   a real behaviour of the transfer engine, not a marketing line:
+
+   auto resume      resume.rs — a roaring bitmap of completed chunks plus each
+                    chunk's xxh3, persisted atomically and keyed by manifest
+                    content, so it survives a restart on either side. The final
+                    pass re-reads every chunk off the disk and proves it.
+   folders          manifest.rs walks directories recursively and keeps the
+                    tree; the CLI takes files and/or directories.
+   external drives  the receiver pre-allocates each file and writes chunks
+                    straight to their final offset (write_at) — no staging
+                    copy, so any mounted volume is just a destination path.
+   encryption       QUIC/TLS 1.3 on every transfer, with app-layer AES-256-CTR
+                    on top when a password is set (crypto.rs).
+   speed            --limit caps the send rate in Mbps; 0 means uncapped.
+*/
+export const PLAN_FEATURES = [
+  {
+    icon: "resume" as const,
+    title: "Picks up where it stopped",
+    body: "Lose the link or reboot mid-run and it resumes at the exact byte - never from the start. Every chunk already on disk is re-read and proven before it is called done.",
+  },
+  {
+    icon: "folder" as const,
+    title: "Whole folders, not just files",
+    body: "Drop in a directory and the entire tree goes across with its structure intact. No zipping it first, no flattening on arrival.",
+  },
+  {
+    icon: "drive" as const,
+    title: "Straight to your external drive",
+    body: "Send from, and receive onto, any mounted disk. Files are written directly to their final place, so nothing is staged on your system drive on the way.",
+  },
+  {
+    icon: "lock" as const,
+    title: "Private the whole way",
+    body: "Encrypted on your device and decrypted on theirs, over TLS 1.3 on every plan and AES-256 on top with Business. We never hold a copy or a key.",
+  },
+  {
+    icon: "gauge" as const,
+    title: "Send at your speed",
+    body: "Cap the rate when you need the line for something else, or let it take everything available - up to 100 Mbps on Free and uncapped on Business.",
+  },
+];
+
 export const PLAN_MATRIX = {
-  columns: ["Free", "Plus", "Pro"],
+  columns: ["Free", "Business"],
   rows: [
-    ["Monthly data transfer", "25 GB", "2 TB", "Unlimited"],
-    ["Transfer speed", "Up to 100 Mbps", "Up to 200 Mbps", "Unlimited"],
-    ["Peer to peer data transfer", "yes", "yes", "yes"],
-    ["TLS encryption", "yes", "yes", "yes"],
-    ["AES-256 encryption", "no", "yes", "yes"],
-    ["Byte-exact resume", "yes", "yes", "yes"],
-    ["Advanced routing & P2P acceleration", "no", "no", "yes"],
-    ["On-prem transfer under the VPN", "no", "no", "yes"],
-    ["API access", "no", "no", "yes"],
-    ["Transfer history", "7 days", "12 months", "Configurable"],
-    ["Support", "Community", "Priority email & chat", "Priority + dedicated onboarding"],
+    ["Monthly data transfer", "25 GB", "Unlimited"],
+    ["Transfer speed", "Up to 100 Mbps", "Unlimited"],
+    ["Peer to peer data transfer", "yes", "yes"],
+    ["TLS encryption", "yes", "yes"],
+    ["AES-256 encryption", "no", "yes"],
+    ["Byte-exact resume", "yes", "yes"],
+    ["Folder & nested tree transfer", "yes", "yes"],
+    ["Send/receive on external drives", "yes", "yes"],
+    ["Transfer history", "7 days", "Configurable"],
+    ["Support", "Community", "Priority + dedicated onboarding"],
   ],
 };
 
-export const FAQS = [
+/* Answers are written from the transfer engine's actual behaviour, not from
+   marketing copy. Where a number appears it comes from the code: 4 MiB chunks
+   over 4 streams, xxh3 per chunk, a roaring bitmap keyed by manifest content
+   hash for resume, QUIC/TLS 1.3 with optional AES-256-CTR, and the flow-control
+   windows in endpoint.rs.
+
+   `topic` decides where a question shows up: "product" on the homepage,
+   "billing" on /pricing. Each page emits FAQPage structured data for exactly
+   the questions it renders — Google penalises markup that claims Q&A the page
+   does not actually show. */
+export type Faq = { q: string; a: string; topic: "product" | "billing" };
+
+export const FAQS: Faq[] = [
+  // ---------------------------------------------------------------- product
   {
+    topic: "product",
+    q: "What is Zetarya?",
+    a: "An app for sending very large files straight from your computer to someone else's. There is no upload step, no shared cloud folder in the middle and no link that expires - the two devices connect to each other and the file moves directly between them. Install it, pair with the person you are sending to, and send.",
+  },
+  {
+    topic: "product",
+    q: "Can it actually transfer 2 TB of data?",
+    a: "Yes, and we have. We moved 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes, holding a sustained 1 Gbps for the whole run rather than in bursts. There is no size limit on a transfer: one enormous file and a folder of a million small ones are both just work to get through.",
+  },
+  {
+    topic: "product",
+    q: "How fast will it be on my connection?",
+    a: "You get whatever the slower of the two connections can give, minus very little. Nothing is uploaded to a server first, so there is no queue to wait behind and no second hop to pay for - on a home line the limit is your own upload speed. The 1 Gbps figure above is what the software sustains when the link can carry it.",
+  },
+  {
+    topic: "product",
+    q: "Is it really peer to peer?",
+    a: "Yes. Devices talk directly over UDP using our own protocol. When a firewall refuses a direct path we fall back to an encrypted relay that carries ciphertext it cannot read, and the app tells you when that has happened - a transfer that is slow between two nearby cities is usually a relayed one.",
+  },
+  {
+    topic: "product",
+    q: "What happens if I close my laptop halfway through?",
+    a: "It picks up at the exact byte. The receiver keeps a record of which chunks are complete, written to disk as it goes, so nothing already transferred is sent twice. Reconnect and the run continues from where it stopped.",
+  },
+  {
+    topic: "product",
+    q: "Does it start over if I restart the sending app, not just the connection?",
+    a: "No. The resume record is keyed by a hash of the file contents, not by the session, so a completely fresh send of the same files finds the previous progress and continues it. Restarting the sender is not the same as starting over.",
+  },
+  {
+    topic: "product",
+    q: "How do you know the file that arrived is not subtly corrupt?",
+    a: "Every chunk carries a checksum that is verified as it lands. Then, at the end, the receiver re-reads every chunk back off the disk and checks it again. Verifying only in flight proves the bytes arrived intact; it says nothing about what the filesystem then did with them, which is exactly where a silently corrupt file comes from. Anything that fails the second pass is re-sent.",
+  },
+  {
+    topic: "product",
+    q: "Can I send a whole folder, or does it have to be one file?",
+    a: "Drop in a folder and the entire tree goes across with its structure intact - subfolders and all. No zipping it up first, and nothing gets flattened on arrival.",
+  },
+  {
+    topic: "product",
+    q: "Will it bog down my computer while it runs?",
+    a: "It holds about 16 MB of your memory for the actual file data, and that number does not change whether you are sending 2 GB or 2 TB. It never touches your GPU, and it does not compress or re-encode your files - it reads them, checks them, encrypts them, and sends them.",
+  },
+  {
+    topic: "product",
+    q: "Do I need free disk space equal to the file I am receiving?",
+    a: "Only for the file itself. The destination is reserved at its full size up front and every piece is written straight into its final position, so there is never a second copy sitting in a temp folder. The only extra is a small bookmark file for resuming, and it is deleted the moment the transfer completes.",
+  },
+  {
+    topic: "product",
+    q: "Can I send straight from - or to - an external drive?",
+    a: "Yes. Any mounted disk is just a path. Because pieces are written directly to their final location, receiving onto an external drive does not stage anything on your system drive first.",
+  },
+  {
+    topic: "product",
+    q: "Can I stop it from eating my whole connection?",
+    a: "Yes. Set a speed cap in Mbps and it will pace itself to that, steadily rather than in bursts, so a video call on the same line stays usable. Leave it off and it takes everything available.",
+  },
+  {
+    topic: "product",
+    q: "What exactly is the encryption?",
+    a: "Every transfer runs inside TLS 1.3. Set a password and a second layer of AES-256 is applied to each chunk before it leaves your machine, with the key derived from your password and a fresh random IV per chunk. We never receive the password, so we could not decrypt the contents even if we held them - which we do not.",
+  },
+  {
+    topic: "product",
+    q: "Do you ever see my files?",
+    a: "No. Files are encrypted on your device and decrypted on theirs, and nothing is written to our servers at any point. Even in the relay fallback, what passes through is ciphertext the relay has no key for.",
+  },
+  {
+    topic: "product",
+    q: "Why is it slower on my phone than on my laptop?",
+    a: "Deliberately. The mobile builds hold roughly a tenth of the data in flight that the desktop ones do, because iOS will kill a foreground app that balloons past a few hundred MB. The smaller ceiling still covers around 200 Mbps on a typical mobile connection - well past what a phone radio sustains - so in practice it costs you nothing.",
+  },
+  {
+    topic: "product",
+    q: "Is there a limit on how many files one transfer can hold?",
+    a: "Not one you are likely to reach. The file list is compressed before it is sent and comfortably handles millions of entries, so a deeply nested project folder is not a problem.",
+  },
+  {
+    topic: "product",
+    q: "What counts as the transfer failing rather than just pausing?",
+    a: "The connection is kept alive through slow patches - a disk that cannot keep up will not kill it. If the other side genuinely goes away it is declared dead after about thirty seconds, the run stops cleanly, and everything already written stays on disk ready to resume.",
+  },
+
+  // ---------------------------------------------------------------- billing
+  {
+    topic: "billing",
     q: "Can I change plans later?",
     a: "Yes, at any time. Upgrades take effect immediately and we prorate the difference. Downgrades apply from the start of your next billing period, and nothing is lost in between.",
   },
   {
+    topic: "billing",
     q: "Does the receiver need a plan?",
     a: "Your plan covers the devices signed in to your account. The person you send to is a guest - guests are free, and there is no limit on them.",
   },
   {
-    q: "Do you offer student or open-source discounts?",
-    a: "Yes. Plus is free for registered students and for maintainers of open-source projects with a public repository. Write to admin@zetarya.com with a link.",
+    topic: "billing",
+    q: "What does unlimited on Business actually mean?",
+    a: "No cap on how much you move in a month and no speed ceiling imposed by us. What you get is whatever the two connections can sustain between them. There is no fair-use clause waiting in the small print.",
   },
   {
+    topic: "billing",
+    q: "Are there egress or per-gigabyte fees on top?",
+    a: "No. The monthly price is the whole price. Because transfers go directly between your devices, there is no bandwidth bill on our side to pass on to you.",
+  },
+  {
+    topic: "billing",
     q: "What happens when my trial ends?",
     a: "Your account moves to the Free plan. Nothing is deleted, because nothing was ever stored on our side - your paired devices simply return to 25 GB a month at up to 100 Mbps.",
   },
-  {
-    q: "Is it really peer to peer?",
-    a: "Yes. Devices talk directly over UDP using our own protocol. When a firewall refuses a direct path we fall back to an encrypted relay that carries ciphertext it cannot read.",
-  },
 ];
+
+export const PRODUCT_FAQS = FAQS.filter((f) => f.topic === "product");
+export const BILLING_FAQS = FAQS.filter((f) => f.topic === "billing");
 
 export const CHANGELOG = [
   {
@@ -288,7 +432,6 @@ export const CHANGELOG = [
     bullets: [
       "You can group saved peers into a roster and revoke a device without touching the others.",
       "History records where a transfer went and when. File names and contents are never written to it.",
-      "Added API access on Pro.",
     ],
   },
   {

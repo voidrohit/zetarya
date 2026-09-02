@@ -46,7 +46,11 @@ export default function SiteNav() {
 
         <ul className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((l) => {
-            const active = pathname === l.href || pathname.startsWith(l.href + "/");
+            // "/#faq" is an anchor on the homepage, not a section of the site:
+            // it should never claim the active underline.
+            const active =
+              !l.href.includes("#") &&
+              (pathname === l.href || pathname.startsWith(l.href + "/"));
             return (
               <li key={l.href}>
                 <Link
@@ -89,6 +93,10 @@ export default function SiteNav() {
               <Link
                 key={l.href}
                 href={l.href}
+                // Closing on a pathname change is not enough: a hash link on the
+                // page you are already on leaves the pathname untouched, so the
+                // sheet would stay up over the section it just jumped to.
+                onClick={() => setOpen(false)}
                 style={{ animationDelay: `${i * 55}ms` }}
                 className="animate-slide-up border-b border-line py-4 text-2xl font-semibold tracking-[-0.02em] text-ink"
               >

@@ -3,7 +3,7 @@
  * site-wide nodes (Organization, WebSite) plus its own page nodes, so every @id
  * reference resolves inside the same document. No cross-<script> references.
  */
-import { FAQS, POSTS, SPECS, TIERS, type Post } from "@/lib/site-content";
+import { POSTS, SPECS, TIERS, type Faq, type Post } from "@/lib/site-content";
 
 export const SITE = "https://zetarya.com";
 
@@ -168,14 +168,14 @@ export function graph(...nodes: object[]) {
 // Page-specific builders
 // ---------------------------------------------------------------------------
 
-/** Numeric INR price, or null for "Custom" / non-numeric tiers. */
-function inr(price: string): string | null {
+/** Numeric USD price, or null for "Custom" / non-numeric tiers. */
+function usd(price: string): string | null {
   const n = price.replace(/[^\d.]/g, "");
   return n && !Number.isNaN(Number(n)) ? String(Number(n)) : null;
 }
 
 export function softwareApplication() {
-  const numeric = TIERS.map((t) => inr(t.price)).filter((p): p is string => p !== null);
+  const numeric = TIERS.map((t) => usd(t.price)).filter((p): p is string => p !== null);
   return {
     "@type": "SoftwareApplication",
     "@id": `${SITE}/#software`,
@@ -198,11 +198,12 @@ export function softwareApplication() {
     publisher: { "@id": `${SITE}/#organization` },
     author: { "@id": `${SITE}/#organization` },
     image: { "@id": `${SITE}/#primaryimage` },
-    // AggregateOffer spans the real published tiers. The previous markup claimed
-    // a flat price of 0 USD, which contradicted the ₹ prices on /pricing.
+    // AggregateOffer spans the real published tiers, in the same currency the
+    // prices on /pricing are shown in. Markup that disagrees with the visible
+    // price is a manual-action risk.
     offers: {
       "@type": "AggregateOffer",
-      priceCurrency: "INR",
+      priceCurrency: "USD",
       lowPrice: numeric.length ? String(Math.min(...numeric.map(Number))) : "0",
       highPrice: numeric.length ? String(Math.max(...numeric.map(Number))) : "0",
       offerCount: TIERS.length,
@@ -216,7 +217,7 @@ export function softwareApplication() {
 
 export function pricingOffers() {
   return TIERS.map((tier) => {
-    const price = inr(tier.price);
+    const price = usd(tier.price);
     return {
       "@type": "Offer",
       "@id": `${SITE}/pricing#${tier.name.toLowerCase()}`,
@@ -230,11 +231,11 @@ export function pricingOffers() {
       ...(price !== null
         ? {
             price,
-            priceCurrency: "INR",
+            priceCurrency: "USD",
             priceSpecification: {
               "@type": "UnitPriceSpecification",
               price,
-              priceCurrency: "INR",
+              priceCurrency: "USD",
               billingIncrement: 1,
               unitCode: "MON",
               referenceQuantity: {
@@ -246,17 +247,19 @@ export function pricingOffers() {
           }
         : // "Custom" is a quote, not a price. Omit price entirely rather than
           // faking a 0 — a 0 makes the tier eligible for "free" treatment.
-          { priceCurrency: "INR", availability: "https://schema.org/PreOrder" }),
+          { priceCurrency: "USD", availability: "https://schema.org/PreOrder" }),
     };
   });
 }
 
-export function faqPage(path: string) {
+/** Pass the questions the page actually renders — markup that claims Q&A a
+ *  visitor cannot see on the page is a manual-action risk. */
+export function faqPage(path: string, items: Faq[]) {
   const url = `${SITE}${path}`;
   return {
     "@type": "FAQPage",
     "@id": `${url}#faq`,
-    mainEntity: FAQS.map((f, i) => ({
+    mainEntity: items.map((f, i) => ({
       "@type": "Question",
       "@id": `${url}#faq-${i + 1}`,
       name: f.q,

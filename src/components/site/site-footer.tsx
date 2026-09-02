@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { Logo, LogoMark } from "./logo";
 import { FOOTER_COLUMNS } from "@/lib/site-content";
+import CookiePrefsLink from "./cookie-prefs-link";
 
 export default function SiteFooter() {
   return (
@@ -47,6 +48,8 @@ export default function SiteFooter() {
             <a href="tel:+919119334720" className="text-[13px] transition-colors hover:text-accent">
               +91 91193 34720
             </a>
+            <span className="hidden h-3 w-px bg-line sm:block" />
+            <CookiePrefsLink />
           </div>
         </div>
       </div>

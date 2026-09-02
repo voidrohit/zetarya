@@ -13,6 +13,15 @@ const nextConfig = {
     poweredByHeader: false,
     async redirects() {
         return [
+            // www served the identical page with a canonical pointing at the apex,
+            // so Search Console filed every www URL as "Alternative page with proper
+            // canonical tag" instead of indexing it. Collapse the host here.
+            {
+                source: '/:path*',
+                has: [{ type: 'host', value: 'www.zetarya.com' }],
+                destination: 'https://zetarya.com/:path*',
+                permanent: true,
+            },
             // Superseded by the separate /terms and /privacy pages.
             { source: '/terms-and-privacy', destination: '/terms', permanent: true },
         ];

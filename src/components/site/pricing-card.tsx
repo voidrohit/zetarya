@@ -55,6 +55,8 @@ export function PricingCard({
         {tier.unit && <span className="pb-1 text-sm text-muted">{tier.unit}</span>}
       </div>
 
+      {tier.note && <p className="mt-2 text-[12.5px] text-faint">{tier.note}</p>}
+
       <p className="mt-3 text-sm leading-relaxed text-muted">{tier.desc}</p>
 
       {soon ? (

@@ -18,10 +18,11 @@ import {
   SectionHeading,
 } from "@/components/site/primitives";
 import Field from "@/components/site/field";
-import { HOME_FEATURES, METRICS, TIERS } from "@/lib/site-content";
+import { FaqList } from "@/components/site/faq-list";
+import { HOME_FEATURES, METRICS, PRODUCT_FAQS, TIERS } from "@/lib/site-content";
 import { DownloadButton, OtherPlatforms } from "@/components/site/platform";
 import JsonLd from "@/components/site/json-ld";
-import { graph, softwareApplication, webPage } from "@/lib/schema";
+import { faqPage, graph, softwareApplication, webPage } from "@/lib/schema";
 
 const TICKER = [
   "2 TB MUMBAI → USA",
@@ -45,6 +46,7 @@ export default function Home() {
           extra: { mainEntity: { "@id": "https://zetarya.com/#software" } },
         }),
         softwareApplication(),
+        faqPage("/", PRODUCT_FAQS),
       )} />
       {/* ---------------- hero ---------------- */}
       <section className="relative isolate overflow-hidden">
@@ -167,7 +169,7 @@ export default function Home() {
             </h2>
             <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
               We pushed 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes - a sustained 1 Gbps end to
-              end on AWS EC2 machines. Pro runs at that ceiling, and a dropped link resumes at the exact byte.
+              end on AWS EC2 machines. Business runs at that ceiling, and a dropped link resumes at the exact byte.
             </p>
             <Link href="/features" className="link-accent mt-6">
               See the benchmarks
@@ -217,7 +219,7 @@ export default function Home() {
           title="Pricing that stays out of the way"
           sub="Free to start, flat monthly after that. No egress fees, no per-gigabyte metering."
         />
-        <div className="mt-12 grid items-start gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-12 grid max-w-[780px] items-start gap-6 md:grid-cols-2">
           {TIERS.map((t, i) => (
             <Reveal key={t.name} delay={i * 90}>
               <PricingCard tier={t} maxFeatures={3} href="/pricing" />
@@ -231,6 +233,25 @@ export default function Home() {
               <Icon name="arrow-right" className="h-4 w-4" />
             </Link>
           </div>
+        </Reveal>
+      </Section>
+
+      {/* ---------------- faq ---------------- */}
+      <Section rule id="faq" className="scroll-mt-[72px]">
+        <SectionHeading
+          center
+          title="The questions people actually ask"
+          sub="The small details, answered properly. Billing questions live on the pricing page."
+        />
+        <FaqList items={PRODUCT_FAQS} />
+        <Reveal delay={200}>
+          <p className="mt-10 text-center text-sm text-muted">
+            Something not covered?{" "}
+            <Link href="/contact" className="font-semibold text-accent hover:underline">
+              Ask us
+            </Link>
+            .
+          </p>
         </Reveal>
       </Section>
 

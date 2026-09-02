@@ -5,16 +5,16 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SiteShell from "@/components/site/site-shell";
 import { PricingCard } from "@/components/site/pricing-card";
+import { FaqList } from "@/components/site/faq-list";
 import { Reveal } from "@/components/site/reveal";
 import { Icon } from "@/components/site/icons";
-import { CtaBanner, PageHero, Section, SectionHeading } from "@/components/site/primitives";
-import { FAQS, PLAN_MATRIX, TIERS } from "@/lib/site-content";
+import { CtaBanner, FeatureBlock, PageHero, Section, SectionHeading } from "@/components/site/primitives";
+import { BILLING_FAQS, PLAN_FEATURES, PLAN_MATRIX, TIERS } from "@/lib/site-content";
 import { DOWNLOADS, DOWNLOADS_LIVE, detectPlatform } from "@/components/site/platform";
 
 export default function PricingClient() {
     const [opening, setOpening] = useState(false);
     const [annual, setAnnual] = useState(true);
-    const [openFaq, setOpenFaq] = useState<number | null>(0);
     const [email, setEmail] = useState("");
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -48,12 +48,14 @@ export default function PricingClient() {
     // Checkout needs an email to attach the order to. Ask for it, nothing more.
     const handlePay = useCallback(() => dialogRef.current?.showModal(), []);
 
-    // Auto-open checkout when someone lands on ?pay=plus.
+    // Auto-open checkout when someone lands on ?pay=business (?pay=plus is
+    // kept working for links that predate the tier rename).
     // Read from window rather than useSearchParams: the hook opts the whole
     // page out of prerendering, which would ship /pricing with no crawlable HTML.
     useEffect(() => {
         if (autoTriggeredRef.current) return;
-        if (new URLSearchParams(window.location.search).get("pay") === "plus") {
+        const pay = new URLSearchParams(window.location.search).get("pay");
+        if (pay === "business" || pay === "plus") {
             autoTriggeredRef.current = true;
             handlePay();
         }
@@ -123,7 +125,7 @@ export default function PricingClient() {
                             >
                                 {o.label}
                                 {o.value && (
-                                    <span className="text-[12px] font-semibold text-accent">Save 20%</span>
+                                    <span className="text-[12px] font-semibold text-accent">Save 17%</span>
                                 )}
                             </button>
                         ))}
@@ -131,36 +133,45 @@ export default function PricingClient() {
                 </div>
             </PageHero>
 
-            <div className="measure grid items-start gap-6 pb-16 md:grid-cols-3 sm:pb-20">
+            <div className="measure mx-auto grid max-w-[780px] items-start gap-6 pb-16 md:grid-cols-2 sm:pb-20">
                 {TIERS.map((t, i) => {
-                    const isPlus = t.name === "Plus";
                     const isFree = t.name === "Free";
-                    const isPro = t.name === "Pro";
-                    const priced =
-                        isPlus && annual
-                            ? { ...t, price: "₹1,199", unit: "/mo, billed yearly" }
-                            : t;
+                    const isPaid = !isFree;
+                    const priced = annual && t.annual ? { ...t, ...t.annual } : t;
                     return (
                         <Reveal key={t.name} delay={i * 90}>
                             <PricingCard
                                 tier={priced}
-                                busy={isPlus && opening}
+                                busy={isPaid && opening}
                                 soon={isFree && !DOWNLOADS_LIVE}
                                 onCta={
-                                    isPlus
+                                    isPaid
                                         ? handlePay
-                                        : isFree && DOWNLOADS_LIVE
+                                        : DOWNLOADS_LIVE
                                           ? () => {
                                                 window.location.href = DOWNLOADS[detectPlatform()].href;
                                             }
                                           : undefined
                                 }
-                                href={isPro ? "/contact" : undefined}
                             />
                         </Reveal>
                     );
                 })}
             </div>
+
+            {/* what every transfer does, on either plan */}
+            <Section rule>
+                <SectionHeading
+                    center
+                    title="In every transfer"
+                    sub="The parts that do not change with your plan. Only speed and volume do."
+                />
+                <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                    {PLAN_FEATURES.map((f, i) => (
+                        <FeatureBlock key={f.title} {...f} delay={i * 80} />
+                    ))}
+                </div>
+            </Section>
 
             {/* plan matrix */}
             <Section rule>
@@ -168,7 +179,7 @@ export default function PricingClient() {
 
                 <Reveal delay={100}>
                     <div className="mt-12 hidden overflow-hidden rounded border border-line lg:block">
-                        <div className="grid grid-cols-[1.6fr_1fr_1fr_1fr] bg-surface">
+                        <div className="grid grid-cols-[1.6fr_1fr_1fr] bg-surface">
                             <div className="px-5 py-4 text-[13px] font-semibold text-muted">Capability</div>
                             {PLAN_MATRIX.columns.map((c, i) => (
                                 <div
@@ -184,7 +195,7 @@ export default function PricingClient() {
                         {PLAN_MATRIX.rows.map((row) => (
                             <div
                                 key={row[0]}
-                                className="grid grid-cols-[1.6fr_1fr_1fr_1fr] border-t border-line transition-colors hover:bg-surface/60"
+                                className="grid grid-cols-[1.6fr_1fr_1fr] border-t border-line transition-colors hover:bg-surface/60"
                             >
                                 <div className="px-5 py-3.5 text-[13.5px] font-medium">{row[0]}</div>
                                 {row.slice(1).map((v, i) => (
@@ -238,44 +249,12 @@ export default function PricingClient() {
 
             {/* faq */}
             <Section rule>
-                <SectionHeading center title="Questions people actually ask" />
-                <div className="mx-auto mt-12 max-w-[800px]">
-                    {FAQS.map((f, i) => {
-                        const open = openFaq === i;
-                        return (
-                            <Reveal key={f.q} delay={i * 60}>
-                                <div className="border-t border-line">
-                                    <button
-                                        onClick={() => setOpenFaq(open ? null : i)}
-                                        aria-expanded={open}
-                                        className="flex w-full items-center justify-between gap-6 py-6 text-left"
-                                    >
-                                        <span className="text-[16px] font-semibold tracking-[-0.01em] sm:text-[16.5px]">
-                                            {f.q}
-                                        </span>
-                                        <Icon
-                                            name="chevron-down"
-                                            className={`h-4 w-4 shrink-0 text-muted transition-transform duration-300 ${
-                                                open ? "rotate-180" : ""
-                                            }`}
-                                        />
-                                    </button>
-                                    <div
-                                        className={`grid transition-all duration-400 ease-[cubic-bezier(.16,1,.3,1)] ${
-                                            open ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"
-                                        }`}
-                                    >
-                                        <div className="overflow-hidden">
-                                            <p className="max-w-[680px] text-[15.5px] leading-relaxed text-muted">
-                                                {f.a}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Reveal>
-                        );
-                    })}
-                </div>
+                <SectionHeading
+                    center
+                    title="Questions about billing"
+                    sub="How plans, invoices and limits work. Product questions are answered on the home page."
+                />
+                <FaqList items={BILLING_FAQS} />
                 <Reveal delay={200}>
                     <p className="mt-10 text-center text-sm text-muted">
                         Still deciding?{" "}
