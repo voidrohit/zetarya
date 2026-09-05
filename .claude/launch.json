@@ -1,0 +1,25 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "zetarya",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "engine-harness",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8088",
+        "--directory",
+        "/Users/rohitkumar/Documents/zero2hq/zetarya/browser"
+      ],
+      "port": 8088
+    }
+  ]
+}
