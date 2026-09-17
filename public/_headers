@@ -1,0 +1,15 @@
+# https://developers.cloudflare.com/workers/static-assets/headers
+# https://opennext.js.org/cloudflare/caching#static-assets-caching
+#
+# Everything under /_next/static is named by a hash of its contents, so a file
+# at a given URL can never change: a new build writes new names instead. That
+# makes it safe to cache for a year, and necessary to.
+#
+# Without this file Cloudflare serves these with its default,
+# "max-age=0, must-revalidate", and it caused a ChunkLoadError in Search
+# Console. A crawler kept an older copy of the homepage HTML, but because the
+# chunk it pointed at had been marked not to keep, it went back for it after a
+# deploy had already replaced it — and got a 404. Cached as immutable, the old
+# chunk stays wherever the old HTML does.
+/_next/static/*
+  Cache-Control: public,max-age=31536000,immutable
