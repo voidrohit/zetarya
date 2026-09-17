@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import React from "react";
 import SiteShell from "@/components/site/site-shell";
 import { Reveal } from "@/components/site/reveal";
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default function ChangelogPage() {
+  // Hidden for now. The nav, footer, sitemap and llms.txt links are commented
+  // out alongside this; delete this line and uncomment those to bring it back.
+  notFound();
+
   return (
     <SiteShell>
       <JsonLd data={graph(

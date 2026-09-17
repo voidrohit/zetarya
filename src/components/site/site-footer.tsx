@@ -12,7 +12,7 @@ export default function SiteFooter() {
           <div className="max-w-[300px]">
             <Logo className="h-8" />
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              Direct encrypted transfer between your devices over UDP. Up to 1 Gbps, AES-256 + TLS 1.3, nothing stored.
+              Direct encrypted transfer between your devices over TCP. No speed cap, AES-256 + TLS 1.3, nothing stored.
             </p>
           </div>
 

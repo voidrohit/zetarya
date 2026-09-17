@@ -11,8 +11,8 @@
     @apply bg-bg text-ink font-sans;
   }
   ::selection {
-    background: #f9ebef;
-    color: #8f1f3c;
+    background: #fdf2f5;
+    color: #a11f40;
   }
 }
 
@@ -57,8 +57,8 @@
 
 @layer utilities {
   .grid-backdrop {
-    background-image: linear-gradient(to right, #eae9e5 1px, transparent 1px),
-      linear-gradient(to bottom, #eae9e5 1px, transparent 1px);
+    background-image: linear-gradient(to right, #ece7e3 1px, transparent 1px),
+      linear-gradient(to bottom, #ece7e3 1px, transparent 1px);
     background-size: 48px 48px;
   }
   .mask-fade-b {

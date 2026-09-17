@@ -23,7 +23,7 @@ const ORGANIZATION = {
   legalName: "Zetarya",
   url: SITE,
   description:
-    "Zetarya moves very large files directly between two devices at up to 1 Gbps over its own UDP protocol, encrypted end to end with nothing stored on its servers.",
+    "Zetarya moves very large files directly between two devices with no speed cap — 1 Gbps sustained and beyond — over parallel TCP connections, encrypted end to end with nothing stored on its servers.",
   logo: {
     "@type": "ImageObject",
     "@id": `${SITE}/#logo`,
@@ -97,7 +97,7 @@ const WEBSITE = {
   name: "Zetarya",
   url: SITE,
   description:
-    "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
+    "Send very large files directly between two devices. No speed cap — 1 Gbps sustained and beyond. Encrypted end to end, resumable to the byte, nothing stored.",
   publisher: { "@id": `${SITE}/#organization` },
   inLanguage: "en",
   // No site search exists, so no SearchAction. Pointing one at a /search route
@@ -182,14 +182,14 @@ export function softwareApplication() {
     name: "Zetarya",
     url: SITE,
     description:
-      "Peer-to-peer file transfer for very large files. Up to 1 Gbps between two devices over a custom UDP protocol, AES-256 inside TLS 1.3, byte-exact resume, nothing stored server-side.",
+      "Peer-to-peer file transfer for very large files. No speed cap between two devices over parallel TCP connections — 1 Gbps sustained and beyond — AES-256 inside TLS 1.3, byte-exact resume, nothing stored server-side.",
     applicationCategory: "UtilitiesApplication",
     applicationSubCategory: "File Transfer",
     operatingSystem: "macOS, Windows, Linux, iOS, Android",
     softwareVersion: "2.4.0",
     downloadUrl: `${SITE}/windows/zetarya.exe`,
     featureList: [
-      `Sustained transfer at up to ${SPECS.recordSpeed}`,
+      `Sustained transfer with no speed cap, ${SPECS.recordSpeed} measured`,
       `${SPECS.cipher} end-to-end encryption`,
       "Byte-exact resume after interruption",
       `Direct peer-to-peer transport using ${SPECS.transport}`,

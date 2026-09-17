@@ -19,7 +19,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Description of service",
     paragraphs: [
-      "Zetarya establishes encrypted links between devices you control or are invited to, using our own protocol over UDP, and moves files across them. The service runs on Amazon Web Services. Where a direct link cannot be formed, an encrypted relay may carry the ciphertext without the ability to read it.",
+      "Zetarya establishes encrypted links between devices you control or are invited to, over TCP connections opened directly between them, and moves files across them. Files are never uploaded to us: the service we operate handles accounts, pairing and coordination, and is not on the path your data takes. Where a direct link cannot be formed, an encrypted relay may carry the ciphertext without the ability to read it.",
       "We may change or discontinue features. For paid accounts we will give 30 days’ notice before removing anything material.",
     ],
   },

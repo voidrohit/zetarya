@@ -17,7 +17,7 @@ import { breadcrumbs, graph, softwareApplication, webPage } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "Features - Zetarya",
   description:
-    "One encrypted link between two devices, on our own protocol over UDP. Up to 1 Gbps, AES-256 inside TLS 1.3, nothing stored.",
+    "One encrypted link between two devices, over parallel TCP connections. No speed cap — 1 Gbps sustained and beyond. AES-256 inside TLS 1.3, nothing stored.",
 };
 
 export default function FeaturesPage() {
@@ -29,7 +29,7 @@ export default function FeaturesPage() {
           path: "/features",
           name: "Features - Zetarya",
           description:
-            "One encrypted link between two devices, on our own protocol over UDP. Up to 1 Gbps, AES-256 inside TLS 1.3, nothing stored.",
+            "One encrypted link between two devices, over parallel TCP connections. No speed cap — 1 Gbps sustained and beyond. AES-256 inside TLS 1.3, nothing stored.",
           trail: [],
           extra: { mainEntity: { "@id": "https://zetarya.com/#software" } },
         }),

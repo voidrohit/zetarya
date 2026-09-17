@@ -7,20 +7,23 @@ export const SPECS = {
   proSpeed: "Unlimited",
   recordVolume: "2 TB",
   recordRoute: "Mumbai → N. Virginia",
-  recordTime: "4 h 27 m",
+  recordTime: "5 h",
+  // Peak, not average. 2 TB in 5 hours averages ~890 Mbps; the link touched a
+  // gigabit at its best. Keeping the two apart is what stops the run's
+  // headline numbers contradicting each other.
   recordSpeed: "1 Gbps",
+  recordAverage: "890 Mbps",
   cipher: "AES-256 inside TLS 1.3",
-  transport: "our own protocol over UDP",
-  cloud: "AWS",
+  transport: "parallel TCP connections between your devices",
 } as const;
 
 export const NAV_LINKS = [
   { label: "Features", href: "/features" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Changelog", href: "/changelog" },
+  // Hidden for now — see src/app/changelog/page.tsx.
+  // { label: "Changelog", href: "/changelog" },
   { label: "Blog", href: "/blog" },
-  // Hash link into the homepage FAQ, not a page of its own.
-  { label: "FAQ", href: "/#faq" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 export const FOOTER_COLUMNS = [
@@ -29,14 +32,15 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "Features", href: "/features" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Changelog", href: "/changelog" },
+      // { label: "Changelog", href: "/changelog" },
     ],
   },
   {
     heading: "Resources",
     links: [
       { label: "Blog", href: "/blog" },
-      { label: "Protocol paper", href: "/blog/one-gbps-long-haul" },
+      { label: "FAQ", href: "/faq" },
+      { label: "White paper", href: "/whitepaper" },
       { label: "Contact", href: "/contact" },
     ],
   },
@@ -61,7 +65,7 @@ export const HOME_FEATURES = [
   {
     icon: "bolt" as const,
     title: "Paired in six digits",
-    body: "Type a code on both ends. No account, no upload queue, no waiting room.",
+    body: "Type a code on both ends. No upload queue, no waiting room.",
   },
   {
     icon: "shield" as const,
@@ -103,8 +107,8 @@ export const FEATURE_GROUPS = [
     items: [
       {
         icon: "gauge" as const,
-        title: "Up to 1 Gbps",
-        body: "Pro is uncapped — it takes whatever the link gives it. Our record run held 1 Gbps from Mumbai to N. Virginia.",
+        title: "No speed limit",
+        body: "Business is uncapped — it takes whatever the link gives it. Our record run held 1 Gbps from Mumbai to N. Virginia; a faster link goes faster.",
       },
       {
         icon: "resume" as const,
@@ -139,14 +143,14 @@ export const FEATURE_GROUPS = [
 export const METRICS = [
   { value: 1, suffix: " Gbps", label: "peak on our Mumbai → US run", decimals: 0 },
   { value: 0, suffix: " bytes", label: "of your data stored by us", decimals: 0 },
-  { value: 4.45, prefix: "", suffix: " hrs", label: "to move 2 TB, Mumbai → USA", decimals: 2 },
+  { value: 5, prefix: "", suffix: " hrs", label: "to move 2 TB, Mumbai → USA", decimals: 0 },
 ];
 
 export const COMPARISON = {
   columns: ["Zetarya", "Cloud storage", "Link services"],
   rows: [
     ["Maximum file size", "Unlimited", "Plan cap, typically 2 TB", "2–5 GB"],
-    ["Typical throughput", "Up to 1 Gbps", "80–150 Mb/s", "20–60 Mb/s"],
+    ["Typical throughput", "Line rate, uncapped", "80–150 Mb/s", "20–60 Mb/s"],
     ["Copy held by the provider", "None", "Full copy", "Full copy"],
     ["Encryption", "AES-256 inside TLS 1.3", "At rest, provider holds keys", "In transit only"],
     ["Resume after a dropped link", "Byte-exact", "Restarts the chunk", "Restarts the upload"],
@@ -275,32 +279,51 @@ export const PLAN_MATRIX = {
    "billing" on /pricing. Each page emits FAQPage structured data for exactly
    the questions it renders — Google penalises markup that claims Q&A the page
    does not actually show. */
-export type Faq = { q: string; a: string; topic: "product" | "billing" };
+export type Faq = {
+  q: string;
+  a: string;
+  topic: "product" | "billing";
+  /** Shown on the home page. Six, deliberately: the front page answers what
+   *  it is, how fast each of the two routes goes, who can see the files and
+   *  what happens when a transfer is interrupted. Everything else is a real
+   *  question but not a first-visit one, and lives on /faq. */
+  home?: true;
+};
 
 export const FAQS: Faq[] = [
   // ---------------------------------------------------------------- product
   {
     topic: "product",
+    home: true,
     q: "What is Zetarya?",
-    a: "An app for sending very large files straight from your computer to someone else's. There is no upload step, no shared cloud folder in the middle and no link that expires - the two devices connect to each other and the file moves directly between them. Install it, pair with the person you are sending to, and send.",
+    a: "Send files of any size at high speed, directly from one device to another with secure peer-to-peer (P2P) transfer. No cloud uploads, no third-party storage, no expiring links — just a fast, private, and secure connection between your devices, because speed and privacy are our priority.",
   },
   {
     topic: "product",
     q: "Can it actually transfer 2 TB of data?",
-    a: "Yes, and we have. We moved 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes, holding a sustained 1 Gbps for the whole run rather than in bursts. There is no size limit on a transfer: one enormous file and a folder of a million small ones are both just work to get through.",
+    a: "Yes, and we have. We moved 2 TB from Mumbai to N. Virginia in 5 hours, holding close to a gigabit for the whole run rather than peaking there in bursts. There is no size limit on a transfer: one enormous file and a folder of a million small ones are both just work to get through.",
   },
   {
     topic: "product",
-    q: "How fast will it be on my connection?",
-    a: "You get whatever the slower of the two connections can give, minus very little. Nothing is uploaded to a server first, so there is no queue to wait behind and no second hop to pay for - on a home line the limit is your own upload speed. The 1 Gbps figure above is what the software sustains when the link can carry it.",
+    home: true,
+    q: "How fast is it between two devices running the app?",
+    a: "You get whatever the slower of the two connections can give, minus very little. Nothing is uploaded to a server first, so there is no queue to wait behind and no second hop to pay for - on a home line the limit is your own upload speed. The 1 Gbps figure above is a measurement, not a ceiling: it is what the software sustained on the link we tested, and a faster link goes faster.",
   },
   {
     topic: "product",
+    home: true,
+    q: "And how fast is it when someone sends from a browser link?",
+    a: "Slower, and by design. A browser cannot open a direct connection to your machine the way the app can, so those transfers go through our relay - which means we are paying for every byte, and they run at a fixed, shared rate rather than at your line speed. The upload page shows the current rate before anything is sent. For a few files it is the difference between a minute and three; for a 2 TB drive, install the app on both ends and take the direct path.",
+  },
+  {
+    topic: "product",
+    home: true,
     q: "Is it really peer to peer?",
-    a: "Yes. Devices talk directly over UDP using our own protocol. When a firewall refuses a direct path we fall back to an encrypted relay that carries ciphertext it cannot read, and the app tells you when that has happened - a transfer that is slow between two nearby cities is usually a relayed one.",
+    a: "Yes. Devices open TCP connections straight to each other. When a firewall refuses a direct path we fall back to an encrypted relay that carries ciphertext it cannot read, and the app tells you when that has happened - a transfer that is slow between two nearby cities is usually a relayed one.",
   },
   {
     topic: "product",
+    home: true,
     q: "What happens if I close my laptop halfway through?",
     a: "It picks up at the exact byte. The receiver keeps a record of which chunks are complete, written to disk as it goes, so nothing already transferred is sent twice. Reconnect and the run continues from where it stopped.",
   },
@@ -346,13 +369,9 @@ export const FAQS: Faq[] = [
   },
   {
     topic: "product",
+    home: true,
     q: "Do you ever see my files?",
     a: "No. Files are encrypted on your device and decrypted on theirs, and nothing is written to our servers at any point. Even in the relay fallback, what passes through is ciphertext the relay has no key for.",
-  },
-  {
-    topic: "product",
-    q: "Why is it slower on my phone than on my laptop?",
-    a: "Deliberately. The mobile builds hold roughly a tenth of the data in flight that the desktop ones do, because iOS will kill a foreground app that balloons past a few hundred MB. The smaller ceiling still covers around 200 Mbps on a typical mobile connection - well past what a phone radio sustains - so in practice it costs you nothing.",
   },
   {
     topic: "product",
@@ -394,6 +413,10 @@ export const FAQS: Faq[] = [
 ];
 
 export const PRODUCT_FAQS = FAQS.filter((f) => f.topic === "product");
+
+/** What the home page renders — and therefore what its FAQPage schema may
+ *  list, since structured data has to match what a visitor can actually see. */
+export const HOME_FAQS = FAQS.filter((f) => f.home);
 export const BILLING_FAQS = FAQS.filter((f) => f.topic === "billing");
 
 export const CHANGELOG = [
@@ -406,7 +429,7 @@ export const CHANGELOG = [
     ],
     title: "A dedicated Mumbai ⇄ Virginia route",
     bullets: [
-      "A dedicated AWS route between Mumbai and N. Virginia. Our first 2 TB run across it landed in 4 hours 27 minutes at a sustained 1 Gbps.",
+      "A dedicated long-haul route between Mumbai and N. Virginia. Our first 2 TB run across it landed in 5 hours, touching a gigabit and averaging a little under it.",
       "The scheduler keeps 64 chunks in flight by default, up from 32. On the long-haul path that lifted sustained throughput from 870 Mb/s to 1.02 Gb/s.",
       "Fixed a case where a resumed transfer re-verified chunks it had already committed.",
     ],
@@ -480,7 +503,7 @@ export const POSTS: Post[] = [
     category: "Engineering",
     title: "How we hold 1 Gbps on a link that keeps moving",
     excerpt:
-      "Congestion control tuned for two known endpoints behaves nothing like the general internet case. Here is the scheduler we ended up with, and the three ideas we threw away first.",
+      "A single connection with default socket buffers tops out long before the link does. What actually holds a gigabit across 200 ms is duller than a new protocol, and we tried the interesting answer first.",
     author: "Rohit Kumar Singh",
     initials: "RS",
     role: "Founder",
@@ -489,21 +512,23 @@ export const POSTS: Post[] = [
     read: "9 min read",
     featured: true,
     body: [
-      "The first version of Zetarya used TCP, like almost everything else does. Laptop to laptop across an office, it was fine. On the Mumbai to Northern Virginia run it settled at around 640 Mb/s and stayed there no matter what we did to the machines at either end. The bottleneck was not the link, and it was not the disks. It was an assumption.",
-      "TCP’s congestion control is written for a stranger’s internet. It assumes it is sharing the path with thousands of flows it cannot see, so it reads a lost packet as a warning from a crowd and backs off hard. For the general case that is exactly right. But a Zetarya transfer is two machines that have already agreed to talk to each other. They know each other’s addresses, they measure the round trip continuously, and they have a decent estimate of what the path will take. On a very long path, one dropped packet is far more often a fluke than a crowd.",
-      "## Writing our own",
-      "So we stopped arguing with TCP and wrote our own protocol on top of UDP. That sentence gets more nervous reactions in a design review than anything else we do, and the nervousness is earned. UDP gives you nothing. No ordering, no retransmission, no acknowledgement that anything arrived at all. Everything you took for granted is now yours to build and yours to get wrong.",
-      "That is also the entire point. Because you own it, you get to decide what it does when the path turns strange, instead of inheriting a decision made in the 1980s for a network that no longer exists.",
-      "What we do with that ownership is, honestly, boring. Measure the path constantly. Send at a rate the current measurements support rather than a rate a rule of thumb suggests. Treat a small amount of loss on a long path as information rather than as an emergency. That is most of the trick. It is less clever than people expect it to be, and it took roughly four times longer than we estimated to get right.",
+      "The first version of Zetarya moved bytes over a single connection, like almost everything else does. Laptop to laptop across an office, it was fine. On the Mumbai to Northern Virginia run it settled at around 640 Mb/s and stayed there no matter what we did to the machines at either end. The bottleneck was not the link, and it was not the disks. It was an assumption.",
+      "## We tried the interesting answer first",
+      "The obvious move, and the one that gets nods in a design review, is to leave TCP behind and run the transfer over UDP instead. We did that. We measured it on the same pair of machines, the same pipeline, the same chunks - and it was slower. Not marginally: a single UDP-based connection moved about two thirds of what several plain TCP connections moved on the identical link.",
+      "That result is not a criticism of anyone’s protocol. It is what a userspace transport costs on today’s machines, against a kernel path that hardware has been optimising for thirty years. We had reached for the clever answer because it was the interesting one, not because the numbers asked for it.",
+      "## It was not TCP that was slow",
+      "It was one connection, with the buffers an operating system hands out by default. Mumbai to Northern Virginia is about 200 ms round trip, and holding a gigabit across 200 ms means roughly 25 MB is in the air at any moment. A socket sized for a normal web request cannot keep that much unacknowledged, so the sender spends most of its time waiting for the far end to say it is still there. The link was never the limit. The window was.",
+      "So bulk bytes now move over several TCP connections at once, opened directly between the two devices, with sockets sized for the path rather than for the average case. An encrypted control link still does the things only it can do - proving who each side is, getting through the NATs in between, and carrying the data itself when the two devices genuinely cannot reach each other directly.",
+      "None of that is a new idea. It is the boring answer, and it took roughly four times longer to accept than it did to implement.",
       "## A file is not a stream",
       "The second change was to stop treating a transfer as one long stream. Files go out as fixed-size chunks, each carrying its own hash. The receiver commits them as they land, in whatever order they land, and can verify the finished file without reading the whole thing back off the disk a second time.",
       "This bought us more than throughput. Resume came almost free, and an entire family of “we were at 94% and then something moved” failures stopped existing.",
       "## Three things we threw away",
       "Compression on the wire. Most of what people send us is already compressed - camera footage, disk images, archives. On the small fraction that isn’t, the CPU cost showed up as a throughput dip on thin laptops and lost more than it ever returned.",
       "An adaptive chunk size. On a whiteboard this is obviously correct. Two weeks of measurement put the gain inside the noise, and it made every bug report harder to reproduce, because no two runs were shaped the same.",
-      "A third loss-recovery mode, for the awkward case in the middle. We could never write down the situation it was for without hand-waving. If you cannot describe when a heuristic fires, it will fire when you least want it to.",
+      "A rule that switched paths mid-transfer when a link looked unhappy. We could never write down the situation it was for without hand-waving, and if you cannot describe when a heuristic fires, it will fire when you least want it to.",
       "## Where it actually sits",
-      "On our own instrumented run we hold a gigabit for 2 TB from Mumbai to Northern Virginia, which finishes in about four and a half hours. That number is the easy one to quote and the easy one to achieve.",
+      "On our own instrumented run we hold close to a gigabit for 2 TB from Mumbai to Northern Virginia, which finishes in about five hours. That number is the easy one to quote and the easy one to achieve.",
       "The number we actually tune for now is different: how often a transfer holds its rate for hours with nobody watching it. Peak throughput is a demo. Not dropping to a crawl at 3am on someone else’s network is a product.",
     ],
   },

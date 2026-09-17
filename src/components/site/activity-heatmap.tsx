@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { useInView } from "./reveal";
 
-const LEVELS = ["#EAE8E5", "rgba(190,42,80,.2)", "rgba(190,42,80,.4)", "rgba(190,42,80,.68)", "#BE2A50"];
+const LEVELS = ["#ece7e3", "rgba(187,37,74,.2)", "rgba(187,37,74,.4)", "rgba(187,37,74,.68)", "#bb254a"];
 
 export default function ActivityHeatmap({ weeks = 38 }: { weeks?: number }) {
   const { ref, inView } = useInView<HTMLDivElement>();

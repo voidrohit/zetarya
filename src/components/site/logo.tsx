@@ -28,12 +28,24 @@ export function LogoMark({
   );
 }
 
-export function Logo({ className = "h-8" }: { className?: string }) {
+/**
+ * `onDark` is a second palette, not a colour override: the arcs stay legible
+ * as the brand tint while the wordmark goes white, which a single
+ * currentColor would not give — it would flatten the mark and the word into
+ * one colour and lose the mark entirely.
+ */
+export function Logo({
+  className = "h-8",
+  onDark = false,
+}: {
+  className?: string;
+  onDark?: boolean;
+}) {
   return (
     <svg viewBox="0 0 185 40" className={`w-auto ${className}`} fill="none" aria-label="Zetarya">
-      <path d={ARC_TOP} className="fill-accent" />
-      <path d={ARC_BOTTOM} className="fill-accent" />
-      <path d={WORDMARK} fill="#351228" />
+      <path d={ARC_TOP} className={onDark ? "fill-accent-dim" : "fill-accent"} />
+      <path d={ARC_BOTTOM} className={onDark ? "fill-accent-dim" : "fill-accent"} />
+      <path d={WORDMARK} fill={onDark ? "#FFFFFF" : "#351228"} />
     </svg>
   );
 }

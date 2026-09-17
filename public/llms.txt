@@ -1,14 +1,14 @@
 # Zetarya
 
-> Zetarya moves very large files directly between two devices — up to 1 Gbps, encrypted end to end, with nothing stored on our servers. Pair two machines with a six-digit code and the bytes go straight from one to the other.
+> Zetarya moves very large files directly between two devices with no speed cap — 1 Gbps sustained and beyond, as fast as the two machines and the link allow — encrypted end to end, with nothing stored on our servers. Pair two machines with a six-digit code and the bytes go straight from one to the other.
 
-Zetarya runs on its own protocol over UDP rather than on TCP, which is what lets a single transfer hold a gigabit across a long path. Files are sent as hashed chunks, so a transfer resumes to the byte after a dropped connection, a closed lid, or a switch from Wi-Fi to mobile. Content is encrypted with AES-256 inside TLS 1.3; session keys are generated on the two endpoints and never reach us. Most connections are established directly through NAT hole punching, and fall back to an encrypted relay when a network refuses a direct path.
+Zetarya opens several TCP connections straight between the two devices and moves the file across them in parallel, which is what lets a single transfer hold a gigabit across a long path. No cloud provider is on the data path: files go device to device, and the service Zetarya operates handles accounts, pairing and coordination only. Files are sent as hashed chunks, so a transfer resumes to the byte after a dropped connection, a closed lid, or a switch from Wi-Fi to mobile. Content is encrypted with AES-256 inside TLS 1.3; session keys are generated on the two endpoints and never reach us. Most connections are established directly through NAT hole punching, and fall back to an encrypted relay when a network refuses a direct path.
 
 ## Product
 
 - [Features](https://zetarya.com/features): pairing, transfer and control capabilities in full
 - [Pricing](https://zetarya.com/pricing): free tier at 25 GB/month up to 100 Mbps; Plus at 2 TB/month up to 200 Mbps; Pro uncapped on volume and speed
-- [Changelog](https://zetarya.com/changelog): release notes by version
+<!-- - [Changelog](https://zetarya.com/changelog): release notes by version -->
 
 ## Writing
 

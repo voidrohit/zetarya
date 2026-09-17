@@ -1,17 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaApple, FaWindows, FaLinux, FaAndroid } from "react-icons/fa";
+import { RELEASES, type Platform } from "@/lib/platforms";
 
-export type Platform = "mac" | "windows" | "linux" | "ios" | "android";
-
-export const DOWNLOADS: Record<Platform, { href: string; label: string }> = {
-  mac: { href: "/download/zetarya.pkg", label: "Download for Mac" },
-  ios: { href: "/download/zetarya.pkg", label: "Download for iOS" },
-  windows: { href: "/download/zetarya.exe", label: "Download for Windows" },
-  linux: { href: "/download/zetarya.exe", label: "Download for Linux" },
-  android: { href: "/download/zetarya.exe", label: "Download for Android" },
-};
+export { RELEASES };
+export type { Platform };
 
 const GLYPHS: Record<Platform, React.ComponentType<{ className?: string }>> = {
   mac: FaApple,
@@ -49,9 +44,13 @@ export function PlatformGlyph({
   return <Glyph className={className} aria-hidden="true" />;
 }
 
-/** Clients are not shipping yet — every download entry point reads "Coming soon". */
-export const DOWNLOADS_LIVE = false;
-
+/**
+ * The one button, on whatever the visitor is running.
+ *
+ * On a Mac it downloads. On anything else it goes to /download rather than
+ * saying "Coming soon" and stopping — the Mac build is real, that page says
+ * when the others land, and a dead button is a visitor who leaves.
+ */
 export function DownloadButton({
   className = "btn-primary btn-lg",
   fullLabel = true,
@@ -61,77 +60,63 @@ export function DownloadButton({
 }) {
   const platform = usePlatform();
 
-  if (!DOWNLOADS_LIVE) {
-    return (
-      <span
-        role="button"
-        aria-disabled="true"
-        className={`${className} cursor-default hover:!bg-accent hover:!shadow-none active:!scale-100`}
-      >
-        {platform && <PlatformGlyph platform={platform} className="h-[17px] w-[17px]" />}
-        Coming soon
-      </span>
-    );
-  }
-
+  // Nothing until the platform is known, so the label never changes under the
+  // reader's eyes on first paint.
   if (!platform) {
     return <span className={`${className} pointer-events-none opacity-0`} aria-hidden="true" />;
   }
-  const d = DOWNLOADS[platform];
-  return (
-    <a href={d.href} download className={className}>
-      <PlatformGlyph platform={platform} className="h-[17px] w-[17px]" />
-      {fullLabel ? d.label : "Download"}
-    </a>
-  );
-}
 
-const PLATFORM_LABEL: Record<Platform, string> = {
-  mac: "macOS",
-  ios: "iOS",
-  windows: "Windows",
-  linux: "Linux",
-  android: "Android",
-};
-
-export function OtherPlatforms() {
-  const platform = usePlatform();
-  const shown: Platform[] = ["mac", "windows", "linux"];
-
-  if (!DOWNLOADS_LIVE) {
+  const release = RELEASES[platform];
+  if (release.href) {
     return (
-      <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[13px] text-faint">
-        {shown.map((p) => (
-          <span key={p} className="inline-flex items-center gap-1.5">
-            <PlatformGlyph platform={p} className="h-3.5 w-3.5" />
-            {PLATFORM_LABEL[p]}
-          </span>
-        ))}
-        <span className="opacity-80">· builds land soon</span>
-      </span>
+      <a href={release.href} className={className}>
+        <PlatformGlyph platform={platform} className="h-[17px] w-[17px]" />
+        {fullLabel ? `Download for ${release.label}` : "Download"}
+      </a>
     );
   }
 
-  const others = shown.filter((p) => {
-    if (!platform) return true;
-    if (platform === "ios") return p !== "mac";
-    if (platform === "android") return p !== "linux";
-    return p !== platform;
-  });
+  return (
+    <Link href="/download" className={className}>
+      <PlatformGlyph platform="mac" className="h-[17px] w-[17px]" />
+      {fullLabel ? "Get Zetarya for Mac" : "Download"}
+    </Link>
+  );
+}
+
+/** The quiet line under the button: what else exists, and what does not. */
+export function OtherPlatforms() {
+  const platform = usePlatform();
+  const others = (["mac", "windows", "linux"] as Platform[]).filter((p) => p !== platform);
 
   return (
-    <span className="inline-flex items-center gap-3">
-      {others.map((p) => (
-        <a
-          key={p}
-          href={DOWNLOADS[p].href}
-          download
-          className="inline-flex items-center gap-1.5 text-[13px] text-faint transition-colors hover:text-accent"
-        >
-          <PlatformGlyph platform={p} className="h-3.5 w-3.5" />
-          {PLATFORM_LABEL[p]}
-        </a>
-      ))}
+    <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[13px] text-faint">
+      {others.map((p) => {
+        const release = RELEASES[p];
+        const body = (
+          <>
+            <PlatformGlyph platform={p} className="h-3.5 w-3.5" />
+            {release.label}
+            {!release.href && <span className="opacity-70">· soon</span>}
+          </>
+        );
+        return release.href ? (
+          <a
+            key={p}
+            href={release.href}
+            className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
+          >
+            {body}
+          </a>
+        ) : (
+          <span key={p} className="inline-flex items-center gap-1.5">
+            {body}
+          </span>
+        );
+      })}
+      <Link href="/download" className="transition-colors hover:text-accent">
+        All downloads
+      </Link>
     </span>
   );
 }

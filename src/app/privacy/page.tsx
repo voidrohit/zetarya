@@ -72,7 +72,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Security",
     paragraphs: [
-      "Transfers run on our own protocol over UDP, encrypted with AES-256-GCM inside TLS 1.3, with keys derived per session on your devices. Our AWS environment uses least-privilege access and annual third-party penetration testing. We hold SOC 2 Type II and publish the summary report on request.",
+      "Transfers run over TCP connections opened directly between your devices, encrypted with AES-256 inside TLS 1.3, with keys derived per session on your devices - no server of ours, and no cloud provider, sits on that path. The separate infrastructure we run for accounts and coordination uses least-privilege access and annual third-party penetration testing. We hold SOC 2 Type II and publish the summary report on request.",
     ],
   },
   {

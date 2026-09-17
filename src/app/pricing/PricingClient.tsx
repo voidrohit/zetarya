@@ -10,11 +10,14 @@ import { Reveal } from "@/components/site/reveal";
 import { Icon } from "@/components/site/icons";
 import { CtaBanner, FeatureBlock, PageHero, Section, SectionHeading } from "@/components/site/primitives";
 import { BILLING_FAQS, PLAN_FEATURES, PLAN_MATRIX, TIERS } from "@/lib/site-content";
-import { DOWNLOADS, DOWNLOADS_LIVE, detectPlatform } from "@/components/site/platform";
+import { CURRENCIES, annualSaving, businessPrice, freePrice } from "@/lib/pricing";
+import { useCurrency } from "@/components/site/use-currency";
+import { RELEASES, detectPlatform } from "@/components/site/platform";
 
 export default function PricingClient() {
     const [opening, setOpening] = useState(false);
     const [annual, setAnnual] = useState(true);
+    const [currency, setCurrency] = useCurrency();
     const [email, setEmail] = useState("");
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -125,8 +128,29 @@ export default function PricingClient() {
                             >
                                 {o.label}
                                 {o.value && (
-                                    <span className="text-[12px] font-semibold text-accent">Save 17%</span>
+                                    <span className="text-[12px] font-semibold text-accent">
+                                        Save {annualSaving(currency)}%
+                                    </span>
                                 )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="mt-3 flex justify-center">
+                    <div className="inline-flex items-center gap-1 rounded border border-line bg-surface p-0.5">
+                        {CURRENCIES.map((c) => (
+                            <button
+                                key={c}
+                                onClick={() => setCurrency(c)}
+                                aria-pressed={currency === c}
+                                className={`rounded px-3 py-1 text-[12px] transition-all duration-200 ${
+                                    currency === c
+                                        ? "bg-card font-semibold text-ink shadow-sm"
+                                        : "font-medium text-muted hover:text-ink"
+                                }`}
+                            >
+                                {c === "INR" ? "₹ INR" : "$ USD"}
                             </button>
                         ))}
                     </div>
@@ -137,21 +161,28 @@ export default function PricingClient() {
                 {TIERS.map((t, i) => {
                     const isFree = t.name === "Free";
                     const isPaid = !isFree;
-                    const priced = annual && t.annual ? { ...t, ...t.annual } : t;
+                    // TIERS keeps its dollar strings: they are what the page
+                    // prerenders and what the schema.org offers advertise. The
+                    // rendered figure comes from the price table instead, so a
+                    // currency switch changes the card without touching either.
+                    const priced = isFree
+                        ? { ...t, price: freePrice(currency) }
+                        : { ...t, ...businessPrice(currency, annual) };
                     return (
                         <Reveal key={t.name} delay={i * 90}>
                             <PricingCard
                                 tier={priced}
                                 busy={isPaid && opening}
-                                soon={isFree && !DOWNLOADS_LIVE}
                                 onCta={
                                     isPaid
                                         ? handlePay
-                                        : DOWNLOADS_LIVE
-                                          ? () => {
-                                                window.location.href = DOWNLOADS[detectPlatform()].href;
-                                            }
-                                          : undefined
+                                        : () => {
+                                              // The free tier's call to action is the download. On a
+                                              // platform that has not shipped, the page that says so
+                                              // is a better answer than a disabled button.
+                                              window.location.href =
+                                                  RELEASES[detectPlatform()].href ?? "/download";
+                                          }
                                 }
                             />
                         </Reveal>

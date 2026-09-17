@@ -2,8 +2,8 @@
 {
   "name": "zetarya",
   "short_name": "zetarya",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
+  "theme_color": "#faf8f6",
+  "background_color": "#faf8f6",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",

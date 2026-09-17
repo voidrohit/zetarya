@@ -7,6 +7,7 @@ import { Logo } from "./logo";
 import { Icon } from "./icons";
 import { NAV_LINKS } from "@/lib/site-content";
 import { DownloadButton } from "./platform";
+import { AccountLink } from "./account-link";
 
 export default function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -69,10 +70,17 @@ export default function SiteNav() {
               </li>
             );
           })}
+          {/* Signed out only, and it renders its own <li>. */}
+          <AccountLink variant="nav" />
         </ul>
 
-        <div className="hidden md:flex">
-          <DownloadButton className="btn-primary btn-md" />
+        {/* One action, deliberately. "Download for macOS" is also cut to
+            "Download" here: at 72px tall the full label made the button wide
+            enough to unbalance the whole bar. The long form stays on the hero
+            and the closing CTA, where it has room and has to do the selling. */}
+        <div className="hidden items-center gap-3 md:flex">
+          <AccountLink variant="avatar" />
+          <DownloadButton className="btn-primary btn-md" fullLabel={false} />
         </div>
 
         <button
@@ -104,6 +112,7 @@ export default function SiteNav() {
               </Link>
             ))}
             <div className="mt-6">
+              <AccountLink className="block py-2 text-[15px]" />
               <DownloadButton className="btn-primary btn-lg w-full" />
             </div>
           </div>

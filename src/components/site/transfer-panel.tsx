@@ -8,10 +8,15 @@ import { useInView } from "./reveal";
 /* ---------------------------------------------------------------------------
    A single peer-to-peer transfer, simulated honestly.
 
-   2 TB at a sustained 1 Gbps takes 4 h 26 m 40 s. We advance a simulated clock
-   60 s per tick so the whole run plays out in about a minute, while every
-   number on screen — throughput, transferred, progress, elapsed, ETA — stays
-   internally consistent with that real arithmetic.
+   A live session on a gigabit link, not a replay of the Mumbai record run —
+   that one moved 2 TB in 5 hours and is described in the page copy instead.
+   Keeping them separate is what lets this graph hold a steady gigabit without
+   contradicting a slower measured average somewhere else on the page.
+
+   2 TB at ~1 Gbps is 4 h 27 m. We advance a simulated clock 60 s per tick so
+   the whole run plays out in about a minute, while every number on screen —
+   throughput, transferred, progress, elapsed, ETA — stays internally
+   consistent with that arithmetic.
 --------------------------------------------------------------------------- */
 
 const TOTAL_MB = 2_000_000; // 2 TB
@@ -49,7 +54,12 @@ const CHUNK_BYTES = 4 * 1024 * 1024;
 const BUFFER_MIB = (STREAMS * CHUNK_BYTES) / (1024 * 1024);
 const RESUME_HEADER = 56;
 const RESUME_PER_CHUNK = 16;
-const TARGET_MBPS = 1000; // 1 Gbps
+/** The rate the link holds. A gigabit link that is behaving looks like a flat
+ *  line, so this is close to one. */
+const TARGET_MBPS = 1000;
+/** Top of the sparkline. Slightly above TARGET so the bars sit near-full
+ *  rather than pinned to the ceiling with nowhere to move. */
+const GRAPH_MAX = 1020;
 const SIM_DT = 60; // simulated seconds per tick
 const TICK_MS = 250;
 const RAMP_SECONDS = 600; // reach full speed over the first 10 simulated minutes
@@ -61,9 +71,14 @@ function speedAt(elapsed: number, i: number) {
   const ramp = easeOutCubic(Math.min(1, elapsed / RAMP_SECONDS));
   // gentle downward drift only — a healthy direct link does not swing around,
   // and it never reports above the plan ceiling
-  const drift =
-    1 - 0.009 * (0.5 - 0.5 * Math.cos(i * 0.19)) - 0.005 * (0.5 - 0.5 * Math.cos(i * 0.61 + 1.1));
-  return Math.max(0, Math.min(TARGET_MBPS, TARGET_MBPS * ramp * drift));
+  // A small ripple that never crosses back under a gigabit. Two reasons it is
+  // one-sided rather than centred: a healthy direct link genuinely does not
+  // swing around, and the readout switches unit at 1000 — a value oscillating
+  // across that boundary reads "1.00 Gbps", "988 Mbps", "1.01 Gbps" and looks
+  // far less stable than the link actually is.
+  const ripple =
+    1 + 0.014 * (0.5 - 0.5 * Math.cos(i * 0.19)) + 0.006 * (0.5 - 0.5 * Math.cos(i * 0.61 + 1.1));
+  return Math.max(0, TARGET_MBPS * ramp * ripple);
 }
 
 function fmtSize(mb: number) {
@@ -218,7 +233,7 @@ export default function TransferPanel() {
                 {s.done ? "Delivered" : "Transferring"}
               </p>
               <p className="truncate font-mono text-[10px] text-faint">
-                session 0x8F2A · 1 recipient · udp direct
+                session 0x8F2A · 1 recipient
               </p>
             </div>
           </div>
@@ -229,7 +244,7 @@ export default function TransferPanel() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded bg-accent px-2.5 py-1.5 text-[11px] font-semibold text-white">
               <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-white" />
-              {s.done ? "Done" : "Live"}
+              {s.done ? "Done" : "Demo P2P Transfer"}
             </span>
           </div>
         </div>
@@ -251,7 +266,7 @@ export default function TransferPanel() {
                 </span>
               </div>
               <span className="hidden shrink-0 font-mono text-[11px] text-muted sm:inline">
-                record run · 1 Gbps · 1 recipient
+                live session · 1 Gbps · 1 recipient
               </span>
             </div>
 
@@ -271,7 +286,7 @@ export default function TransferPanel() {
                       key={i}
                       className="flex-1 rounded-t-[2px] transition-[height] duration-200 ease-linear"
                       style={{
-                        height: `${Math.max(1.5, (v / TARGET_MBPS) * 100)}%`,
+                        height: `${Math.max(1.5, (v / GRAPH_MAX) * 100)}%`,
                         // backgroundColor, not the `background` shorthand: the browser expands
                         // the shorthand into longhands and React flags it as a hydration mismatch.
                         backgroundColor: `rgba(190,42,80,${(0.22 + 0.78 * Math.pow(i / (BARS - 1), 1.7)).toFixed(3)})`,
@@ -368,13 +383,13 @@ export default function TransferPanel() {
               <div className="mt-4 flex justify-center">
                 <div className="relative h-[132px] w-[132px]">
                   <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-                    <circle cx="60" cy="60" r="54" fill="none" stroke="#EAE8E5" strokeWidth="11" />
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#ece7e3" strokeWidth="11" />
                     <circle
                       cx="60"
                       cy="60"
                       r="54"
                       fill="none"
-                      stroke="#BE2A50"
+                      stroke="#bb254a"
                       strokeWidth="11"
                       strokeLinecap="round"
                       strokeDasharray={ringLen}
@@ -424,7 +439,7 @@ export default function TransferPanel() {
               </div>
 
               <div className="bg-card p-5 sm:px-6">
-                <p className="font-mono text-[9.5px] tracking-[0.1em] text-faint">ROUTE</p>
+                <p className="font-mono text-[9.5px] tracking-[0.1em] text-faint">LOCATION</p>
                 <p className="mt-1.5 text-[13px] font-semibold">Mumbai → N. Virginia</p>
                 <p className="mt-1 font-mono text-[10px] text-faint">direct · 0 relays</p>
               </div>

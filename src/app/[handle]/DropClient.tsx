@@ -32,6 +32,55 @@ import {
    sizes; the relay sees ciphertext.
 --------------------------------------------------------------------------- */
 
+/**
+ * The browser route is the slower of Zetarya's two, and this page is the only
+ * place a sender ever learns there is a faster one.
+ *
+ * Shown while they are deciding and while the transfer runs — when the relay's
+ * cap is the number they are watching — and not afterwards, when the files have
+ * already arrived. `limitMbps` is the live value from the API, not a constant:
+ * the cap is a backend setting and this sentence has to follow it.
+ *
+ * Always opens in a new tab. Every byte is read from this tab as it goes, so a
+ * link that navigated away mid-transfer would end the transfer, and before one
+ * starts it would throw away the files they picked and the name they typed.
+ */
+function AppNudge({
+  limitMbps,
+  title,
+  className = "",
+}: {
+  limitMbps: number;
+  title: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex flex-col gap-3 rounded border border-line bg-surface px-4 py-3.5 sm:flex-row sm:items-center ${className}`}
+    >
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded bg-accent-soft text-accent">
+        <Icon name="bolt" className="h-[18px] w-[18px]" />
+      </span>
+      <div className="min-w-0 flex-1 text-left">
+        <p className="text-[14px] font-semibold tracking-[-0.01em] text-ink">{title}</p>
+        <p className="mt-0.5 text-[13px] leading-relaxed text-muted">
+          In a browser, files go through our relay at up to {limitMbps} Mbps. With the app on both
+          devices they go straight from one to the other, at your full connection speed.
+        </p>
+      </div>
+      <a
+        href="/download"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="link-accent shrink-0 text-[14px]"
+      >
+        Get the app
+        <Icon name="arrow-up-right" className="h-4 w-4" />
+      </a>
+    </div>
+  );
+}
+
 const POLL_MS = 1500;
 const NAME_KEY = "zetarya.drop.sender";
 
@@ -423,8 +472,13 @@ export default function DropClient({ username }: { username: string }) {
                     </button>
                     <p className="text-center text-[12px] leading-relaxed text-faint">
                       They approve every transfer on their device before anything is written.
-                      Browser transfers go through the Zetarya relay at up to {link.limitMbps} Mbps.
                     </p>
+                    {/* The relay cap used to be the second half of the line above;
+                        it lives in the nudge now, beside the way around it. */}
+                    <AppNudge
+                      limitMbps={link.limitMbps}
+                      title="Sending something big? Use the Zetarya app."
+                    />
                   </form>
                 ) : phase.kind === "waiting" ? (
                   <div className="py-4 text-center">
@@ -481,6 +535,13 @@ export default function DropClient({ username }: { username: string }) {
                         </dd>
                       </div>
                     </dl>
+                    {/* "Next time", not "this would be faster": switching now would
+                        mean starting over, and the recipient needs the app too. */}
+                    <AppNudge
+                      className="mt-5"
+                      limitMbps={phase.status.limitMbps}
+                      title="Next time, send faster with the Zetarya app."
+                    />
                     <p className="mt-4 text-[12px] leading-relaxed text-faint">
                       Be on this page to get maximum speed. Make sure you are not connected to any VPN.
                     </p>

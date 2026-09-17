@@ -5,8 +5,11 @@ import { useInView } from "./reveal";
 
 const ROWS = [
   { name: "Zetarya · record run", value: "1,000 Mb/s", pct: 100, hot: true },
-  { name: "Cloud storage sync", value: "118 Mb/s", pct: 11.8, hot: false },
-  { name: "Browser upload service", value: "44 Mb/s", pct: 4.4, hot: false },
+  { name: "Cloud storage sync", value: "20 Mb/s", pct: 11.8, hot: false },
+  // Named for the category, not the medium. "Browser upload service" collided
+  // with our own browser link further down the page — the same two words for a
+  // competitor's whole product and for one of our two routes.
+  { name: "Link-sharing service", value: "2 Mb/s", pct: 4.4, hot: false },
 ];
 
 export default function ThroughputChart() {
@@ -16,7 +19,7 @@ export default function ThroughputChart() {
     <div ref={ref} className="rounded border border-line bg-card p-5 sm:p-7">
       <h3 className="text-sm font-semibold">2 TB across the planet</h3>
       <p className="mt-1 text-[12.5px] text-muted">
-        Mumbai → N. Virginia on AWS · record run, 4 h 27 m
+        Mumbai → N. Virginia · record run, 5 h
       </p>
 
       <div className="mt-6 space-y-5">

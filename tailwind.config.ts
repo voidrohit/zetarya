@@ -21,25 +21,40 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Taken from the desktop app (zero2hq/zoop, src/brand/theme.css), whose
+      // shell declares --zetarya-brand and is therefore where the brand is
+      // defined. The site had drifted to a cooler near-miss of every value:
+      // #BE2A50 against the app's #bb254a, and a cold #0A0A0A ink sitting on a
+      // warm cream. Same role, same hex, so the two match when a visitor has
+      // the site and the app open at once.
       colors: {
-        bg: "#FAFAF9",
-        surface: "#F2F1EF",
-        surface2: "#EAE8E5",
-        ink: "#0A0A0A",
-        muted: "#6B6B67",
-        faint: "#9A9A95",
-        line: "#E3E2DE",
+        bg: "#faf8f6", // app: canvas
+        surface: "#f7f4f1", // app: rail
+        surface2: "#ece7e3",
+        ink: "#1c1517", // app: ink — warm near-black, not pure black
+        muted: "#6b625f", // app: ink-soft
+        faint: "#9a918d", // app: ink-faint
+        line: "#ebe6e2", // app: line
         accent: {
-          DEFAULT: "#BE2A50",
-          soft: "#F9EBEF",
-          deep: "#8F1F3C",
+          DEFAULT: "#bb254a", // app: brand-500
+          soft: "#fdf2f5", // app: brand-50
+          deep: "#a11f40", // app: brand-600, which is its hover state
+          // The auth panel's ground. A night with a crimson cast rather than
+          // the brand colour itself: a full-height wall of accent is the most
+          // saturated thing anyone would see all day, and it fights the form
+          // beside it. Matches the desktop app's own auth screen.
+          night: "#3B0C18",
+          dim: "#E08BA3",
         },
         card: "#FFFFFF",
-        grid: "#EAE9E5",
-        ok: "#1F8A5B",
+        grid: "#ece7e3",
+        ok: "#2e7d5b", // app: ok-500
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        // The same system serif stack the desktop app uses for its headings.
+        // No webfont to load: every face here already ships with the OS.
+        serif: ["ui-serif", "Iowan Old Style", "Georgia", "Times New Roman", "serif"],
         mono: ["var(--font-jetbrains)", "JetBrains Mono", "ui-monospace", "monospace"],
       },
       maxWidth: {

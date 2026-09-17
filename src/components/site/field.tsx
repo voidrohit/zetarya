@@ -20,8 +20,8 @@ struct Params {
 };
 @group(0) @binding(0) var<uniform> u: Params;
 
-const REST = vec3f(0.905, 0.900, 0.884);   // the grid grey, on cream
-const ACCENT = vec3f(0.745, 0.165, 0.314);
+const REST = vec3f(0.925, 0.906, 0.890);   // grid grey (#ece7e3), on cream
+const ACCENT = vec3f(0.733, 0.145, 0.290);  // brand #bb254a
 
 @fragment
 fn fs_main(@location(0) uv: vec2f) -> @location(0) vec4f {

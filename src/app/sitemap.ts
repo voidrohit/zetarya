@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { CHANGELOG, POSTS } from "@/lib/site-content";
+import { /* CHANGELOG, */ POSTS } from "@/lib/site-content";
 
 const BASE = "https://zetarya.com";
 
@@ -21,6 +21,7 @@ type StaticEntry = {
 const STATIC: StaticEntry[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/features", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/whitepaper", priority: 0.8, changeFrequency: "yearly" },
   { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
   {
     path: "/blog",
@@ -28,12 +29,14 @@ const STATIC: StaticEntry[] = [
     changeFrequency: "weekly",
     lastModified: latest(POSTS.map((p) => p.date)),
   },
-  {
-    path: "/changelog",
-    priority: 0.7,
-    changeFrequency: "weekly",
-    lastModified: latest(CHANGELOG.map((c) => c.date)),
-  },
+  // Hidden for now — see src/app/changelog/page.tsx.
+  // {
+  //   path: "/changelog",
+  //   priority: 0.7,
+  //   changeFrequency: "weekly",
+  //   lastModified: latest(CHANGELOG.map((c) => c.date)),
+  // },
+  { path: "/faq", priority: 0.7, changeFrequency: "monthly" },
   { path: "/about", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.5, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },

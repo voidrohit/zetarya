@@ -19,46 +19,53 @@ import {
 } from "@/components/site/primitives";
 import Field from "@/components/site/field";
 import { FaqList } from "@/components/site/faq-list";
-import { HOME_FEATURES, METRICS, PRODUCT_FAQS, TIERS } from "@/lib/site-content";
+import { DropLinkSection } from "@/components/site/drop-link";
+import { RoutePath } from "@/components/site/route-path";
+import { HOME_FAQS, HOME_FEATURES, METRICS, TIERS } from "@/lib/site-content";
+import { businessPrice, freePrice } from "@/lib/pricing";
+import { useCurrency } from "@/components/site/use-currency";
 import { DownloadButton, OtherPlatforms } from "@/components/site/platform";
 import JsonLd from "@/components/site/json-ld";
 import { faqPage, graph, softwareApplication, webPage } from "@/lib/schema";
 
 const TICKER = [
   "2 TB MUMBAI → USA",
-  "4 H 27 M",
-  "1 GBPS SUSTAINED",
+  "5 HOURS",
+  // The run peaked at a gigabit; the product has no ceiling. Two separate
+  // claims — merged into "beyond 1 Gbps sustained" they described neither.
+  "1 GBPS PEAK · NO CEILING",
   "AES-256 + TLS 1.3 INSIDE",
-  "OUR OWN PROTOCOL · UDP",
   "0 BYTES STORED",
   "BYTE-EXACT RESUME",
 ];
 
 export default function Home() {
+  const [currency] = useCurrency();
+
   return (
     <SiteShell>
       <JsonLd data={graph(
         webPage({
           path: "/",
-          name: "Zetarya — Transfer files at up to 1 Gbps",
+          name: "Zetarya — Transfer files beyond 1 Gbps",
           description:
-            "Send very large files directly between two devices at up to 1 Gbps. Encrypted end to end, resumable to the byte, and nothing stored on our servers.",
+            "Send very large files directly between two devices. No speed cap — 1 Gbps sustained and beyond. Encrypted end to end, resumable to the byte, nothing stored.",
           extra: { mainEntity: { "@id": "https://zetarya.com/#software" } },
         }),
         softwareApplication(),
-        faqPage("/", PRODUCT_FAQS),
+        faqPage("/", HOME_FAQS),
       )} />
       {/* ---------------- hero ---------------- */}
       <section className="relative isolate overflow-hidden">
         <Field className="mask-fade-y pointer-events-none absolute inset-0 -z-10" />
 
         <div className="measure pb-14 pt-14 text-center sm:pt-24 lg:pb-20">
-          <Reveal>
-            <span className="chip">
-              <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
-              NOW IN BETA
-            </span>
-          </Reveal>
+          {/*<Reveal>*/}
+          {/*  <span className="chip">*/}
+          {/*    <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />*/}
+          {/*    NOW LIVE*/}
+          {/*  </span>*/}
+          {/*</Reveal>*/}
 
           <Reveal delay={70}>
             <h1 className="h-display mx-auto mt-6 max-w-[900px] text-[40px] sm:text-[56px] lg:text-[68px]">
@@ -69,8 +76,7 @@ export default function Home() {
 
           <Reveal delay={140}>
             <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-relaxed text-muted sm:text-[18px]">
-              Our own protocol over UDP. AES-256 inside TLS 1.3. Utilize full available bandwidth up
-              to 1 Gbps between two devices, and not one byte parked on our server.
+              P2P fully encrypted high speed data transfer system.
             </p>
           </Reveal>
 
@@ -78,10 +84,10 @@ export default function Home() {
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <DownloadButton className="btn-primary btn-lg w-full sm:w-auto" />
               <Link
-                href="/blog/one-gbps-long-haul"
+                href="/whitepaper"
                 className="btn-ghost btn-lg group w-full sm:w-auto"
               >
-                Read the 1 Gbps run
+                Read the white paper
                 <Icon
                   name="arrow-right"
                   className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
@@ -142,37 +148,20 @@ export default function Home() {
       {/* ---------------- deep dive ---------------- */}
       <Section rule>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal>
-            <Eyebrow>TRACK</Eyebrow>
-            <h2 className="h-section mt-4 text-[28px] sm:text-[34px] lg:text-[38px]">
-              Every byte, on a timeline
-            </h2>
-            <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              A year of transfers at a glance - volume per day, throughput per run, and the exact AWS
-              route each one took.
-            </p>
-            <Link href="/features" className="link-accent mt-6">
-              See what it tracks
-              <Icon name="arrow-right" className="h-4 w-4" />
-            </Link>
-          </Reveal>
-          <Reveal delay={120}>
-            <ActivityHeatmap />
-          </Reveal>
-        </div>
-
-        <div className="mt-20 grid items-center gap-12 lg:mt-28 lg:grid-cols-2 lg:gap-20">
           <Reveal className="lg:order-2">
-            <Eyebrow>SPEED</Eyebrow>
+            <Eyebrow>SPEED · DEVICE TO DEVICE</Eyebrow>
             <h2 className="h-section mt-4 text-[28px] sm:text-[34px] lg:text-[38px]">
               We use the whole pipe
             </h2>
             <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              We pushed 2 TB from Mumbai to N. Virginia in 4 hours 27 minutes - a sustained 1 Gbps end to
-              end on AWS EC2 machines. Business runs at that ceiling, and a dropped link resumes at the exact byte.
+              Between two devices running the app, whatever your network can do, Zetarya does.
+              Across a desk there is no upload step at all - the file crosses your own Wi-Fi. Across
+              the world we moved 2 TB from Mumbai to N. Virginia in 5 hours, touching a gigabit and
+              holding close to it the whole way. Lose the link and it resumes at the exact byte.
             </p>
+            <RoutePath variant="direct" className="mt-7 max-w-[420px]" />
             <Link href="/features" className="link-accent mt-6">
-              See the benchmarks
+              See the features
               <Icon name="arrow-right" className="h-4 w-4" />
             </Link>
           </Reveal>
@@ -180,6 +169,14 @@ export default function Home() {
             <ThroughputChart />
           </Reveal>
         </div>
+      </Section>
+
+      {/* ---------------- receive from anyone ----------------
+          On its own surface deliberately. It is the second of the two routes
+          and the slower one, so it should not read as a continuation of the
+          gigabit story immediately above it. */}
+      <Section rule className="bg-surface">
+        <DropLinkSection />
       </Section>
 
       {/* ---------------- metrics ---------------- */}
@@ -202,6 +199,29 @@ export default function Home() {
       </div>
 
       {/* ---------------- testimonial ---------------- */}
+      {/* ---------------- track: kept back deliberately, see note above ---------------- */}
+      <Section rule>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <Reveal>
+            <Eyebrow>TRACK</Eyebrow>
+            <h2 className="h-section mt-4 text-[28px] sm:text-[34px] lg:text-[38px]">
+              Every byte, on a timeline
+            </h2>
+            <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-muted sm:text-[17px]">
+              A year of transfers at a glance - volume per day, throughput per run, and the exact
+              route each one took.
+            </p>
+            <Link href="/features" className="link-accent mt-6">
+              See what it tracks
+              <Icon name="arrow-right" className="h-4 w-4" />
+            </Link>
+          </Reveal>
+          <Reveal delay={120}>
+            <ActivityHeatmap />
+          </Reveal>
+        </div>
+      </Section>
+
       <Section>
         <Reveal>
           <blockquote className="mx-auto max-w-[900px] text-center text-[22px] font-semibold leading-[1.35] tracking-[-0.02em] sm:text-[27px] lg:text-[30px]">
@@ -222,7 +242,19 @@ export default function Home() {
         <div className="mx-auto mt-12 grid max-w-[780px] items-start gap-6 md:grid-cols-2">
           {TIERS.map((t, i) => (
             <Reveal key={t.name} delay={i * 90}>
-              <PricingCard tier={t} maxFeatures={3} href="/pricing" />
+              <PricingCard
+                // Monthly here, as the preview always was; /pricing is where
+                // the yearly term and the currency are actually chosen. The
+                // currency still follows the visitor, so the two pages do not
+                // quote different money for the same plan.
+                tier={
+                  t.name === "Free"
+                    ? { ...t, price: freePrice(currency) }
+                    : { ...t, ...businessPrice(currency, false) }
+                }
+                maxFeatures={3}
+                href="/pricing"
+              />
             </Reveal>
           ))}
         </div>
@@ -243,7 +275,13 @@ export default function Home() {
           title="The questions people actually ask"
           sub="The small details, answered properly. Billing questions live on the pricing page."
         />
-        <FaqList items={PRODUCT_FAQS} />
+        <FaqList items={HOME_FAQS} />
+        <Reveal className="mt-10 text-center">
+          <Link href="/faq" className="link-accent">
+            All questions
+            <Icon name="arrow-right" className="h-4 w-4" />
+          </Link>
+        </Reveal>
         <Reveal delay={200}>
           <p className="mt-10 text-center text-sm text-muted">
             Something not covered?{" "}
