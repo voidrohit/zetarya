@@ -230,7 +230,7 @@ export default function TransferPanel() {
             <LogoMark className="h-4 w-5 shrink-0" />
             <div className="min-w-0">
               <p className="truncate text-[13px] font-semibold leading-tight">
-                {s.done ? "Delivered" : "Transferring"}
+                {s.done ? "Delivered" : "Demo Transfer"}
               </p>
               <p className="truncate font-mono text-[10px] text-faint">
                 session 0x8F2A · 1 recipient
