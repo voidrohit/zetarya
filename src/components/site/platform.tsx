@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaApple, FaWindows, FaLinux, FaAndroid } from "react-icons/fa";
-import { RELEASES, type Platform } from "@/lib/platforms";
+import {
+  PLATFORM_GLYPHS,
+  PLATFORM_ORDER,
+  RELEASES,
+  downloadLabel,
+  shortDownloadLabel,
+  type Platform,
+} from "@/lib/platforms";
 
 export { RELEASES };
 export type { Platform };
-
-const GLYPHS: Record<Platform, React.ComponentType<{ className?: string }>> = {
-  mac: FaApple,
-  ios: FaApple,
-  windows: FaWindows,
-  linux: FaLinux,
-  android: FaAndroid,
-};
 
 export function detectPlatform(): Platform {
   if (typeof navigator === "undefined") return "mac";
@@ -40,16 +38,17 @@ export function PlatformGlyph({
   platform: Platform;
   className?: string;
 }) {
-  const Glyph = GLYPHS[platform];
+  const Glyph = PLATFORM_GLYPHS[platform];
   return <Glyph className={className} aria-hidden="true" />;
 }
 
 /**
  * The one button, on whatever the visitor is running.
  *
- * On a Mac it downloads. On anything else it goes to /download rather than
- * saying "Coming soon" and stopping — the Mac build is real, that page says
- * when the others land, and a dead button is a visitor who leaves.
+ * On a Mac it downloads and on Android it opens Google Play. On anything with
+ * no build yet it goes to /download rather than saying "Coming soon" and
+ * stopping — that page says when the others land, and a dead button is a
+ * visitor who leaves.
  */
 export function DownloadButton({
   className = "btn-primary btn-lg",
@@ -69,9 +68,15 @@ export function DownloadButton({
   const release = RELEASES[platform];
   if (release.href) {
     return (
-      <a href={release.href} className={className}>
+      <a
+        href={release.href}
+        // A store listing leaves our site, so it opens alongside it. Our own
+        // download does not navigate at all — it is a file — so it must not.
+        {...(release.store ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        className={className}
+      >
         <PlatformGlyph platform={platform} className="h-[17px] w-[17px]" />
-        {fullLabel ? `Download for ${release.label}` : "Download"}
+        {fullLabel ? downloadLabel(platform) : shortDownloadLabel(platform)}
       </a>
     );
   }
@@ -87,7 +92,9 @@ export function DownloadButton({
 /** The quiet line under the button: what else exists, and what does not. */
 export function OtherPlatforms() {
   const platform = usePlatform();
-  const others = (["mac", "windows", "linux"] as Platform[]).filter((p) => p !== platform);
+  // Everything but iOS, which is still TestFlight-only and has nowhere public
+  // to send anyone. /download lists it with the rest.
+  const others = PLATFORM_ORDER.filter((p) => p !== platform && p !== "ios");
 
   return (
     <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[13px] text-faint">
@@ -104,6 +111,7 @@ export function OtherPlatforms() {
           <a
             key={p}
             href={release.href}
+            {...(release.store ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
           >
             {body}

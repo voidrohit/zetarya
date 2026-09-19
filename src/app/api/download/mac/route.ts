@@ -16,5 +16,5 @@ export async function GET(request: NextRequest) {
     // them to the page that can say so in words.
     return NextResponse.redirect(new URL("/download?unavailable=1", request.url));
   }
-  return NextResponse.redirect(release.dmg, 302);
+  return NextResponse.redirect(release.installer, 302);
 }
