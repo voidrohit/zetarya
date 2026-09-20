@@ -65,7 +65,15 @@ export class DropApiError extends Error {
   }
 }
 
-async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
+/**
+ * The shared call into the backend: JSON in, JSON out, and the `{error,
+ * message}` body the Go `fail()` helper produces turned into a DropApiError
+ * carrying the message meant for a person.
+ *
+ * Exported because the contact form talks to the same backend and would
+ * otherwise need its own copy of this error handling — see src/lib/contact.ts.
+ */
+export async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: { "Content-Type": "application/json", ...(init.headers ?? {}) },

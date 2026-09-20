@@ -22,6 +22,7 @@ const SECTIONS: LegalSection[] = [
     paragraphs: [
       "Account details: your name, email address, and - for paid accounts - billing contact and company name. Payment card data is handled by our payment processor and never touches our servers.",
       "Support correspondence: anything you send us in a ticket, including logs you choose to attach.",
+      "Contact form: the name, email address, company and message you submit at zetarya.com/contact. It is delivered to our team as email and is not written to any database - the mailbox is the only copy, and your address is used to reply to you and for nothing else.",
     ],
   },
   {
@@ -54,6 +55,7 @@ const SECTIONS: LegalSection[] = [
     heading: "Cookies and tracking",
     paragraphs: [
       "The marketing site uses one essential cookie for session state and, with your consent, one first-party analytics cookie. We do not run third-party advertising or cross-site tracking pixels.",
+      "The contact form runs Cloudflare Turnstile to tell people from bots. It is a security measure rather than analytics, so it runs without asking for consent, and it is the one third-party script on the site. Turnstile sets no cookies and does not profile you across other sites - which is why we use it instead of a CAPTCHA that does.",
       "You can change your choice at any time from the cookie preferences link in the footer.",
     ],
   },
@@ -66,7 +68,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Data retention",
     paragraphs: [
-      "Connection metadata is retained for 30 days for abuse prevention, then deleted. Account records are kept for the life of the account and for seven years afterwards where tax law requires it. Support tickets are deleted after 24 months.",
+      "Connection metadata is retained for 30 days for abuse prevention, then deleted. Account records are kept for the life of the account and for seven years afterwards where tax law requires it. Support tickets are deleted after 24 months. Contact form messages live in our mailbox and are deleted after 24 months, the same as tickets.",
     ],
   },
   {
