@@ -13,6 +13,7 @@ import {
   type DropStatus,
   type PublicLink,
 } from "@/lib/drops";
+import { EVENTS, capture } from "@/lib/analytics";
 import {
   collectDropped,
   collectInput,
@@ -147,6 +148,9 @@ export default function DropClient({ username }: { username: string }) {
         if (cancelled) return;
         setLink(l);
         setPhase({ kind: "compose" });
+        // Top of the funnel. `accepting` is the half worth knowing: a link
+        // switched off is a visitor who could never have sent anything.
+        capture(EVENTS.dropLinkOpened, { accepting: l.accepting });
       })
       .catch(() => !cancelled && setPhase({ kind: "missing" }));
     try {
@@ -183,6 +187,7 @@ export default function DropClient({ username }: { username: string }) {
     async (receipt: DropReceipt, status: DropStatus) => {
       setPhase({ kind: "sending", receipt, status });
       setProgress({ bytes: 0, total, speedBps: 0, relay: true });
+      const startedAt = Date.now();
       try {
         const engine = await loadEngine();
         await sendPicked(engine, status.ticket!, status.relay, picked, status.limitMbps, (ev: EngineEvent) => {
@@ -192,16 +197,21 @@ export default function DropClient({ username }: { username: string }) {
             setProgress((p) => (p ? { ...p, relay: ev.relay } : p));
           }
         });
+        capture(EVENTS.dropDelivered, {
+          files: picked.length,
+          bytes: total,
+          // Seconds on the wire, so a relay that is too slow to be useful
+          // shows up as a number rather than as a support message.
+          seconds: Math.round((Date.now() - startedAt) / 1000),
+          limitMbps: status.limitMbps,
+        });
         setPhase({ kind: "done", device: status.device ?? "their device" });
       } catch (err) {
         // A cancel from this page is not a failure to report.
         if (phaseRef.current.kind !== "sending") return;
-        setPhase({
-          kind: "failed",
-          message: err instanceof Error ? err.message : String(err),
-          receipt,
-          retryable: true,
-        });
+        const message = err instanceof Error ? err.message : String(err);
+        capture(EVENTS.dropFailed, { at: "sending", message, bytes: total });
+        setPhase({ kind: "failed", message, receipt, retryable: true });
       }
     },
     [picked, total],
@@ -228,10 +238,12 @@ export default function DropClient({ username }: { username: string }) {
           return;
         case "declined":
           stopped = true;
+          capture(EVENTS.dropFailed, { at: "declined" });
           setPhase({ kind: "failed", message: `${link?.displayName ?? "They"} declined the transfer.`, retryable: false });
           return;
         case "expired":
           stopped = true;
+          capture(EVENTS.dropFailed, { at: "expired" });
           setPhase({
             kind: "failed",
             message: "Nobody answered in time. They may not have a device open — try again later.",
@@ -274,6 +286,7 @@ export default function DropClient({ username }: { username: string }) {
         sender,
         picked.map((p) => ({ name: p.path, size: p.file.size })),
       );
+      capture(EVENTS.dropCreated, { files: picked.length, bytes: total });
       setPhase({ kind: "waiting", receipt });
     } catch (err) {
       setFormError(

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { EVENTS, capture } from "@/lib/analytics";
 import {
   PLATFORM_GLYPHS,
   PLATFORM_ORDER,
@@ -73,6 +74,15 @@ export function DownloadButton({
         // A store listing leaves our site, so it opens alongside it. Our own
         // download does not navigate at all — it is a file — so it must not.
         {...(release.store ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        onClick={() =>
+          capture(EVENTS.downloadClicked, {
+            platform,
+            kind: release.store ? "store" : "installer",
+            // Where on the page it was pressed matters: the hero converting and
+            // the footer converting are different findings.
+            placement: "primary",
+          })
+        }
         className={className}
       >
         <PlatformGlyph platform={platform} className="h-[17px] w-[17px]" />
@@ -112,6 +122,13 @@ export function OtherPlatforms() {
             key={p}
             href={release.href}
             {...(release.store ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            onClick={() =>
+              capture(EVENTS.downloadClicked, {
+                platform: p,
+                kind: release.store ? "store" : "installer",
+                placement: "other-platforms",
+              })
+            }
             className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
           >
             {body}
